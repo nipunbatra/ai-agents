@@ -26,9 +26,9 @@ const SUM=[['1',`An agent is ${kA('a model')}, ${kT('tools')} and a loop.`],
  ['5',`Start with a workflow, measure with evals, then raise ${kY('autonomy')}.`]];
 S_('summary','wrap','The talk in one slide',{builds:1,
  body:`<div class="w6-sum">${loopFig({W:600,H:450,at:{},tools:['sensor','code','mail','database','globe']})}<ol>${SUM.map(([k,t])=>`<li><b>PART ${k}</b><span>${t}</span></li>`).join('')}</ol></div>`,
- lines:['Five parts, one picture. The loop is the engine; your design decides how far it is allowed to run.'],
+ lines:['The whole talk around the picture we started with. The loop is the engine; your design decides how far it may run.'],
  ask:['Which of the five will you remember on Monday morning?'],
- expected:['Most remember Part 3 (where it works) or Part 4 (what goes wrong). Point back to the map of fourteen jobs.'],
+ expected:['Most remember Part 3 (where it works) or Part 4 (what goes wrong). Point back to the map of '+APPS.apps.length+' jobs.'],
  point:'The whole talk in five sentences.',transition:'And what to do next.'});
 
 const MON=[['play','Run the notebook','Open it in Colab, paste a free Gemini key, and watch the loop on your own question.'],

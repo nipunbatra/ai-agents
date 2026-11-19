@@ -92,8 +92,16 @@ export function lanes(steps,{W=1152,laneH=108,left=172,fs=18,r=25,names={},alt='
  const pos=steps.map((s,i)=>{if(!LANES.some(l=>l[0]===s.lane))throw new Error('Unknown lane '+s.lane);return [left+colW*(i+.5),laneY(s.lane)+r+8];});
  // Two passes: every arrow first, then nodes and labels on top, the labels with a halo in the lane's colour, so an
  // arrow never runs over text. Each piece still appears at its step's click.
- steps.forEach((s,i)=>{if(i<=first)return;const [x0,y0]=pos[i-1],[x,y]=pos[i],dx=x-x0,dy=y-y0,L=Math.hypot(dx,dy),ux=dx/L,uy=dy/L;
-  const a=arrow(x0+ux*(r+5),y0+uy*(r+5),x-ux*(r+7),y-uy*(r+7),{stroke:DARK,w:2.2,head:10});g+=s.at?gat(s.at,a):a;});
+ // Labels hang below the nodes, so an arrow that changes lane goes round them at a right angle: down, it leaves the
+ // node's right side and drops onto the next node's top; up, it leaves the node's top and enters the next from the left.
+ const elbow=(pts)=>{const [hx,hy]=pts.at(-1),[px,py]=pts.at(-2),a=Math.atan2(hy-py,hx-px),h=10;
+  return `<path d="M${pts.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' L')}" fill="none" stroke="${DARK}" stroke-width="2.2" stroke-linejoin="round"/>`+
+   `<path d="M${hx.toFixed(1)},${hy.toFixed(1)} L${(hx-h*Math.cos(a-.42)).toFixed(1)},${(hy-h*Math.sin(a-.42)).toFixed(1)} L${(hx-h*Math.cos(a+.42)).toFixed(1)},${(hy-h*Math.sin(a+.42)).toFixed(1)}Z" fill="${DARK}"/>`;};
+ steps.forEach((s,i)=>{if(i<=first)return;const [x0,y0]=pos[i-1],[x,y]=pos[i];
+  const a=Math.abs(y-y0)<1?arrow(x0+r+5,y0,x-r-7,y,{stroke:DARK,w:2.2,head:10})
+   :y>y0?elbow([[x0+r+4,y0],[x,y0],[x,y-r-6]])
+   :elbow([[x0,y0-r-4],[x0,y],[x-r-6,y]]);
+  g+=s.at?gat(s.at,a):a;});
  steps.forEach((s,i)=>{
   const [x,y]=pos[i],c=s.kind==='risk'?COL.loss:s.kind==='done'?COL.green:ROLE[s.lane];let b='';
   const filled=s.kind==='check'||s.kind==='done';

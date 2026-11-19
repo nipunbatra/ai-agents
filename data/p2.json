@@ -1,0 +1,371 @@
+{
+ "tool": {
+  "name": "get_air_quality",
+  "description": "Forecast of fine-dust pollution (PM2.5, in micrograms per cubic metre) for a city: one daily mean per day, starting tomorrow.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "city": {
+     "type": "string",
+     "description": "the city's name, for example \"Pune\""
+    },
+    "days": {
+     "type": "integer",
+     "description": "how many days ahead, from 1 to 4"
+    }
+   },
+   "required": [
+    "city"
+   ]
+  }
+ },
+ "vague": {
+  "name": "get_data",
+  "description": "Gets data.",
+  "parameters": {
+   "type": "object",
+   "properties": {
+    "x": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "x"
+   ]
+  }
+ },
+ "walk": {
+  "turns": [
+   {
+    "read": 284,
+    "wrote": 133,
+    "thinking": 66,
+    "seconds": 4.54,
+    "cost_inr": 0.0665,
+    "spent_inr": 0.067,
+    "elapsed": 4.5,
+    "thought": "Optimal Travel Sequencing for PM2.5 Minimization",
+    "calls": [
+     {
+      "city": "Delhi",
+      "days": 3
+     },
+     {
+      "days": 3,
+      "city": "Ahmedabad"
+     },
+     {
+      "city": "Pune",
+      "days": 3
+     }
+    ],
+    "results": [
+     {
+      "city": "Delhi",
+      "state": "National Capital Territory of Delhi",
+      "unit": "µg/m³",
+      "pm25_daily_mean": {
+       "2026-11-20": 124.0,
+       "2026-11-21": 162.4,
+       "2026-11-22": 130.8
+      },
+      "source": "CAMS forecast via Open-Meteo"
+     },
+     {
+      "city": "Ahmedabad",
+      "state": "Gujarat",
+      "unit": "µg/m³",
+      "pm25_daily_mean": {
+       "2026-11-20": 40.0,
+       "2026-11-21": 41.0,
+       "2026-11-22": 44.4
+      },
+      "source": "CAMS forecast via Open-Meteo"
+     },
+     {
+      "city": "Pune",
+      "state": "Maharashtra",
+      "unit": "µg/m³",
+      "pm25_daily_mean": {
+       "2026-11-20": 38.4,
+       "2026-11-21": 51.7,
+       "2026-11-22": 57.5
+      },
+      "source": "CAMS forecast via Open-Meteo"
+     }
+    ]
+   },
+   {
+    "read": 1020,
+    "wrote": 740,
+    "thinking": 572,
+    "seconds": 9.92,
+    "cost_inr": 0.331,
+    "spent_inr": 0.398,
+    "elapsed": 14.5,
+    "thought": "Analyzing Permutations for Optimized Value Accumulation",
+    "calls": [
+     {
+      "expression": "124 + 41 + 57.5"
+     },
+     {
+      "expression": "124 + 51.7 + 44.4"
+     },
+     {
+      "expression": "40 + 162.4 + 57.5"
+     },
+     {
+      "expression": "40 + 51.7 + 130.8"
+     },
+     {
+      "expression": "38.4 + 162.4 + 44.4"
+     },
+     {
+      "expression": "38.4 + 41 + 130.8"
+     }
+    ],
+    "results": [
+     222.5,
+     220.1,
+     259.9,
+     222.5,
+     245.2,
+     210.2
+    ]
+   },
+   {
+    "read": 2464,
+    "wrote": 593,
+    "thinking": 211,
+    "seconds": 6.23,
+    "cost_inr": 0.3807,
+    "spent_inr": 0.778,
+    "elapsed": 20.7,
+    "thought": "Analyzing Air Quality Data",
+    "calls": [],
+    "results": []
+   }
+  ],
+  "request": "Over the next three days I visit Delhi, Ahmedabad and Pune, one city per day, in any order I like. Which order keeps the fine-dust pollution (PM2.5) I breathe lowest? Give the order and the numbers.",
+  "answer": "Pune first, then Ahmedabad, then Delhi: 210.2 µg/m³ over three days, against 259.9 for the worst order.",
+  "forecast": {
+   "Delhi": [
+    124.0,
+    162.4,
+    130.8
+   ],
+   "Ahmedabad": [
+    40.0,
+    41.0,
+    44.4
+   ],
+   "Pune": [
+    38.4,
+    51.7,
+    57.5
+   ]
+  },
+  "sums": [
+   "124 + 41 + 57.5",
+   "124 + 51.7 + 44.4",
+   "40 + 162.4 + 57.5",
+   "40 + 51.7 + 130.8",
+   "38.4 + 162.4 + 44.4",
+   "38.4 + 41 + 130.8"
+  ],
+  "totals": [
+   222.5,
+   220.1,
+   259.9,
+   222.5,
+   245.2,
+   210.2
+  ],
+  "max_read": 2464
+ },
+ "context": {
+  "parts": [
+   {
+    "key": "instructions",
+    "tokens": 40
+   },
+   {
+    "key": "tool menu",
+    "tokens": 206
+   },
+   {
+    "key": "task",
+    "tokens": 50
+   },
+   {
+    "key": "tool results",
+    "tokens": 349
+   },
+   {
+    "key": "earlier turns",
+    "tokens": 1819
+   }
+  ],
+  "turns": [
+   284,
+   1020,
+   2464
+  ],
+  "total": 2464,
+  "growth": 8.7,
+  "karpathy": {
+   "date": "25 Jun 2025",
+   "quote": "the delicate art and science of filling the context window with just the right information for the next step"
+  }
+ },
+ "memory": {
+  "saved_by": "Remember this: I have asthma, so for travel advice I care about air quality more than weather.",
+  "note": "User has asthma and prioritizes air quality over weather for travel advice.",
+  "goal": "I am choosing between Delhi and Pune for a workshop tomorrow. Which would you suggest for me?",
+  "calls": [
+   {
+    "name": "read_notes",
+    "args": {}
+   },
+   {
+    "name": "get_air_quality",
+    "args": {
+     "city": "Delhi",
+     "days": 1
+    }
+   },
+   {
+    "name": "get_air_quality",
+    "args": {
+     "city": "Pune",
+     "days": 1
+    }
+   }
+  ],
+  "forecast": {
+   "Delhi": 124.0,
+   "Pune": 38.4
+  },
+  "answer": "I recommend Pune. Given your asthma and need for better air quality, Pune is the much healthier choice for tomorrow.",
+  "steps": 2,
+  "calls_n": 3
+ },
+ "patterns": {
+  "source_date": "19 Dec 2024",
+  "names": [
+   "Prompt chaining",
+   "Routing",
+   "Parallelisation",
+   "Orchestrator and workers",
+   "Evaluator and optimizer"
+  ]
+ },
+ "routing": [
+  {
+   "message": "I was charged twice for my order last week.",
+   "route": "billing"
+  },
+  {
+   "message": "The app crashes when I open my profile.",
+   "route": "technical"
+  },
+  {
+   "message": "Do you have an office in Gandhinagar?",
+   "route": "other"
+  },
+  {
+   "message": "मेरा रिफंड अभी तक नहीं आया।",
+   "route": "billing"
+  }
+ ],
+ "multi": {
+  "date": "13 Jun 2025",
+  "gain_pct": 90.2,
+  "agent_x": 4,
+  "multi_x": 15
+ },
+ "farm": {
+  "checklist": [
+   "written in Gujarati",
+   "under 80 words",
+   "uses at least one number from the forecast",
+   "gives one clear action for this week",
+   "says nothing the forecast or crop notes do not support"
+  ],
+  "rounds": [
+   {
+    "pass": true,
+    "problems": 0
+   }
+  ],
+  "snippet": "ખેડૂત મિત્રો, મહેસાણામાં આગામી 19 થી 23 નવેમ્બર દરમિયાન વરસાદની શક્યતા 0% છે",
+  "words": 47,
+  "place": "Mahesāna",
+  "max_rounds": 3,
+  "short": [
+   "in Gujarati",
+   "under 80 words",
+   "a forecast number",
+   "one clear action",
+   "nothing unsupported"
+  ]
+ },
+ "mcp": {
+  "announced": "25 Nov 2024",
+  "donated": "9 Dec 2025",
+  "founders": [
+   "Anthropic",
+   "Block",
+   "OpenAI"
+  ],
+  "models": [
+   "Gemini",
+   "Claude",
+   "GPT",
+   "Llama",
+   "Qwen",
+   "Mistral"
+  ],
+  "tools": [
+   [
+    "sensor",
+    "forecast"
+   ],
+   [
+    "database",
+    "database"
+   ],
+   [
+    "mail",
+    "email"
+   ],
+   [
+    "calendar",
+    "calendar"
+   ],
+   [
+    "file",
+    "files"
+   ],
+   [
+    "search",
+    "web search"
+   ],
+   [
+    "terminal",
+    "code runner"
+   ],
+   [
+    "chart",
+    "dashboard"
+   ]
+  ],
+  "n_models": 4,
+  "n_tools": 5,
+  "custom": 20,
+  "via": 9
+ },
+ "loop": {
+  "max_steps": 10
+ }
+}

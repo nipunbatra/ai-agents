@@ -1,0 +1,552 @@
+{
+  "id": "ai-agents",
+  "kicker": "IITGN-X",
+  "title": "The engine of autonomy",
+  "series": "IITGN-X Residency Program",
+  "subtitle": "Unlocking the true power of AI agents",
+  "date": "3 December 2026",
+  "minutes": 65,
+  "sections": [
+    {
+      "id": "open",
+      "title": "Opening",
+      "minutes": 6
+    },
+    {
+      "id": "what",
+      "title": "Part 1 · What an agent is",
+      "minutes": 10
+    },
+    {
+      "id": "engine",
+      "title": "Part 2 · Inside the engine",
+      "minutes": 12
+    },
+    {
+      "id": "work",
+      "title": "Part 3 · Agents at work",
+      "minutes": 20
+    },
+    {
+      "id": "risk",
+      "title": "Part 4 · When the engine stalls",
+      "minutes": 9
+    },
+    {
+      "id": "adopt",
+      "title": "Part 5 · Agents in your organisation",
+      "minutes": 6
+    },
+    {
+      "id": "wrap",
+      "title": "Wrap-up",
+      "minutes": 2
+    },
+    {
+      "id": "optional",
+      "title": "Appendix · More depth",
+      "minutes": 0
+    }
+  ],
+  "coreSlides": 58,
+  "optionalSlides": 4,
+  "totalStates": 129,
+  "slides": [
+    {
+      "id": "title",
+      "title": "The engine of autonomy",
+      "section": "open",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "ask-vs-do",
+      "title": "The same request, two systems",
+      "section": "open",
+      "chapter": "",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "eras",
+      "title": "From answering to acting, in four years",
+      "section": "open",
+      "chapter": "",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "horizon",
+      "title": "How long a task can an agent finish on its own?",
+      "section": "open",
+      "chapter": "",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "route",
+      "title": "Today’s route",
+      "section": "open",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "part-1",
+      "title": "Part 1 · What an agent is",
+      "section": "what",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "alone",
+      "title": "On its own, a model only writes text",
+      "section": "what",
+      "chapter": "1.1 The model alone",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "tool-call",
+      "title": "A tool call is a request written as text",
+      "section": "what",
+      "chapter": "1.2 A tool call",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "the-loop",
+      "title": "The loop is the engine",
+      "section": "what",
+      "chapter": "1.3 The loop",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "agent-card",
+      "title": "Seven questions describe any agent",
+      "section": "what",
+      "chapter": "1.3 The loop",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "workflow",
+      "title": "A workflow or an agent?",
+      "section": "what",
+      "chapter": "1.4 How much autonomy",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "autonomy",
+      "title": "Autonomy is a dial you set",
+      "section": "what",
+      "chapter": "1.4 How much autonomy",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "recap-1",
+      "title": "Part 1 in one slide",
+      "section": "what",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "part-2",
+      "title": "Part 2 · Inside the engine",
+      "section": "engine",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "trace-walk",
+      "title": "One run, one event at a time",
+      "section": "engine",
+      "chapter": "2.1 One real run",
+      "builds": 6,
+      "optional": false
+    },
+    {
+      "id": "loop-code",
+      "title": "The whole engine, in eleven lines",
+      "section": "engine",
+      "chapter": "2.1 One real run",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "tool-menu",
+      "title": "What the model knows about a tool",
+      "section": "engine",
+      "chapter": "2.1 One real run",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "context",
+      "title": "What the model reads, every turn",
+      "section": "engine",
+      "chapter": "2.1 One real run",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "memory",
+      "title": "The context forgets; notes do not",
+      "section": "engine",
+      "chapter": "2.2 Memory",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "patterns",
+      "title": "Five patterns, three of them here",
+      "section": "engine",
+      "chapter": "2.3 Patterns",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "patterns-2",
+      "title": "Patterns with several model calls",
+      "section": "engine",
+      "chapter": "2.3 Patterns",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "mcp",
+      "title": "One plug instead of a tangle of wires",
+      "section": "engine",
+      "chapter": "2.4 A common plug",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "recap-2",
+      "title": "Part 2 in one slide",
+      "section": "engine",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "part-3",
+      "title": "Part 3 · Agents at work",
+      "section": "work",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "read-card",
+      "title": "How to read a card",
+      "section": "work",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "app-coding",
+      "title": "Coding: from a failing test to a pull request",
+      "section": "work",
+      "chapter": "3.1 Knowledge work",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "app-research",
+      "title": "Research: a market scan with sources",
+      "section": "work",
+      "chapter": "3.1 Knowledge work",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-analyst",
+      "title": "Data analysis: a real run on last winter’s air",
+      "section": "work",
+      "chapter": "3.1 Knowledge work",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "app-documents",
+      "title": "Invoices: mostly a workflow",
+      "section": "work",
+      "chapter": "3.1 Knowledge work",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-support",
+      "title": "Customer support: a refund request",
+      "section": "work",
+      "chapter": "3.2 Operations",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "app-incident",
+      "title": "IT incidents: an alert in the night",
+      "section": "work",
+      "chapter": "3.2 Operations",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-browser",
+      "title": "Web forms: renewing a trade licence",
+      "section": "work",
+      "chapter": "3.2 Operations",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-coscientist",
+      "title": "A co-scientist that argues with itself",
+      "section": "work",
+      "chapter": "3.3 Science and engineering",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-lab",
+      "title": "A robot lab runs the experiment",
+      "section": "work",
+      "chapter": "3.3 Science and engineering",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-evolve",
+      "title": "AlphaEvolve: the check is a program",
+      "section": "work",
+      "chapter": "3.3 Science and engineering",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-farmer",
+      "title": "A farm advisory in Gujarati, by voice",
+      "section": "work",
+      "chapter": "3.4 India and sustainability",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "app-air",
+      "title": "A city air-quality desk, every morning",
+      "section": "work",
+      "chapter": "3.4 India and sustainability",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-building",
+      "title": "Cooling a campus for less",
+      "section": "work",
+      "chapter": "3.4 India and sustainability",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "app-clinic",
+      "title": "A scribe in the clinic",
+      "section": "work",
+      "chapter": "3.4 India and sustainability",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "stakes-map",
+      "title": "How much freedom should each job get?",
+      "section": "work",
+      "chapter": "",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "recap-3",
+      "title": "Part 3 in one slide",
+      "section": "work",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "part-4",
+      "title": "Part 4 · When the engine stalls",
+      "section": "risk",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "compound",
+      "title": "Small errors add up over many steps",
+      "section": "risk",
+      "chapter": "4.1 Errors compound",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "failures",
+      "title": "When it goes wrong for real",
+      "section": "risk",
+      "chapter": "4.1 Errors compound",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "injection",
+      "title": "A poisoned email",
+      "section": "risk",
+      "chapter": "4.2 Poisoned inputs",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "trifecta",
+      "title": "The lethal trifecta",
+      "section": "risk",
+      "chapter": "4.2 Poisoned inputs",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "guardrails",
+      "title": "Guardrails before, during and after a run",
+      "section": "risk",
+      "chapter": "4.3 Guardrails",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "evals",
+      "title": "Measure before you trust",
+      "section": "risk",
+      "chapter": "4.3 Guardrails",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "recap-4",
+      "title": "Part 4 in one slide",
+      "section": "risk",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "part-5",
+      "title": "Part 5 · Agents in your organisation",
+      "section": "adopt",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "should-agent",
+      "title": "Should this task be an agent?",
+      "section": "adopt",
+      "chapter": "5.1 What to hand over",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "ramp",
+      "title": "Start small, and climb",
+      "section": "adopt",
+      "chapter": "5.1 What to hand over",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "cost",
+      "title": "What does one task cost?",
+      "section": "adopt",
+      "chapter": "5.2 Cost and people",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "skills",
+      "title": "What changes for a team",
+      "section": "adopt",
+      "chapter": "5.2 Cost and people",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "recap-5",
+      "title": "Part 5 in one slide",
+      "section": "adopt",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "summary",
+      "title": "The talk in one slide",
+      "section": "wrap",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "monday",
+      "title": "Three things to try on Monday",
+      "section": "wrap",
+      "chapter": "",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "thanks",
+      "title": "Thank you. Questions?",
+      "section": "wrap",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "glossary",
+      "title": "Glossary: the loop",
+      "section": "optional",
+      "chapter": "",
+      "builds": 1,
+      "optional": true
+    },
+    {
+      "id": "glossary-2",
+      "title": "Glossary: running it safely",
+      "section": "optional",
+      "chapter": "",
+      "builds": 1,
+      "optional": true
+    },
+    {
+      "id": "mcp-code",
+      "title": "The air-quality tool as an MCP server",
+      "section": "optional",
+      "chapter": "",
+      "builds": 1,
+      "optional": true
+    },
+    {
+      "id": "further",
+      "title": "Further reading",
+      "section": "optional",
+      "chapter": "",
+      "builds": 1,
+      "optional": true
+    }
+  ]
+}

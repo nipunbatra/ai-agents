@@ -1,0 +1,6 @@
+{
+ "name": "ai-agents-talk",
+ "private": true,
+ "type": "module",
+ "description": "Slides and notebook for the IITGN-X talk on AI agents. Node is used only for the checks in scripts/."
+}

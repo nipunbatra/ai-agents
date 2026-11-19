@@ -6,3 +6,6 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 qa/parts/
+notebook/agent_notes.md
+notebook/chart-*.png
+exports/*.tmp

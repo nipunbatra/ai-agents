@@ -126,7 +126,7 @@ const ROUTE=[['spark','What an agent is','A model, tools and a loop'],
 const mins=meta.sections.filter(s=>PARTS.some(pp=>pp[0]===s.id)).map(s=>s.minutes);
 S_('route','open','Today’s route',{builds:1,nb:nb('part-0','▶ The notebook'),
  body:`<div class="p0-route">${ROUTE.map(([ic,t,d],i)=>`<div>${iconHTML(ic,COL.guess,30)}<b>Part ${i+1}</b><p><b style="all:unset;font-weight:650">${t}</b></p><p style="font-size:18px;color:#374151;margin-top:6px">${d}</p><small>${mins[i]} minutes</small></div>`).join('')}</div>`,
- lines:['Five parts. Everything you see runs in a notebook you can open in Colab, with a free key or with none.'],
+ lines:['The talk has five parts, and everything you see runs in a notebook you can open in Colab, with a free key or with none.'],
  ask:['Which part matters most for your work?'],
  expected:['Most will say Part 3 or Part 5. Promise both, and say that Part 4 is the one to remember.'],
  point:'A map of the talk, so the audience knows the applications and the risks are coming.',

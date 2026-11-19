@@ -1,0 +1,177 @@
+{
+ "coscientist": {
+  "date": "19 Feb 2025",
+  "model": "Gemini 2.0",
+  "days": 2,
+  "arxiv": "2502.18864"
+ },
+ "lab": {
+  "date": "20 Dec 2023",
+  "journal": "Nature",
+  "year": 2023
+ },
+ "robin": {
+  "date": "20 May 2025",
+  "year": 2025,
+  "drug": "ripasudil"
+ },
+ "evolve": {
+  "date": "14 May 2025",
+  "compute_pct": 0.7,
+  "matrix": 4,
+  "mults": 48,
+  "kernel_pct": 23,
+  "training_pct": 1
+ },
+ "kisan": {
+  "date": "Sep 2025",
+  "languages": 11,
+  "answered_lakh": 95,
+  "per_day": 20000
+ },
+ "farmerchat": {
+  "farmers_lo_m": 1.6,
+  "farmers_hi_m": 3,
+  "languages": 10,
+  "countries": 6
+ },
+ "clinic": {
+  "physicians": 7260,
+  "encounters_m": 2.58,
+  "hours": 15800,
+  "months": 15,
+  "from": "Oct 2023",
+  "to": "Dec 2024"
+ },
+ "farm": {
+  "place": "Mehsana",
+  "source": "Open-Meteo forecast",
+  "first": "19 Nov",
+  "last": "23 Nov",
+  "days": [
+   {
+    "day": "19 Nov",
+    "max_c": 31.9,
+    "min_c": 21.0,
+    "rain_chance": 0,
+    "rain_mm": 0.0
+   },
+   {
+    "day": "20 Nov",
+    "max_c": 30.1,
+    "min_c": 17.8,
+    "rain_chance": 0,
+    "rain_mm": 0.0
+   },
+   {
+    "day": "21 Nov",
+    "max_c": 29.4,
+    "min_c": 17.0,
+    "rain_chance": 0,
+    "rain_mm": 0.0
+   },
+   {
+    "day": "22 Nov",
+    "max_c": 30.7,
+    "min_c": 16.4,
+    "rain_chance": 0,
+    "rain_mm": 0.0
+   },
+   {
+    "day": "23 Nov",
+    "max_c": 31.4,
+    "min_c": 18.1,
+    "rain_chance": 0,
+    "rain_mm": 0.0
+   }
+  ],
+  "low_c": 16.4,
+  "rain_chance_max": 0,
+  "interval": [
+   8,
+   10
+  ],
+  "checks": 5,
+  "rounds": 1,
+  "passed": true,
+  "draft": "ખેડૂત મિત્રો, મહેસાણામાં આગામી 19 થી 23 નવેમ્બર દરમિયાન વરસાદની શક્યતા 0% છે અને લઘુત્તમ તાપમાન ઘટીને 16.4°C સુધી રહેશે. આવું ઠંડું અને સૂકું હવામાન જીરું માટે અનુકૂળ હોવાથી, આ અઠવાડિયે વાવણી કરી તરત જ હળવું પિયત આપો. ત્યારબાદ જરૂર મુજબ 8 થી 10 દિવસે પિયત આપવું.",
+  "words": 47,
+  "from_forecast": [
+   "19 થી 23 નવેમ્બર",
+   "0%",
+   "16.4°C"
+  ],
+  "from_notes": [
+   "8 થી 10 દિવસે"
+  ]
+ },
+ "air": {
+  "standard": 60,
+  "days": 120,
+  "from": "Nov 2025",
+  "to": "Feb 2026",
+  "cities": [
+   {
+    "city": "Kolkata",
+    "avg": 114.2,
+    "over": 116,
+    "days": 120
+   },
+   {
+    "city": "Patna",
+    "avg": 105.2,
+    "over": 110,
+    "days": 120
+   },
+   {
+    "city": "Delhi",
+    "avg": 108.3,
+    "over": 109,
+    "days": 120
+   },
+   {
+    "city": "Lucknow",
+    "avg": 98.1,
+    "over": 105,
+    "days": 120
+   },
+   {
+    "city": "Mumbai",
+    "avg": 57.7,
+    "over": 48,
+    "days": 120
+   },
+   {
+    "city": "Ahmedabad",
+    "avg": 43.6,
+    "over": 22,
+    "days": 120
+   },
+   {
+    "city": "Gandhinagar",
+    "avg": 43.3,
+    "over": 21,
+    "days": 120
+   },
+   {
+    "city": "Pune",
+    "avg": 43.9,
+    "over": 21,
+    "days": 120
+   },
+   {
+    "city": "Bengaluru",
+    "avg": 32.6,
+    "over": 1,
+    "days": 120
+   },
+   {
+    "city": "Chennai",
+    "avg": 33.3,
+    "over": 1,
+    "days": 120
+   }
+  ],
+  "model": "Gemini 3.8 Flash"
+ }
+}

@@ -105,3 +105,4 @@ pre.json{font:18px/1.42 "SFMono-Regular",Menlo,Consolas,monospace;margin:0;white
  .reading .tchip{font-size:15px;white-space:normal}
  .reading .facts p{font-size:17px}
 }
+@media(max-width:760px){.reading .msg .mh{flex-wrap:wrap}.reading .msg .mh em{margin-left:0;width:100%}}

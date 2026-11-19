@@ -1,1 +1,1 @@
-- The user has asthma and prioritizes air quality over weather for travel advice.
+- User has asthma and prioritizes air quality over weather for travel advice.

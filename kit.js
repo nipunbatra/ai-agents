@@ -1,7 +1,7 @@
 // The authoring kit of the agents talk. Every part file in parts/ imports from here and from nowhere else:
 // the talk's meta, the one slide list, the slide helpers, the route strip, the application slide and the agent card.
 // AUTHORING.md explains how to use it.
-import {at,esc,m} from './shared/author.js';
+import {at,esc,m,highlight} from './shared/author.js';
 import {iconHTML,chip,lanes,agentCard,ROLE} from './figures.js';
 export * from './shared/author.js';
 export * from './widgets.js';
@@ -44,6 +44,8 @@ export const ps=s=>`<p class="small">${s}</p>`;
 export const small=s=>`<p class="caption">${s}</p>`;
 /** Colour a word by its role: a person (amber), the model (purple), tools and the world (teal), risk (red), a checked result (green). */
 export const kY=s=>`<span class="kY">${s}</span>`,kA=s=>`<span class="kA">${s}</span>`,kT=s=>`<span class="kT">${s}</span>`,kR=s=>`<span class="kR">${s}</span>`,kG=s=>`<span class="kG">${s}</span>`;
+/** Code that appears a line per click: rows of [build, line]; build 0 shows the line from the start. */
+export const codeSteps=rows=>`<pre class="code code-steps"><code>${rows.map(([b,l])=>`<span class="cl"${b?` data-at="${b}"`:''}>${highlight(l)||' '}</span>`).join('')}</code></pre>`;
 export const takeaway=s=>`<div class="takeaway"><b>Takeaway.</b> ${s}</div>`;
 /** The answer to a question the slide asks, shown from click b on. */
 export const answer=(b,s)=>at(b,`<div class="answer">${s}</div>`);

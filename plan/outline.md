@@ -8,7 +8,7 @@ but stay inside the part's budget. "#n" refers to row n of `plan/research/verifi
 |---|---|---|---|---|---|
 | Opening (done) | `open` | `parts/00-opening.js` | metr, facts, traces, apps | 11 | 6 |
 | 1 What an agent is (done) | `what` | `parts/01-what.js` | traces | 18 | 10 |
-| 2 Inside the engine | `engine` | `parts/02-engine.js` | `p2` | 22 | 12 |
+| 2 Inside the engine | `engine` | `parts/02-engine.js` | `p2` | 25 | 12 |
 | 3a Agents at work: part break, knowledge work, operations | `work` | `parts/03a-work.js` | `p3a` | 19 | 10 |
 | 3b Agents at work: science, India and sustainability, the map | `work` | `parts/03b-work.js` | `p3b` | 19 | 10 |
 | 4 When the engine stalls | `risk` | `parts/04-risk.js` | `p4` | 17 | 9 |
@@ -24,7 +24,7 @@ answer Pune, Ahmedabad, Delhi (210.2 against 259.9 µg/m³ for the worst order).
 
 ---
 
-## Part 2: Inside the engine (`parts/02-engine.js`, data `p2`, 22 clicks)
+## Part 2: Inside the engine (`parts/02-engine.js`, data `p2`, 25 clicks)
 
 `partBreak(2, 'Inside the engine', …, {img:'part-engine.jpg', nb:nb('part-2')})`. Lead: open the bonnet on one real
 run: what the model reads each turn, how it picks a tool, how it remembers, and the few patterns most systems use.
@@ -35,6 +35,8 @@ run: what the model reads each turn, how it picks a tool, how it remembers, and 
    grows per click: tokens read and written per turn (`usage`), running cost in ₹ (`cost_inr`), seconds. The story
    line says what to notice (it reread everything each turn; it asked for independent things at once). Fit it: one
    line per event on the left, bars on the right; use `only()` windows if needed.
+1b. **`loop-code`** (3). The whole loop as about ten lines of Python (`codeSteps`, simplified `run_agent` from the
+   notebook), with think, act and observe marked beside it. Frameworks add retries, logs and permissions around it.
 2. **`tool-menu`** (2). What the model actually knows about a tool: name, description, parameters. Copy the real
    `get_air_quality` docstring and parameters from `notebook/agents.py` into `p2.py` (say so in the source line).
    Build 2: a vague description beside it (`get_data(x): gets data`) and why the model would misuse it. Point: the
