@@ -1,0 +1,174 @@
+{
+ "families": [
+  {
+   "id": "knowledge",
+   "name": "Knowledge work"
+  },
+  {
+   "id": "ops",
+   "name": "Operations"
+  },
+  {
+   "id": "science",
+   "name": "Science and engineering"
+  },
+  {
+   "id": "india",
+   "name": "India and sustainability"
+  }
+ ],
+ "apps": [
+  {
+   "id": "coding",
+   "family": "knowledge",
+   "name": "Coding",
+   "x": 0.86,
+   "y": 0.45,
+   "why": "Tests run in seconds, and a person reviews the pull request.",
+   "zone": "Let it run"
+  },
+  {
+   "id": "research",
+   "family": "knowledge",
+   "name": "Deep research",
+   "x": 0.3,
+   "y": 0.3,
+   "why": "Citations must be opened and read to be checked.",
+   "zone": "Agent drafts, a person decides"
+  },
+  {
+   "id": "analyst",
+   "family": "knowledge",
+   "name": "Data analysis",
+   "x": 0.62,
+   "y": 0.4,
+   "why": "The code can be rerun and the numbers recomputed.",
+   "zone": "Let it run"
+  },
+  {
+   "id": "documents",
+   "family": "knowledge",
+   "name": "Invoices",
+   "x": 0.74,
+   "y": 0.66,
+   "why": "Rules check the match, but money moves.",
+   "zone": "Agent acts, a person approves"
+  },
+  {
+   "id": "support",
+   "family": "ops",
+   "name": "Customer support",
+   "x": 0.48,
+   "y": 0.56,
+   "why": "Each reply is easy to read, but promises bind the company.",
+   "zone": "A person leads, the agent assists"
+  },
+  {
+   "id": "incident",
+   "family": "ops",
+   "name": "IT incidents",
+   "x": 0.56,
+   "y": 0.82,
+   "why": "Metrics show whether a fix worked; a wrong rollback is an outage.",
+   "zone": "Agent acts, a person approves"
+  },
+  {
+   "id": "browser",
+   "family": "ops",
+   "name": "Web forms",
+   "x": 0.66,
+   "y": 0.7,
+   "why": "The form can be read before it is submitted; a submission is final.",
+   "zone": "Agent acts, a person approves"
+  },
+  {
+   "id": "coscientist",
+   "family": "science",
+   "name": "Hypotheses",
+   "x": 0.14,
+   "y": 0.2,
+   "why": "Only a lab can check an idea, but an idea alone harms nobody.",
+   "zone": "Agent drafts, a person decides"
+  },
+  {
+   "id": "lab",
+   "family": "science",
+   "name": "Robot lab",
+   "x": 0.7,
+   "y": 0.5,
+   "why": "Instruments measure every result; reagents and time cost money.",
+   "zone": "Agent acts, a person approves"
+  },
+  {
+   "id": "evolve",
+   "family": "science",
+   "name": "Algorithm search",
+   "x": 0.94,
+   "y": 0.14,
+   "why": "A program scores every candidate automatically.",
+   "zone": "Let it run"
+  },
+  {
+   "id": "farmer",
+   "family": "india",
+   "name": "Farm advisory",
+   "x": 0.28,
+   "y": 0.76,
+   "why": "Farmers act on it, and a crop lost cannot be undone.",
+   "zone": "A person leads, the agent assists"
+  },
+  {
+   "id": "air",
+   "family": "india",
+   "name": "Air alerts",
+   "x": 0.44,
+   "y": 0.64,
+   "why": "A false alarm or a missed one affects schools and hospitals.",
+   "zone": "A person leads, the agent assists"
+  },
+  {
+   "id": "building",
+   "family": "india",
+   "name": "Building energy",
+   "x": 0.82,
+   "y": 0.28,
+   "why": "Meters and a simulation check a schedule before it runs.",
+   "zone": "Let it run"
+  },
+  {
+   "id": "clinic",
+   "family": "india",
+   "name": "Clinic notes",
+   "x": 0.52,
+   "y": 0.92,
+   "why": "The doctor reads every note, and errors reach patients.",
+   "zone": "Agent acts, a person approves"
+  }
+ ],
+ "zones": [
+  {
+   "easy": true,
+   "costly": false,
+   "name": "Let it run",
+   "advice": "act, with spot checks"
+  },
+  {
+   "easy": true,
+   "costly": true,
+   "name": "Agent acts, a person approves",
+   "advice": "approval before the irreversible step"
+  },
+  {
+   "easy": false,
+   "costly": false,
+   "name": "Agent drafts, a person decides",
+   "advice": "the output is a draft"
+  },
+  {
+   "easy": false,
+   "costly": true,
+   "name": "A person leads, the agent assists",
+   "advice": "every output is reviewed"
+  }
+ ]
+}

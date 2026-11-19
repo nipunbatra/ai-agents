@@ -1,0 +1,233 @@
+{
+ "best": [
+  "Pune",
+  "Ahmedabad",
+  "Delhi"
+ ],
+ "results": {
+  "gemini-flash-latest": [
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 9,
+    "input": 3125,
+    "output": 1502,
+    "cost_usd": 0.007976,
+    "seconds": 18.4,
+    "answer": "The order that minimizes your total PM2.5 exposure is **Pune → Ahmedabad → Delhi**.\n\n### Daily PM2.5 Forecast (µg/m³)\n* **Day 1:** Pune – **38.1**\n* **Day 2:** Ahmedabad – **42.9**\n* **Day 3:** Delhi – **141.4**\n\n**Total exposure:** **222.4 µg/m³** (mean: 74.1 µg/m³/day)\n\n---\n\n### Comparison of all routes (totals)\n1. **Pune → Ahmedabad → Delhi:** 38.1 + 42.9 + 141.4 = **222.4 µg/m³** (Lowest)\n2. **Delhi → Ahmedabad → Pune:** 127.9 + 42.9 + 55.6 = **226.4 µg/m³**\n3. **Delhi → Pune → Ahmedabad:** 127.9 + 53.5 + 50.0 = **231.4 µg/m³**\n4. **Ahmedabad → Pune → Delhi:** 42.1 + 53.5 + 141.4 = **237.0 µg/m³**\n5. **Pune → Delhi → Ahmedabad:** 38.1 + 156.0 + 50.0 = **244.1 µg/m³**\n6. **Ahmedabad → Delhi → Pune:** 42.1 + 156.0 + 55.6 = **253.7 µg/m³**"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 9,
+    "input": 3054,
+    "output": 1523,
+    "cost_usd": 0.008002,
+    "seconds": 20.3,
+    "answer": "To keep fine-dust pollution (PM2.5) lowest, the optimal order is **Pune → Ahmedabad → Delhi**.\n\n### Daily Forecasts (PM2.5 in µg/m³)\n* **Delhi**: Day 1 = 127.9, Day 2 = 156.0, Day 3 = 141.4\n* **Ahmedabad**: Day 1 = 42.1, Day 2 = 42.9, Day 3 = 50.0\n* **Pune**: Day 1 = 38.1, Day 2 = 53.5, Day 3 = 55.6\n\n---\n\n### Optimal Itinerary\n1. **Day 1: Pune** — 38.1 µg/m³\n2. **Day 2: Ahmedabad** — 42.9 µg/m³\n3. **Day 3: Delhi** — 141.4 µg/m³\n\n**Total PM2.5:** **222.4 µg/m³** (average: 74.1 µg/m³/day)\n\n*(Next best alternative: Delhi → Ahmedabad → Pune at 226.4 µg/m³)*"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 9,
+    "input": 3359,
+    "output": 1698,
+    "cost_usd": 0.008887,
+    "seconds": 21.2,
+    "answer": "To minimize your PM2.5 exposure, visit **Pune**, then **Ahmedabad**, then **Delhi**.\n\n### PM2.5 Forecasts (µg/m³)\n* **Delhi**: Day 1: 127.9 | Day 2: 156.0 | Day 3: 141.4\n* **Ahmedabad**: Day 1: 42.1 | Day 2: 42.9 | Day 3: 50.0\n* **Pune**: Day 1: 38.1 | Day 2: 53.5 | Day 3: 55.6\n\n---\n\n### Total Pollution by Itinerary\n1. **Pune → Ahmedabad → Delhi**: 38.1 + 42.9 + 141.4 = **222.4 µg/m³** *(Lowest)*\n2. **Delhi → Ahmedabad → Pune**: 127.9 + 42.9 + 55.6 = **226.4 µg/m³**\n3. **Delhi → Pune → Ahmedabad**: 127.9 + 53.5 + 50.0 = **231.4 µg/m³**\n4. **Ahmedabad → Pune → Delhi**: 42.1 + 53.5 + 141.4 = **237.0 µg/m³**\n5. **Pune → Delhi → Ahmedabad**: 38.1 + 156.0 + 50.0 = **244.1 µg/m³**\n6. **Ahmedabad → Delhi → Pune**: 42.1 + 156.0 + 55.6 = **253.7 µg/m³**"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 9,
+    "input": 3290,
+    "output": 1621,
+    "cost_usd": 0.008546,
+    "seconds": 20.9,
+    "answer": "To keep your fine-dust pollution (PM2.5) exposure lowest, visit the cities in the following order:\n\n1. **Day 1:** **Pune** – 38.1 µg/m³\n2. **Day 2:** **Ahmedabad** – 42.9 µg/m³\n3. **Day 3:** **Delhi** – 141.4 µg/m³\n\n**Total cumulative PM2.5:** **222.4 µg/m³**\n\n---\n\n### Comparison of all possible itineraries:\n* **Pune → Ahmedabad → Delhi:** 38.1 + 42.9 + 141.4 = **222.4 µg/m³** *(Lowest)*\n* **Delhi → Ahmedabad → Pune:** 127.9 + 42.9 + 55.6 = **226.4 µg/m³**\n* **Delhi → Pune → Ahmedabad:** 127.9 + 53.5 + 50.0 = **231.4 µg/m³**\n* **Ahmedabad → Pune → Delhi:** 42.1 + 53.5 + 141.4 = **237.0 µg/m³**\n* **Pune → Delhi → Ahmedabad:** 38.1 + 156.0 + 50.0 = **244.1 µg/m³**\n* **Ahmedabad → Delhi → Pune:** 42.1 + 156.0 + 55.6 = **253.7 µg/m³**"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 9,
+    "input": 3250,
+    "output": 1476,
+    "cost_usd": 0.007972,
+    "seconds": 18.3,
+    "answer": "To minimize total PM2.5 exposure, the optimal order is **Pune → Ahmedabad → Delhi**.\n\n### Daily PM2.5 Forecasts (µg/m³)\n* **Delhi**: Day 1 = 127.9, Day 2 = 156.0, Day 3 = 141.4\n* **Ahmedabad**: Day 1 = 42.1, Day 2 = 42.9, Day 3 = 50.0\n* **Pune**: Day 1 = 38.1, Day 2 = 53.5, Day 3 = 55.6\n\n---\n\n### Lowest Total Exposure\n* **Day 1**: Pune (38.1 µg/m³)\n* **Day 2**: Ahmedabad (42.9 µg/m³)\n* **Day 3**: Delhi (141.4 µg/m³)\n* **Total**: **222.4 µg/m³**\n\n*(For comparison, the second best order is Delhi → Ahmedabad → Pune at 226.4 µg/m³).*"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 9,
+    "input": 3531,
+    "output": 1571,
+    "cost_usd": 0.00854,
+    "seconds": 20.6,
+    "answer": "The optimal order to minimize PM2.5 exposure is **Pune → Ahmedabad → Delhi**.\n\n### Daily Forecast (PM2.5 in µg/m³)\n* **Day 1 (Pune):** 38.1\n* **Day 2 (Ahmedabad):** 42.9\n* **Day 3 (Delhi):** 141.4\n\n**Total PM2.5:** 222.4 µg/m³ (Average: 74.1 µg/m³/day)\n\n---\n\n### Comparison of all possible itineraries:\n1. **Pune → Ahmedabad → Delhi:** 38.1 + 42.9 + 141.4 = **222.4 µg/m³**\n2. **Delhi → Ahmedabad → Pune:** 127.9 + 42.9 + 55.6 = 226.4 µg/m³\n3. **Delhi → Pune → Ahmedabad:** 127.9 + 53.5 + 50.0 = 231.4 µg/m³\n4. **Ahmedabad → Pune → Delhi:** 42.1 + 53.5 + 141.4 = 237.0 µg/m³\n5. **Pune → Delhi → Ahmedabad:** 38.1 + 156.0 + 50.0 = 244.1 µg/m³\n6. **Ahmedabad → Delhi → Pune:** 42.1 + 156.0 + 55.6 = 253.7 µg/m³"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 7,
+    "input": 3453,
+    "output": 1814,
+    "cost_usd": 0.009392,
+    "seconds": 24.1,
+    "answer": "To keep your fine-dust pollution (PM2.5) lowest, the optimal order is:\n\n1. **Day 1: Pune** – 38.1 µg/m³\n2. **Day 2: Ahmedabad** – 42.9 µg/m³\n3. **Day 3: Delhi** – 141.4 µg/m³\n\n**Total PM2.5:** 222.4 µg/m³ (average: 74.1 µg/m³/day)\n\n---\n\n### Comparison of all possible itineraries:\n- **Pune → Ahmedabad → Delhi:** 38.1 + 42.9 + 141.4 = **222.4 µg/m³** (Lowest)\n- **Delhi → Ahmedabad → Pune:** 127.9 + 42.9 + 55.6 = **226.4 µg/m³**\n- **Delhi → Pune → Ahmedabad:** 127.9 + 53.5 + 50.0 = **231.4 µg/m³**\n- **Ahmedabad → Pune → Delhi:** 42.1 + 53.5 + 141.4 = **237.0 µg/m³**\n- **Pune → Delhi → Ahmedabad:** 38.1 + 156.0 + 50.0 = **244.1 µg/m³**\n- **Ahmedabad → Delhi → Pune:** 42.1 + 156.0 + 55.6 = **253.7 µg/m³**"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 9,
+    "input": 2725,
+    "output": 1592,
+    "cost_usd": 0.008014,
+    "seconds": 19.8,
+    "answer": "To minimize total fine-dust pollution (PM2.5), the optimal order is **Pune → Ahmedabad → Delhi**:\n\n* **Day 1 (Pune):** 38.1 µg/m³\n* **Day 2 (Ahmedabad):** 42.9 µg/m³\n* **Day 3 (Delhi):** 141.4 µg/m³\n\n**Total PM2.5 exposure:** **222.4 µg/m³**\n\n---\n\n### Daily forecasts (µg/m³)\n* **Delhi:** Day 1: 127.9 | Day 2: 156.0 | Day 3: 141.4\n* **Ahmedabad:** Day 1: 42.1 | Day 2: 42.9 | Day 3: 50.0\n* **Pune:** Day 1: 38.1 | Day 2: 53.5 | Day 3: 55.6\n\n### Other possible itineraries for comparison\n* Delhi → Ahmedabad → Pune: 127.9 + 42.9 + 55.6 = 226.4 µg/m³\n* Delhi → Pune → Ahmedabad: 127.9 + 53.5 + 50.0 = 231.4 µg/m³\n* Ahmedabad → Pune → Delhi: 42.1 + 53.5 + 141.4 = 237.0 µg/m³\n* Pune → Delhi → Ahmedabad: 38.1 + 156.0 + 50.0 = 244.1 µg/m³\n* Ahmedabad → Delhi → Pune: 42.1 + 156.0 + 55.6 = 253.7 µg/m³"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 9,
+    "input": 3363,
+    "output": 1371,
+    "cost_usd": 0.007663,
+    "seconds": 19.8,
+    "answer": "The order that minimizes your total PM2.5 exposure is:\n\n1. **Day 1: Pune** – 38.1 µg/m³\n2. **Day 2: Ahmedabad** – 42.9 µg/m³\n3. **Day 3: Delhi** – 141.4 µg/m³\n\n**Total PM2.5:** 222.4 µg/m³ (daily average: ~74.1 µg/m³)\n\n---\n\n### Daily Forecasts (µg/m³)\n* **Delhi:** Day 1: 127.9 | Day 2: 156.0 | Day 3: 141.4\n* **Ahmedabad:** Day 1: 42.1 | Day 2: 42.9 | Day 3: 50.0\n* **Pune:** Day 1: 38.1 | Day 2: 53.5 | Day 3: 55.6"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.8-flash",
+    "steps": 3,
+    "calls": 7,
+    "input": 3222,
+    "output": 1408,
+    "cost_usd": 0.007697,
+    "seconds": 19.1,
+    "answer": "To minimize your PM2.5 exposure over the next three days, the optimal order is **Pune → Ahmedabad → Delhi**.\n\n### Daily Forecasts (PM2.5 in µg/m³)\n* **Delhi**: Day 1: 127.9 | Day 2: 156.0 | Day 3: 141.4\n* **Ahmedabad**: Day 1: 42.1 | Day 2: 42.9 | Day 3: 50.0\n* **Pune**: Day 1: 38.1 | Day 2: 53.5 | Day 3: 55.6\n\n---\n\n### Optimal Route\n1. **Day 1**: Pune (38.1 µg/m³)\n2. **Day 2**: Ahmedabad (42.9 µg/m³)\n3. **Day 3**: Delhi (141.4 µg/m³)\n\n**Total PM2.5**: **222.4 µg/m³** (Daily average: ~74.1 µg/m³)"
+   }
+  ],
+  "gemini-flash-lite-latest": [
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 3,
+    "calls": 5,
+    "input": 1820,
+    "output": 301,
+    "cost_usd": 0.001298,
+    "seconds": 13.1,
+    "answer": "Pune (Day 1: 38.1), Ahmedabad (Day 2: 53.5), Delhi (Day 3: 127.9). Total: 219.5 µg/m³."
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 3,
+    "calls": 4,
+    "input": 1654,
+    "output": 177,
+    "cost_usd": 0.000939,
+    "seconds": 6.2,
+    "answer": "Day 1 (Nov 20): Pune - 38.1 µg/m³\nDay 2 (Nov 21): Ahmedabad - 42.9 µg/m³\nDay 3 (Nov 22): Delhi - 141.4 µg/m³\nTotal: 222.4 µg/m³"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 4,
+    "calls": 6,
+    "input": 2823,
+    "output": 826,
+    "cost_usd": 0.002912,
+    "seconds": 8.3,
+    "answer": "Pune (Day 1: 38.1), Ahmedabad (Day 2: 42.9), Delhi (Day 3: 141.4). Total PM2.5: 222.4 µg/m³. \n\nAlternatively, Pune (Day 1: 38.1), Ahmedabad (Day 2: 42.1), Delhi (Day 3: 156) gives a total of 236.2 µg/m³. Wait, let's check Pune (Day 1: 38.1), Ahmedabad (Day 2: 50), Delhi (Day 3: 127.9) -> 216.0 µg/m³.\n\nLet's check all permutations:\n1. Pune (38.1) -> Ahmedabad (42.9) -> Delhi (141.4) = 222.4\n2. Pune (38.1) -> Ahmedabad (42.1) -> Delhi (156) = 236.2\n3. Pune (38.1) -> Ahmedabad (50) -> Delhi (127.9) = 216.0\n4. Pune (53.5) -> Ahmedabad (42.1) -> Delhi (141.4) = 237.0\n5. Pune (53.5) -> Ahmedabad (42.9) -> Delhi (127.9) = 224.3\n6. Pune (55.6) -> Ahmedabad (42.1) -> Delhi (156) = 253.7\n7. Pune (55.6) -> Ahmedabad (42.9) -> Delhi (141.4) = 239.9\n\nLowest total: Pune on Day 1 (38.1), Ahmedabad on Day 2 (50.0), Delhi on Day 3 (127.9), total 216 µg/m³."
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 5,
+    "calls": 6,
+    "input": 3419,
+    "output": 280,
+    "cost_usd": 0.001726,
+    "seconds": 8.1,
+    "answer": "Pune (Day 1: 38.1), Ahmedabad (Day 2: 42.1), Delhi (Day 3: 141.4), Total: 221.6 µg/m³"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 3,
+    "calls": 4,
+    "input": 1654,
+    "output": 147,
+    "cost_usd": 0.000864,
+    "seconds": 6.0,
+    "answer": "Pune (Day 1: 38.1), Ahmedabad (Day 2: 42.9), Delhi (Day 3: 141.4). Total: 222.4 µg/m³."
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 10,
+    "calls": 14,
+    "input": 10708,
+    "output": 827,
+    "cost_usd": 0.00528,
+    "seconds": 14.2,
+    "answer": "Order:\n- Day 1 (Nov 20): Pune (38.1 µg/m³)\n- Day 2 (Nov 21): Ahmedabad (42.9 µg/m³)\n- Day 3 (Nov 22): Delhi (127.9 µg/m³)\n\nTotal PM2.5: 208.9 µg/m³"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 4,
+    "calls": 5,
+    "input": 2589,
+    "output": 270,
+    "cost_usd": 0.001452,
+    "seconds": 7.0,
+    "answer": "̀iPune (Day 1: 38.1), Ahmedabad (Day 2: 42.1), Delhi (Day 3: 141.4); Total: 221.6 µg/m³"
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 4,
+    "calls": 5,
+    "input": 2609,
+    "output": 279,
+    "cost_usd": 0.00148,
+    "seconds": 16.6,
+    "answer": "Pune (Day 1: 38.1), Ahmedabad (Day 2: 42.9), Delhi (Day 3: 141.4). Total: 222.4 µg/m³."
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 3,
+    "calls": 4,
+    "input": 1654,
+    "output": 147,
+    "cost_usd": 0.000864,
+    "seconds": 6.8,
+    "answer": "Pune (Day 1: 38.1), Ahmedabad (Day 2: 42.9), Delhi (Day 3: 141.4). Total: 222.4 µg/m³."
+   },
+   {
+    "ok": true,
+    "model": "gemini-3.5-flash-lite",
+    "steps": 5,
+    "calls": 7,
+    "input": 3951,
+    "output": 514,
+    "cost_usd": 0.00247,
+    "seconds": 15.3,
+    "answer": "Day 1 (Nov 20): Pune (38.1 µg/m³)\nDay 2 (Nov 21): Ahmedabad (42.1 µg/m³)\nDay 3 (Nov 22): Delhi (127.9 µg/m³)\n\nTotal PM2.5: 208.1 µg/m³"
+   }
+  ]
+ }
+}

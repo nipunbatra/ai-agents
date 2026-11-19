@@ -1,0 +1,107 @@
+/* The agents talk: cover, application slides, trace bubbles, agent card, live figures. Builds on shared/deck.css.
+   Colours by role: amber a person (--noise), purple the model (--q), teal tools and the world (--p), red risk (--loss),
+   green a checked result (--d), blue memory and data (--data). */
+.presenting .controls a[href*="github.com"]{display:none}
+.kY{color:var(--noise);font-weight:650}.kA{color:var(--q);font-weight:650}.kT{color:var(--p);font-weight:650}.kR{color:var(--loss);font-weight:650}.kG{color:var(--d);font-weight:650}
+.mono{font-family:"SFMono-Regular",Menlo,Consolas,monospace;font-size:.92em;overflow-wrap:anywhere}
+.dim{opacity:.38}
+/* cover */
+.cover{display:grid;grid-template-columns:1.05fr 1fr;gap:34px;align-items:center}
+.cover h1{font-size:60px;line-height:1.04;letter-spacing:-1.8px;margin-bottom:14px}
+.cover .sub{font-size:30px;line-height:1.3;color:var(--q);margin-bottom:22px}
+.cover .who{font-size:22px;color:var(--muted);margin-top:22px;line-height:1.5}
+.scene#title>header h2{display:none}
+/* lists, tiles, panels */
+.steps{margin:0;padding-left:30px;font-size:27px;line-height:1.45}
+.steps li{margin:4px 0}.steps li::marker{color:var(--q);font-weight:650}
+.steps.tight{font-size:25px}.steps.tight li{margin:6px 0}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.four{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.two-two{display:grid;grid-template-columns:1fr 1fr;gap:14px 26px}
+.tiles{display:grid;gap:10px}
+.tile{border:2px solid var(--line);border-radius:12px;background:#fff;padding:10px 14px;font-size:22px;line-height:1.25;min-width:0}
+.tile b{display:block;font-size:17px;font-weight:650;color:var(--muted);margin-bottom:2px}
+.big-number{font-size:64px;line-height:1;font-weight:650;letter-spacing:-1px;font-variant-numeric:tabular-nums}
+.takeaway{font-size:25px;line-height:1.4;border-left:5px solid var(--p);background:#0F766E0F;border-radius:0 10px 10px 0;padding:10px 18px}
+.takeaway b{color:var(--p)}
+.answer{font-size:25px;line-height:1.4;border:2px solid #14773766;background:#1477370D;border-radius:10px;padding:10px 18px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+.compare>div{border-top:4px solid var(--line);padding-top:12px;min-width:0}
+.compare .a{border-color:var(--q)}.compare .b{border-color:var(--p)}.compare .y{border-color:var(--noise)}.compare .r{border-color:var(--loss)}
+.compare h3{font-size:26px;margin-bottom:8px}
+.compare ul{margin:0;padding-left:24px;font-size:24px;line-height:1.45}
+.tight table{font-size:21px}.tight th,.tight td{padding:6px 12px}
+.xtight table{font-size:19px}.xtight th,.xtight td{padding:4px 10px}
+/* illustrations */
+.illo{margin:0;min-width:0;display:flex;flex-direction:column;gap:8px}
+.illo img{width:100%;height:auto;max-height:420px;object-fit:contain;border-radius:18px;display:block;mix-blend-mode:multiply}
+.illo figcaption{font-size:17px;color:var(--muted);text-align:center}
+.illo.round img{border-radius:50%}
+/* a person's request */
+.req{display:flex;gap:12px;align-items:flex-start;background:#AA4E080F;border:2px solid #AA4E0855;border-radius:16px 16px 16px 4px;padding:9px 16px;font-size:23px;line-height:1.35}
+.req>svg{flex:none;margin-top:3px}
+.req b{display:block;font-size:14px;letter-spacing:1px;text-transform:uppercase;color:var(--noise);margin-bottom:1px}
+/* application slides */
+.app{display:grid;grid-template-columns:200px minmax(0,1fr);gap:22px;align-items:center}
+.app.noimg{grid-template-columns:minmax(0,1fr)}
+.app .illo img{border-radius:16px;max-height:260px}
+.app-main{display:flex;flex-direction:column;gap:12px;min-width:0}
+.lanes svg{max-height:300px}
+.facts{display:grid;gap:18px;align-items:start;margin-top:2px}
+.facts.f3{grid-template-columns:1.15fr 1fr 1.15fr}.facts.f2{grid-template-columns:1fr 1fr}.facts.f1{grid-template-columns:1fr}
+.facts>div,.facts>div>div{min-width:0}
+.facts small{display:block;font-size:14px;letter-spacing:1px;text-transform:uppercase;font-weight:650;color:var(--muted);margin-bottom:4px}
+.facts p{font-size:20px;line-height:1.35}
+.facts .f-check small{color:var(--noise)}.facts .f-ev small{color:var(--d)}.facts .f-tools small{color:var(--p)}
+.facts .f-ev b{color:var(--d);font-size:24px}
+.chips{display:flex;gap:6px 8px;flex-wrap:wrap}
+.tchip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 12px 3px 8px;font-size:18px;line-height:1.25;border:1.5px solid currentColor;white-space:nowrap}
+.tchip.tools{color:var(--p)}.tchip.agent{color:var(--q)}.tchip.you{color:var(--noise)}.tchip.risk{color:var(--loss)}.tchip.done{color:var(--d)}.tchip.memory{color:var(--data)}
+.tchip .ic{flex:none}
+/* a real trace as chat bubbles */
+.msgs{display:flex;flex-direction:column;gap:8px;min-width:0}
+.msg{border-radius:14px;padding:7px 14px 9px;font-size:20px;line-height:1.38;border:2px solid var(--line);background:#fff;min-width:0}
+.msg .mh{display:flex;align-items:center;gap:7px;font-size:14px;letter-spacing:.8px;text-transform:uppercase;font-weight:700;margin-bottom:2px}
+.msg .mh em{font-style:normal;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted);margin-left:auto;font-size:15px}
+.msg.you{border-color:#AA4E0855;background:#AA4E080D}.msg.you .mh{color:var(--noise)}
+.msg.model,.msg.call{border-color:#8B2CDE55;background:#8B2CDE0B}.msg.model .mh,.msg.call .mh{color:var(--q)}
+.msg.thought{border-style:dashed;border-color:#8B2CDE55;color:#4B5563;font-style:italic}.msg.thought .mh{color:var(--q);font-style:normal}
+.msg.tool{border-color:#0F766E55;background:#0F766E0B}.msg.tool .mh{color:var(--p)}
+.msg .mb{overflow-wrap:anywhere}
+.msg code,.msg .mono{font-size:17px}
+pre.json{font:18px/1.42 "SFMono-Regular",Menlo,Consolas,monospace;margin:0;white-space:pre-wrap;color:#1F2328}
+.json .jk{color:var(--p)}.json .jn{color:var(--data)}
+/* the agent card */
+.acard{border:2px solid var(--line);border-radius:14px;background:#fff;padding:12px 14px;min-width:0}
+.acard h3{font-size:20px;font-weight:650;color:var(--muted);margin:0 0 6px 10px}
+.acard dl{display:grid;grid-template-columns:auto 1fr;gap:3px 0;margin:0;font-size:22px;line-height:1.3}
+.acard dt{font-weight:650;color:var(--muted);padding:5px 18px 5px 10px;border-radius:8px 0 0 8px;white-space:nowrap}
+.acard dd{margin:0;padding:5px 10px;border-radius:0 8px 8px 0;min-width:0}
+.acard .hi{background:#8B2CDE12}
+.acard dt.s-goal,.acard dt.s-stop{color:var(--ink)}.acard dt.s-human{color:var(--noise)}.acard dt.s-model{color:var(--q)}.acard dt.s-tools{color:var(--p)}.acard dt.s-guard{color:var(--loss)}.acard dt.s-memory{color:var(--data)}
+.acard.dimrest dd:not(.hi),.acard.dimrest dt:not(.hi){opacity:.45}
+.acard.sm dl{font-size:19px}
+/* code shown one line per click: the line of the current click is tinted */
+.code-steps .cl{display:block;margin:0 -10px;padding:0 10px;border-radius:4px}
+.scene[data-build="1"] .cl[data-at="1"],.scene[data-build="2"] .cl[data-at="2"],.scene[data-build="3"] .cl[data-at="3"],.scene[data-build="4"] .cl[data-at="4"],.scene[data-build="5"] .cl[data-at="5"],.scene[data-build="6"] .cl[data-at="6"],.scene[data-build="7"] .cl[data-at="7"]{background:#8B2CDE17}
+.code-sm .code{font-size:20px;line-height:1.45}.code-xs .code{font-size:18px;line-height:1.45}
+/* live figures */
+.w-controls .w-slider{display:flex;align-items:center;gap:10px;flex:1;min-width:230px}
+.w-slider span{white-space:nowrap}
+.w-slider output{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:650;min-width:3.4em;white-space:nowrap}
+.w-panel{font-size:21px;line-height:1.45;color:var(--ink)}
+.widget svg{touch-action:none}
+.w-hint{font-size:17px;color:var(--muted)}
+.loopfig svg{max-height:430px}
+/* phones, in the reading view */
+@media(max-width:760px){
+ .reading .cover,.reading .compare,.reading .app,.reading .facts,.reading .three,.reading .four,.reading .two-two,.reading .tiles{grid-template-columns:minmax(0,1fr)!important}
+ .reading .cover h1{font-size:36px}.reading .cover .sub{font-size:22px}
+ .reading .steps{font-size:20px}.reading .takeaway,.reading .answer{font-size:19px}.reading .req{font-size:18px}
+ .reading .msg{font-size:16px}.reading pre.json{font-size:14px}.reading .acard dl{font-size:17px}
+ .reading .app .illo img{max-height:200px;width:auto;margin:0 auto}
+ .reading .lanes svg,.reading .loopfig svg{min-width:0!important}
+ .reading .w-fig{overflow:auto;max-width:100%}.reading .w-readout{white-space:normal}
+ .reading .tchip{font-size:15px;white-space:normal}
+ .reading .facts p{font-size:17px}
+}

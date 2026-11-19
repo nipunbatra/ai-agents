@@ -1,0 +1,74 @@
+{
+ "forecast": {
+  "Delhi": [
+   124.0,
+   162.4,
+   130.8
+  ],
+  "Ahmedabad": [
+   40.0,
+   41.0,
+   44.4
+  ],
+  "Pune": [
+   38.4,
+   51.7,
+   57.5
+  ]
+ },
+ "dates": [
+  "2026-11-20",
+  "2026-11-21",
+  "2026-11-22"
+ ],
+ "orders": [
+  {
+   "order": [
+    "Pune",
+    "Ahmedabad",
+    "Delhi"
+   ],
+   "total": 210.2
+  },
+  {
+   "order": [
+    "Delhi",
+    "Pune",
+    "Ahmedabad"
+   ],
+   "total": 220.1
+  },
+  {
+   "order": [
+    "Ahmedabad",
+    "Pune",
+    "Delhi"
+   ],
+   "total": 222.5
+  },
+  {
+   "order": [
+    "Delhi",
+    "Ahmedabad",
+    "Pune"
+   ],
+   "total": 222.5
+  },
+  {
+   "order": [
+    "Pune",
+    "Delhi",
+    "Ahmedabad"
+   ],
+   "total": 245.2
+  },
+  {
+   "order": [
+    "Ahmedabad",
+    "Delhi",
+    "Pune"
+   ],
+   "total": 259.9
+  }
+ ]
+}

@@ -1,0 +1,101 @@
+{
+ "model": "gemini-3-pro-image",
+ "style": "flat vector editorial illustration, clean geometric shapes, soft warm off-white background (#FAFAFB), limited palette of deep teal (#0F766E), violet purple (#8B2CDE), warm amber (#C2410C) and charcoal (#1F2937) with light tints of these, subtle paper grain, generous empty space around the subject, friendly and professional, people shown as simple stylised figures with natural brown Indian skin tones (palette colours only on clothing and objects), Indian setting and people where people appear, subjects fully inside the frame. Absolutely no text, no letters, no numbers, no words, no logos, no watermarks, no captions. No maps, no country outlines, no monuments, no flags, no signs, no markings.",
+ "images": [
+  {
+   "name": "part-what",
+   "prompt": "A small glowing violet spark-shaped helper floating above an office desk, reaching out with thin lines to simple tools: a magnifying glass, a calculator, an envelope, a calendar, a globe. A person in the background hands it a sticky note with a goal.",
+   "aspect": "4:3"
+  },
+  {
+   "name": "part-engine",
+   "prompt": "A stylised engine in cutaway: three large interlocking gears arranged in a circle, one violet gear with a lightbulb, one teal gear with a hand holding a wrench, one teal gear with an eye, connected by a looping belt with arrows; small tool icons (magnifier, envelope, database cylinder) orbit around it. No people.",
+   "aspect": "4:3"
+  },
+  {
+   "name": "part-work",
+   "prompt": "An isometric miniature Indian town seen from above: an office tower with a flat plain rooftop (no helipad, no markings), a green cumin farm with a farmer, a research lab, a small clinic and a government office building, all connected by thin glowing violet lines to a small spark floating in the sky above the centre.",
+   "aspect": "4:3"
+  },
+  {
+   "name": "part-risk",
+   "prompt": "A stylised car engine on a test bench with an amber warning light glowing, a large hand pulling a brake lever, a shield and a padlock nearby, a fishing hook dangling from above holding an envelope.",
+   "aspect": "4:3"
+  },
+  {
+   "name": "part-adopt",
+   "prompt": "Indian office professionals around a meeting table looking at a large screen showing a simple flowchart of boxes and arrows, a small violet spark helper sits on the table; a staircase on the side with three steps rising.",
+   "aspect": "4:3"
+  },
+  {
+   "name": "app-coding",
+   "prompt": "A software developer at a laptop late in the evening, the screen shows abstract code blocks and a green check mark, a small violet spark helper beside the laptop holding a wrench.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-research",
+   "prompt": "A tall stack of documents and open books, a large magnifying glass, and several small paper cards flying into a neat finished report with coloured bookmarks, on a plain desk. No buildings, no people.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-analyst",
+   "prompt": "A laptop on a desk showing a bar chart and a line chart drawn as simple coloured shapes, an abstract network of connected dots beside it, a coffee cup, and a window with a hazy city skyline. No maps, no people.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-documents",
+   "prompt": "A conveyor of paper invoices and receipts flowing into a neat filing cabinet, a few papers flagged with amber tabs set aside on a tray for a person to check.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-support",
+   "prompt": "A customer holding a smartphone with a chat bubble, on the other side a support desk with a headset resting on it and a violet spark helper typing a reply.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-incident",
+   "prompt": "A single night scene that fills the frame: a dark server room with rows of racks, one rack glowing with an amber alert light, an on-call engineer in a hoodie at a laptop on a small desk in the foreground, a moon visible through a high window.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-browser",
+   "prompt": "A laptop showing a simple web form with empty boxes and a large submit button, a cursor arrow, a violet spark helper pointing, and a hand hovering ready to confirm.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-coscientist",
+   "prompt": "Three distinct scientists (a young woman, an older man with glasses, a middle-aged woman) in lab coats at a whiteboard covered with abstract diagrams of molecules and bacteria, small hypothesis cards pinned in a tournament bracket, a small violet spark helper beside them.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-lab",
+   "prompt": "A robotic arm pipetting liquid into a row of test tubes and a well plate in a bright laboratory, a tablet on the bench showing a simple graph.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-evolve",
+   "prompt": "A tree of branching code blocks growing upward, the best branch glowing violet, next to rows of data centre servers with a small downward arrow on an energy meter.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-farmer",
+   "prompt": "A Gujarati farmer wearing a white kediyu and a white safa turban, standing waist-deep in a field of feathery, fine-leaved cumin plants with tiny white umbrella-shaped flower clusters, at sunrise, holding a smartphone that shows a voice-message waveform and a sun-and-cloud weather symbol. The farmer is fully inside the frame.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-air",
+   "prompt": "A city skyline with light haze, an air quality sensor pole in the foreground with a small antenna, a school building with children, and a smartphone alert bubble with a mask symbol.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-building",
+   "prompt": "A modern campus building with large windows, rooftop solar panels and air-conditioning units, a thermometer and a sun, a facilities manager holding a tablet with a schedule.",
+   "aspect": "1:1"
+  },
+  {
+   "name": "app-clinic",
+   "prompt": "A doctor with a stethoscope around the neck and a patient talking across a desk in a small Indian clinic, a small recording device with sound waves on the desk, a tablet showing a neat note made of simple grey lines.",
+   "aspect": "1:1"
+  }
+ ]
+}

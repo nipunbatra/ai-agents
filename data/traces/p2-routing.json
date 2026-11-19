@@ -1,0 +1,18 @@
+[
+ {
+  "message": "I was charged twice for my order last week.",
+  "route": "billing"
+ },
+ {
+  "message": "The app crashes when I open my profile.",
+  "route": "technical"
+ },
+ {
+  "message": "Do you have an office in Gandhinagar?",
+  "route": "other"
+ },
+ {
+  "message": "मेरा रिफंड अभी तक नहीं आया।",
+  "route": "billing"
+ }
+]
