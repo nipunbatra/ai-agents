@@ -23,9 +23,9 @@
    "family": "knowledge",
    "name": "Coding",
    "x": 0.86,
-   "y": 0.45,
-   "why": "Tests run in seconds, and a person reviews the pull request.",
-   "zone": "Let it run"
+   "y": 0.56,
+   "why": "Tests run in seconds; merging is the step a person approves.",
+   "zone": "Agent acts, a person approves"
   },
   {
    "id": "research",
@@ -58,10 +58,10 @@
    "id": "support",
    "family": "ops",
    "name": "Customer support",
-   "x": 0.48,
-   "y": 0.56,
-   "why": "Each reply is easy to read, but promises bind the company.",
-   "zone": "A person leads, the agent assists"
+   "x": 0.56,
+   "y": 0.58,
+   "why": "Small refunds are easy to check; a person approves anything over the cap.",
+   "zone": "Agent acts, a person approves"
   },
   {
    "id": "incident",
@@ -95,7 +95,7 @@
    "family": "science",
    "name": "Robot lab",
    "x": 0.7,
-   "y": 0.5,
+   "y": 0.56,
    "why": "Instruments measure every result; reagents and time cost money.",
    "zone": "Agent acts, a person approves"
   },

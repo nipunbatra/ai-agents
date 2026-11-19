@@ -89,18 +89,17 @@ export function lanes(steps,{W=1152,laneH=108,left=172,fs=18,r=25,names={},alt='
   g+=`<rect x="0" y="${y}" width="${W}" height="${laneH}" rx="14" fill="${TINT[k]}"/>`;
   g+=icon(ic,24,y+laneH/2,26,c)+label(46,y+laneH/2+7,esc(names[k]||name),{size:19,fill:c,weight:650});
  }
- const pos=steps.map((s,i)=>{if(!LANES.some(l=>l[0]===s.lane))throw new Error('Unknown lane '+s.lane);return [left+colW*(i+.5),laneY(s.lane)+r+8];});
+ const pos=steps.map((s,i)=>{if(!LANES.some(l=>l[0]===s.lane))throw new Error('Unknown lane '+s.lane);return [left+colW*(i+.5),laneY(s.lane)+r+5];});
  // Two passes: every arrow first, then nodes and labels on top, the labels with a halo in the lane's colour, so an
  // arrow never runs over text. Each piece still appears at its step's click.
- // Labels hang below the nodes, so an arrow that changes lane goes round them at a right angle: down, it leaves the
- // node's right side and drops onto the next node's top; up, it leaves the node's top and enters the next from the left.
+ // Labels hang below the nodes, so an arrow that changes lane leaves the node's right side, turns halfway to the next
+ // column, and enters the next node from its left: it never runs through a label or along another arrow.
  const elbow=(pts)=>{const [hx,hy]=pts.at(-1),[px,py]=pts.at(-2),a=Math.atan2(hy-py,hx-px),h=10;
   return `<path d="M${pts.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' L')}" fill="none" stroke="${DARK}" stroke-width="2.2" stroke-linejoin="round"/>`+
    `<path d="M${hx.toFixed(1)},${hy.toFixed(1)} L${(hx-h*Math.cos(a-.42)).toFixed(1)},${(hy-h*Math.sin(a-.42)).toFixed(1)} L${(hx-h*Math.cos(a+.42)).toFixed(1)},${(hy-h*Math.sin(a+.42)).toFixed(1)}Z" fill="${DARK}"/>`;};
  steps.forEach((s,i)=>{if(i<=first)return;const [x0,y0]=pos[i-1],[x,y]=pos[i];
   const a=Math.abs(y-y0)<1?arrow(x0+r+5,y0,x-r-7,y,{stroke:DARK,w:2.2,head:10})
-   :y>y0?elbow([[x0+r+4,y0],[x,y0],[x,y-r-6]])
-   :elbow([[x0,y0-r-4],[x0,y],[x-r-6,y]]);
+   :elbow([[x0+r+4,y0],[(x0+x)/2,y0],[(x0+x)/2,y],[x-r-6,y]]);   // turn halfway between the columns, so a round trip never shares a line
   g+=s.at?gat(s.at,a):a;});
  steps.forEach((s,i)=>{
   const [x,y]=pos[i],c=s.kind==='risk'?COL.loss:s.kind==='done'?COL.green:ROLE[s.lane];let b='';
@@ -117,7 +116,7 @@ export function lanes(steps,{W=1152,laneH=108,left=172,fs=18,r=25,names={},alt='
 // ---------------------------------------------------------------------------------------- the loop as an engine
 /** The agent loop: think (the model) → act (tools) → observe (results) → think again, until it answers.
  o.at: {loop, act, observe, stop, tools} reveal builds; o.size scales; o.tools: icons around Act. */
-export function loopFig({W=620,H=470,at={},tools=['search','database','mail','code','globe'],labels={},hub=true,stopText='answer'}={}){
+export function loopFig({W=620,H=470,at={},tools=['search','database','mail','code','globe'],labels={},hub=true,stopText='answer',toolSize=24}={}){
  const cx=W/2-40,cy=Math.max(H/2+8,232),R=150,st=[['think',-90,'spark',COL.guess,labels.think||'Think'],['act',30,'zap',COL.target,labels.act||'Act'],['observe',150,'eye',COL.target,labels.observe||'Observe']];
  const P=a=>[cx+R*Math.cos(a*Math.PI/180),cy+R*Math.sin(a*Math.PI/180)];
  let g='';
@@ -130,7 +129,7 @@ export function loopFig({W=620,H=470,at={},tools=['search','database','mail','co
  if(hub)g+=wrap('loop',icon('target',cx,cy-14,40,COL.amber)+label(cx,cy+30,'the goal',{size:20,fill:COL.amber,anchor:'middle',weight:600}));
  for(const [k,a,ic,c,name] of st){const [x,y]=P(a),b=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="44" fill="#fff" stroke="${c}" stroke-width="3.5"/>`+icon(ic,x,y-6,34,c)+
    label(x,y+(a===-90?-56:70),name,{size:24,fill:c,anchor:'middle',weight:700});g+=k==='think'?b:wrap(k,b);}
- if(tools?.length){const [ax,ay]=P(30);const t=tools.map((ic,i)=>{const a=(-40+i*28)*Math.PI/180,x=ax+92*Math.cos(a)+8,y=ay+92*Math.sin(a);return icon(ic,x,y,24,COL.target);}).join('');g+=wrap('tools',t);}
+ if(tools?.length){const [ax,ay]=P(30);const t=tools.map((ic,i)=>{const a=(-40+i*28)*Math.PI/180,x=ax+92*Math.cos(a)+8,y=ay+92*Math.sin(a);return icon(ic,x,y,toolSize,COL.target);}).join('');g+=wrap('tools',t);}
  if(at.stop!==undefined){const [tx,ty]=P(-90),x1=tx+50,x2=W-14;
   g+=gat(at.stop,arrow(x1,ty,x2-70,ty,{stroke:COL.green,w:3,head:13})+icon('check',x2-46,ty,30,COL.green,{sw:2.6})+label(x2-46,ty+38,stopText,{size:20,fill:COL.green,anchor:'middle',weight:650}));}
  return fig(W,H,g,'The agent loop: think, act, observe, repeated until the goal is reached','loopfig');

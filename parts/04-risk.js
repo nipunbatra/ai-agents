@@ -27,7 +27,7 @@ css(`.p4-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22
 .p4-inj2{display:grid;grid-template-columns:1fr 1.08fr;gap:30px;align-items:center}
 .p4-inj2>div{min-width:0;display:flex;flex-direction:column;gap:12px}
 .p4-mail.sm{font-size:20px}
-.p4-slot>*{align-self:center}.p4-evflow{margin-top:18px}.p4-inj3{display:flex;flex-direction:column;gap:30px}
+.p4-slot>*{align-self:center}.p4-evflow{margin-top:18px}.p4-inj3{display:flex;flex-direction:column;gap:18px}
 .p4-attacks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
 .p4-attacks>div{border:2px solid var(--line);border-top:5px solid var(--loss);border-radius:14px;background:#fff;padding:14px 18px;min-width:0}
 .p4-attacks b{display:block;font-size:24px;line-height:1.2;margin:10px 0 2px}.p4-attacks small{display:block;font-size:17px;color:var(--muted);margin-bottom:8px}
@@ -62,7 +62,7 @@ function compoundSVG({p:q,n,check,reveal}){
  let g='';
  for(const v of [.25,.5,.75,1])g+=line(x(SL.n_min),y(v),x(SL.n_max),y(v),{stroke:'#EEF0F2',w:1});
  g+=axes;
- g+=line(x(SL.n_min),y(q),x(SL.n_max),y(q),{stroke:MUTED,w:2,dash:'6 6'})+label(x(SL.n_max),y(q)-9,`one step: ${fpct(q)}`,{size:18,anchor:'end',halo:true});
+ g+=line(x(SL.n_min),y(q),x(SL.n_max),y(q),{stroke:check?'#C9CED4':MUTED,w:2,dash:'6 6'})+label(x(SL.n_max),y(q)-9,`${check?'one step, no check':'one step'}: ${fpct(q)}`,{size:18,anchor:'end',halo:true,fill:check?'#9CA3AF':MUTED});
  const ks=Array.from({length:SL.n_max-SL.n_min+1},(_,i)=>SL.n_min+i);
  const v=q**n,vc=stepOK(q,true)**n;
  g+=line(x(n),y(0),x(n),y(Math.max(q,check?vc:0)),{stroke:'#9CA3AF',w:1.5,dash:'4 4'});
@@ -80,7 +80,7 @@ const COMPOUND_ALT='The chance that a whole task comes out right, against the nu
 const BUILD_COMPOUND={1:{check:false,reveal:false},2:{check:false,reveal:true},3:{check:true,reveal:true}};
 register('p4-compound',(el,ctx)=>{
  if(ctx.printing){el.innerHTML=`<div class="state-slot">${Object.entries(BUILD_COMPOUND).map(([b,s])=>`<div data-only="${b}">${fig(CW,CH,compoundSVG({p:CP.p,n:CP.n,...s}),COMPOUND_ALT)}</div>`).join('')}</div>`;return;}
- el.innerHTML=`<div class="w-fig"></div><div class="w-controls">${slider('p','Each step right',SL.p_min,SL.p_max,SL.p_step,CP.p)}${slider('n','Steps',SL.n_min,SL.n_max,1,CP.n)}<button type="button" data-k="check" aria-pressed="false">Check each step, retry once</button></div>`;
+ el.innerHTML=`<div class="w-fig"></div><div class="w-controls">${slider('p','Each step right',SL.p_min,SL.p_max,SL.p_step,CP.p)}${slider('n','Steps',SL.n_min,SL.n_max,1,CP.n)}<button type="button" data-k="check" aria-pressed="false" style="visibility:hidden">Check each step, retry once</button></div>`;
  const f=el.querySelector('.w-fig'),sp=el.querySelector('[data-k="p"]'),sn=el.querySelector('[data-k="n"]'),bt=el.querySelector('[data-k="check"]');
  const op=el.querySelector('[data-o="p"]'),on=el.querySelector('[data-o="n"]');
  let st={...BUILD_COMPOUND[1]},last=null;
@@ -90,12 +90,12 @@ register('p4-compound',(el,ctx)=>{
  bt.addEventListener('click',()=>{bt.setAttribute('aria-pressed',String(bt.getAttribute('aria-pressed')!=='true'));bt.blur();show();});
  const scene=el.closest('.scene');
  const sync=()=>{const b=scene?.dataset.build;if(!BUILD_COMPOUND[b]||b===last)return;last=b;st={...BUILD_COMPOUND[b]};
-  sp.value=CP.p;sn.value=CP.n;bt.setAttribute('aria-pressed',String(st.check));show();};
+  sp.value=CP.p;sn.value=CP.n;bt.setAttribute('aria-pressed',String(st.check));bt.style.visibility=st.check?'':'hidden';show();};
  if(scene)new MutationObserver(sync).observe(scene,{attributes:true,attributeFilter:['data-build']});
  show();sync();
 });
 S_('compound','risk','Small errors add up over many steps',{builds:3,nb:nb('part-4'),
- body:`${widget('p4-compound',COMPOUND_ALT)}${small('The simple model: steps fail independently, and all must be right. The check catches every wrong step.')}`,
+ body:`${widget('p4-compound',COMPOUND_ALT)}<p class="caption">The simple model: steps fail independently, and all must be right.<span data-at="3"> The check catches every wrong step.</span></p>`,
  lines:[`Say each step of a task is right ${pc(CP.p)} of the time, and the task takes ${word(CP.n)} steps. How often is the whole task right?`,
   `Only ${pc(CP.task)}. Every step must be right, so the chances multiply. Drag the steps up: long tasks punish even small error rates.`,
   `Now check each step and retry once when the check fails. The same ${word(CP.n)} steps now come out right ${pc(CP.task_checked)} of the time.`],
@@ -125,11 +125,11 @@ S_('compound','risk','Small errors add up over many steps',{builds:3,nb:nb('part
  const PICS=[
   mini([['spark',COL.guess,'the agent'],['database',COL.target,'live data',{cross:true}]],'The agent reached the live database and deleted it'),
   mini([['chat',COL.guess,'chatbot'],['person',COL.amber,'customer'],['scale',COL.loss,'tribunal']],'The chatbot advised the customer; a tribunal held the airline to it'),
-  mini([...Array.from({length:k},()=>['refresh',COL.loss,'']),['stop',COL.amber,'step limit',{box:true}]],`Our agent retried a failing tool ${word(k)} times; the step limit stopped it`)];
+  mini([...Array.from({length:k},()=>['refresh',COL.loss,'']),['stop','#374151','step limit',{box:true}]],`Our agent retried a failing tool ${word(k)} times; the step limit stopped it`)];
  const CASES=[
   ['database','Replit',F.replit.when,'Its coding agent deleted a company’s live database during a code freeze.','Work on a copy of the data.'],
   ['chat','Air Canada',F.air_canada.when,`Its chatbot promised a refund against policy. The airline had to pay CAD ${num(F.air_canada.cad,2)}.`,'You answer for what it says.'],
-  ['terminal','Our own agent',T.date_text,`Told to keep trying, it retried a failing tool until the limit stopped it.`,'Cap the steps and the spend.']];
+  ['terminal','Our own agent',D.run_month,`Told to keep trying, it retried a failing tool until the limit stopped it.`,'Cap the steps and the spend.']];
  S_('failures','risk','When it goes wrong for real',{builds:2,nb:nb('part-4'),
   body:`<div class="p4-cases">${CASES.map(([ic,t,w,d,l],i)=>`<div class="p4-case"><div class="hd">${iconHTML(ic,COL.loss,32)}<div><b>${t}</b><small>${esc(w)}</small></div></div>
    <p>${d}</p>${PICS[i]}${at(2,`<p class="p4-lesson">${iconHTML('shield',COL.green,22)}<span>${l}</span></p>`)}</div>`).join('')}</div>`,
@@ -137,9 +137,9 @@ S_('compound','risk','Small errors add up over many steps',{builds:3,nb:nb('part
    'Each has a plain fix, and each fix lives in the system around the model.'],
   ask:['Which of the three could happen in your organisation this year?','Which of these fixes would a better model have made unnecessary?'],
   expected:['Most say the chatbot: many already have one on their website. Coding agents with production access are becoming common too.',
-   'None. A better model makes them rarer; the fixes make them harmless.'],
+   'None of them. A better model would make such mistakes less frequent; each fix limits the damage when one happens anyway.'],
   point:'Real failures come from what an agent is allowed to touch and say, and from loops nobody bounded.',
-  misconception:`That these are stories about bad models. Replit’s agent had write access to production; Air Canada argued, and lost, that its chatbot was responsible for its own words. The agent’s own chat log said it wiped records of ${big(F.replit.executives)} executives and ${big(F.replit.companies)} companies (as reported). Air Canada’s chatbot told a grieving customer he could claim a bereavement fare after travelling; the policy said otherwise. Strictly it was a chatbot; the point is who is liable. Replit’s chief executive replied that it had started separating development and production databases automatically (as reported).`,
+  misconception:`That these are stories about bad models. Replit (as reported): the agent had write access to production; its own chat log said it wiped records of ${big(F.replit.executives)} executives and ${big(F.replit.companies)} companies; the chief executive replied that Replit had started separating development and production databases automatically; one report says the data was later recovered with Replit’s rollback. Air Canada: the chatbot told a grieving customer he could claim a bereavement fare after travelling, and the policy said otherwise; in the tribunal’s words, Air Canada “in effect” suggested the chatbot was a separate legal entity, and lost. Strictly it was a chatbot, and the lesson is about who is liable. Ours: the instruction to keep trying met a tool that never answers.`,
   demo:`Notebook 4.3: the flaky lookup always times out; with max_steps set, the run stops after ${word(S.steps)} steps (${num(S.seconds,1)} s, ₹${num(S.cost_inr,2)}).`,
   transition:'Those agents were wrong on their own. The next failure needs an attacker, and nothing more than an email.',
   source:`Replit (${F.replit.when}): reported by ${F.replit.reported_by}. Air Canada: ${F.air_canada.case}, decided ${F.air_canada.decided}, reported by ${F.air_canada.reported_by}. Ours: notebook 4.3, ${T.date_text}.`});
@@ -158,31 +158,31 @@ chap('4.2','Poisoned inputs');
   label(0,118,'Warned you about the fake email',{size:20,fill:COL.ink,weight:600})+label(W,118,`${TR.warned} of ${TR.runs}`,{size:20,fill:COL.ink,anchor:'end',weight:700});
  flat.forEach((r,j)=>{const cx=cxs[j];
   g+=r.tried?`<circle cx="${cx}" cy="58" r="17" fill="${COL.loss}"/>`:`<circle cx="${cx}" cy="58" r="17" fill="#fff" stroke="#AAB3BC" stroke-width="2.5"/>`;
-  g+=r.warned?`<circle cx="${cx}" cy="154" r="17" fill="${COL.green}"/>`+icon('check',cx,154,20,'#fff',{sw:3}):`<circle cx="${cx}" cy="154" r="17" fill="${COL.loss}"/>`+icon('alert',cx,153,20,'#fff');});
+  g+=r.warned?`<circle cx="${cx}" cy="154" r="17" fill="${COL.green}"/>`+icon('check',cx,154,20,'#fff',{sw:3}):`<circle cx="${cx}" cy="154" r="17" fill="#fff" stroke="#AAB3BC" stroke-width="2.5"/>`;});
  let o=0;for(const m of TR.models){const a=cxs[o],b=cxs[o+m.runs-1];g+=label((a+b)/2,208,esc(m.name),{size:17,anchor:'middle'});o+=m.runs;}
  const dots=fig(W,H,g,`${Word(TR.runs)} runs of the poisoned inbox: none tried to forward the invoices; ${word(TR.warned)} of ${word(TR.runs)} summaries warned about the fake bank-details email`);
  const A=D.attacks,AIC={echoleak:'mail',github:'code',comet:'globe'};
  const path3=chart([{steps:[{t:'Untrusted text\nreaches the agent',col:COL.loss},{t:'It reads the text\nas an instruction',col:COL.guess},{t:'It gathers\nprivate data',col:COL.data},{t:'A tool sends\nthe data out',col:COL.target}]}],
   {W:1152,bh:84,fs:21,gx:46,alt:'The path of every attack: untrusted text in, read as an instruction, private data gathered, sent out by a tool'});
- const ATEXT={echoleak:a=>`${kR('A crafted email')} could make it disclose data. Microsoft rated it ${num(a.cvss,1)} of 10.`,
+ const ATEXT={echoleak:a=>`${kR('A crafted email')} could make it disclose data. Microsoft rated its severity ${num(a.cvss,1)} of 10 (critical).`,
   github:()=>`${kR('A public issue')} led an agent to leak private repository data.`,
   comet:()=>`${kR('Text on a web page')} steered the browser agent.`};
  S_('injection','risk','A poisoned email',{builds:3,nb:nb('part-4'),
   body:`<div class="state-slot p4-slot">${only('1',`<div class="p4-inj1">${request(esc(I.goal))}${mail(false)}</div>`)}
    ${only('2',`<div class="p4-inj2"><div>${mail(true)}</div><div>${dots}${msg('model',`“…${esc(I.typical_quote)}”`,{note:'a typical summary'})}</div></div>`)}
-   ${only('3',`<div class="p4-inj3"><div class="p4-attacks">${A.map(a=>`<div>${iconHTML(AIC[a.id],COL.loss,32)}<b>${esc(a.product)}</b><small>${esc(a.when)}${a.name?` · ${esc(a.name)}`:''}</small><p>${ATEXT[a.id](a)}</p></div>`).join('')}</div>${path3}</div>`)}</div>`,
+   ${only('3',`<div class="p4-inj3"><div class="p4-attacks">${A.map(a=>`<div>${iconHTML(AIC[a.id],COL.loss,32)}<b>${esc(a.product)}</b><small>${esc(a.when)}${a.name?` · ${esc(a.name)}`:''}</small><p>${ATEXT[a.id](a)}</p></div>`).join('')}</div>${small(`Researchers showed each on a real product and reported it; Microsoft has patched ${esc(A.find(a=>a.patched).name)}.`)}${path3}</div>`)}</div>`,
   lines:['One email in our demo inbox ends with lines addressed to the assistant. We asked the agent to summarise the inbox.',
    `Neither model ever tried to forward the invoices. But ${word(TR.passed_on)} summaries in ${word(TR.runs)} passed on the fake bank details as routine news.`,
-   'The same trick has worked on real products. Follow the path: in through text the agent reads, out through a tool it can use.'],
+   'The same trick works on real products. Follow the path along the bottom.'],
   ask:['What do you expect the agent to do with this email?','Which is worse: forwarding the invoices, or a calm summary that mentions “updated bank details”?','What do the three attacks have in common?'],
   expected:['Some say forward the invoices, some say ignore it. The model reads instructions and data in one stream of text, so either can happen.',
    'The summary. You trust it, and the next step is someone paying a fraudster. The agent did not act; it laundered the fraud into a summary you trust.',
    'Each agent read text from outside, could see private data, and had a way to send it out. That is the next slide.'],
-  point:'Prompt injection: an agent cannot reliably tell data from instructions. The risk is both what it does and what it tells you.',
+  point:'Prompt injection: an agent cannot reliably tell data from instructions, so the risk covers what it reports to you as well as what it does.',
   misconception:`That a smarter model simply ignores injected text. Ours did ignore the instruction, and still passed the fraud on. The defence has to sit outside the model. Only ${word(TR.warned)} summary in ${word(TR.runs)} called the email suspicious.`,
   demo:`Notebook 4.2 adds the poisoned email and runs the summary with and without an approval gate, then ${word(TR.models[0].runs)} times on each model.`,
   transition:'Why were those products exposed? Three ingredients, all present at once.',
-  source:`Our runs: notebook 4.2, ${T.date_text}, ${word(TR.runs)} runs with no gate, ${TR.models.map(m=>esc(m.name)).join(' and ')}. ${D.attacks.map(a=>`${esc(a.product)}: ${esc(a.by)}${a.cve?`, ${a.cve}`:''} (${a.date})`).join('; ')}.`});
+  source:`Our runs: notebook 4.2, ${T.date_text}, ${word(TR.runs)} runs with no gate, ${TR.models.map(m=>esc(m.name)).join(' and ')}. ${D.attacks.map(a=>`${esc(a.product)}: ${esc(a.found_by)}${a.by!==a.found_by?`, ${esc(a.by)}`:''}${a.cve?`, ${a.cve}`:''} (${a.date})`).join('; ')}.`});
 }
 
 // ---------------------------------------------------------------------------------------- 4.2 the lethal trifecta
@@ -191,12 +191,12 @@ chap('4.2','Poisoned inputs');
  const tint={[COL.data]:'#245EDB12',[COL.loss]:'#BE123C0F',[COL.target]:'#0F766E12'};
  let g=C.map(([x,y,c])=>`<circle cx="${x}" cy="${y}" r="${R}" fill="${tint[c]}" stroke="${c}" stroke-width="3"/>`).join('');
  g+=gat(2,`<circle cx="${C[2][0]}" cy="${C[2][1]}" r="${R}" fill="none" stroke="${COL.amber}" stroke-width="5" stroke-dasharray="12 8"/>`);
- g+=label(160,108,'Private',{size:23,fill:COL.data,anchor:'middle',weight:700})+label(160,134,'data',{size:23,fill:COL.data,anchor:'middle',weight:700});
- g+=label(434,108,'Untrusted',{size:22,fill:COL.loss,anchor:'middle',weight:700})+label(434,134,'content',{size:22,fill:COL.loss,anchor:'middle',weight:700});
- g+=label(300,340,'A way to',{size:23,fill:COL.target,anchor:'middle',weight:700})+label(300,366,'send it out',{size:23,fill:COL.target,anchor:'middle',weight:700});
+ g+=label(166,98,'Private',{size:23,fill:COL.data,anchor:'middle',weight:700})+label(166,124,'data',{size:23,fill:COL.data,anchor:'middle',weight:700});
+ g+=label(430,98,'Untrusted',{size:22,fill:COL.loss,anchor:'middle',weight:700})+label(430,124,'content',{size:22,fill:COL.loss,anchor:'middle',weight:700});
+ g+=label(300,320,'A way to',{size:23,fill:COL.target,anchor:'middle',weight:700})+label(300,346,'send it out',{size:23,fill:COL.target,anchor:'middle',weight:700});
  g+=icon('alert',300,196,38,COL.loss,{sw:2.4});
  const tag=(x,y,t,c)=>{const w=t.length*17*.6+22;return `<rect x="${(x-w/2).toFixed(1)}" y="${y-15}" width="${w.toFixed(1)}" height="30" rx="15" fill="#fff" stroke="${c}" stroke-width="2"/>`+label(x,y+6,t,{size:17,fill:c,anchor:'middle',weight:600});};
- g+=gat(2,tag(160,170,'read_email',COL.data)+tag(428,170,'the fake email',COL.loss)+tag(300,394,'send_email',COL.target)+
+ g+=gat(2,tag(178,160,'read_email',COL.data)+tag(420,160,'fake email',COL.loss)+tag(300,377,'send_email',COL.target)+
   `<circle cx="452" cy="318" r="22" fill="${COL.amber}"/>`+icon('approve',452,318,26,'#fff')+label(482,312,'a person',{size:18,fill:COL.amber,weight:650})+label(482,334,'approves',{size:18,fill:COL.amber,weight:650}));
  const venn=fig(W,H,g,'Three overlapping circles: private data, untrusted content, and a way to send it out; the agent at their overlap');
  const ap=T.inbox.approvals[0];
@@ -205,7 +205,7 @@ chap('4.2','Poisoned inputs');
   body:cols(venn,`<div class="state-slot">${only('1',`<div class="p4-right"><ul class="p4-tri">${P3.map((t,i)=>`<li style="color:${PC[i]}"><i></i><span style="color:var(--ink)">${esc(t)}</span></li>`).join('')}</ul>
     ${ps('Each is useful on its own. Together, a stranger’s text can make the agent send your data to the stranger.')}</div>`)}
    ${only('2',`<div class="p4-right">${msg('call',jsonHTML({name:ap.call,args:{to:ap.args.to,body:ap.args.body}}),{note:'our inbox run'})}
-    <p class="p4-gate">${iconHTML('approve',COL.amber,28)}<span>${kY('It waited for a yes')} before it went. Every send does.</span></p>
+    <p class="p4-gate">${iconHTML('approve',COL.amber,28)}<span>${kY('It waited for a yes')} before it went: even harmless sends wait.</span></p>
     <p class="p4-gate">${iconHTML('check',COL.green,28)}<span>${kG('No invoice left the inbox')} in any of our runs.</span></p></div>`)}</div>`,'1fr 1fr'),
   lines:['Simon Willison’s rule of thumb: an agent that has all three can be tricked into sending your data to an attacker.',
    'Our inbox agent had all three. Cut one: send_email waits for a person, whatever the model decides.'],
@@ -221,9 +221,10 @@ chap('4.2','Poisoned inputs');
 // ---------------------------------------------------------------------------------------- 4.3 guardrails
 chap('4.3','Guardrails');
 {
+ const N='#4B5563';   // the middle column is neutral; only the person's row is amber
  const LAYERS=[
   ['Before it runs','lock',COL.target,'#0F766E0A',[['key','Only the tools','the task needs',''],['eye','Read-only','by default',''],['server','A sandbox: a copy','of the live data','see Replit']]],
-  ['While it runs','zap',COL.amber,'#AA4E080A',[['approve','A person approves','what cannot be undone','see the inbox gate'],['stop','Limits on steps','and on spend','see our stuck agent'],['check','A check on','every step','see errors compound']]],
+  ['While it runs','zap',N,'#4B55630A',[['approve','A person approves','what cannot be undone','see the inbox gate',COL.amber],['stop','Limits on steps','and on spend','see our stuck agent'],['check','A check on','every step','see errors compound']]],
   ['After it runs','eye',COL.green,'#1477370A',[['notes','A log of','every trace',''],['flask','Evals on','every change','next slide'],['pulse','Monitoring','in production','']]]];
  const W=1152,H=404,pw=360,gx=36,top=66;
  const g=LAYERS.map(([t,ic,c,bg,items],i)=>{const x=i*(pw+gx);
@@ -231,14 +232,14 @@ chap('4.3','Guardrails');
    icon(ic,x+22,32,30,c)+label(x+46,41,t,{size:26,fill:c,weight:700});
   if(i)s+=arrow(x-gx+6,top+(H-top)/2,x-6,top+(H-top)/2,{stroke:'#4B5563',w:2.5,head:11});
   let it='';
-  items.forEach(([ii,a,b,tg],j)=>{const y=top+58+j*112;
-   it+=`<circle cx="${x+44}" cy="${y}" r="26" fill="#fff" stroke="${c}" stroke-width="2.5"/>`+icon(ii,x+44,y,28,c)+
-    label(x+84,y-6,a,{size:21,fill:COL.ink,weight:600})+label(x+84,y+20,b,{size:21,fill:COL.ink})+(tg?label(x+84,y+44,tg,{size:16,fill:MUTED}):'');});
+  items.forEach(([ii,a,b,tg,ci],j)=>{const y=top+54+j*104,cc=ci||c;
+   it+=`<circle cx="${x+44}" cy="${y}" r="26" fill="#fff" stroke="${cc}" stroke-width="2.5"/>`+icon(ii,x+44,y,28,cc)+
+    label(x+84,y-6,a,{size:21,fill:ci||COL.ink,weight:600})+label(x+84,y+20,b,{size:21,fill:COL.ink})+(tg?label(x+84,y+46,tg,{size:18,fill:MUTED}):'');});
   return s+gat(i+1,it);}).join('');
  S_('guardrails','risk','Guardrails before, during and after a run',{builds:3,
   body:fig(W,H,g,'Guardrails in three layers: before the agent runs, while it runs, and after it runs'),
   lines:['Before it runs, decide what it can touch. Replit’s agent could reach the live database; in a sandbox the damage would have stayed in a copy.',
-   `While it runs, a person stands before anything that cannot be undone, and limits cap the loop. Our stuck agent cost ₹${num(S.cost_inr,2)} because one did.`,
+   `While it runs, a person stands before anything that cannot be undone, and limits cap the loop. Our stuck agent cost only ₹${num(S.cost_inr,2)} because a step limit stopped it.`,
    'After it runs, keep every trace so you can see what went wrong, and rerun the evals whenever the model, the prompt or a tool changes.'],
   ask:['Which tools would a first version of your agent really need?','Which steps in your process cannot be undone?','Who in your team would read the traces?'],
   expected:['Usually read-only ones: search, look up, read. Writing and sending can come later.','Payments, emails to customers, deletions, orders, anything published.',
@@ -253,20 +254,20 @@ chap('4.3','Guardrails');
 {
  const M=T.evals.models,names=Object.keys(M),runs=M[names[0]].runs;
  const maxc=Math.max(...names.map(n=>M[n].cost_inr_mean)),maxs=Math.max(...names.map(n=>M[n].seconds_mean));
- const W=1152,H=240,dx=38,d0=244,cX=720,tX=972;
+ const W=1152,H=252,dx=38,d0=244,cX=720,tX=972,BAR='#7B8794';
  let g=icon('target',14,20,26,COL.green)+label(38,28,`<tspan fill="${COL.green}" font-weight="700">Known answer</tspan>  ${esc(T.evals.best.join(', then '))}`,{size:21,fill:COL.ink});
- g+=label(d0-16,80,`Right answers in ${runs} runs`,{size:18,fill:MUTED,weight:650})+label(cX,80,'Mean cost a run',{size:18,fill:MUTED,weight:650})+label(tX,80,'Mean time',{size:18,fill:MUTED,weight:650});
+ g+=label(d0-16,80,`One task, run ${runs} times: right answers`,{size:18,fill:MUTED,weight:650})+label(cX,80,'Mean cost per run',{size:18,fill:MUTED,weight:650})+label(tX,80,'Mean time',{size:18,fill:MUTED,weight:650});
  names.forEach((n,i)=>{const y=124+i*74,m=M[n];
-  g+=label(0,y+7,esc(n),{size:20,fill:COL.guess,weight:650})+label(0,y+36,'tool calls each run',{size:15,fill:MUTED});
+  g+=label(0,y+7,esc(n),{size:20,fill:COL.guess,weight:650})+label(0,y+38,'tool calls each run',{size:17,fill:MUTED});
   m.ok.forEach((ok,j)=>{const cx=d0+j*dx;g+=`<circle cx="${cx}" cy="${y}" r="15" fill="${ok?COL.green:COL.loss}"/>`+icon(ok?'check':'alert',cx,y,18,'#fff',{sw:3})+
-   label(cx,y+36,String(m.calls[j]),{size:15,fill:MUTED,anchor:'middle'});});
+   label(cx,y+38,String(m.calls[j]),{size:17,fill:MUTED,anchor:'middle'});});
   g+=label(d0+runs*dx-6,y+7,`${m.right} of ${m.runs}`,{size:20,fill:COL.green,weight:700});
   const cw=m.cost_inr_mean/maxc*150,tw=m.seconds_mean/maxs*100;
-  g+=`<rect x="${cX}" y="${y-13}" width="${cw.toFixed(1)}" height="26" rx="4" fill="${COL.guess}"/>`+label(cX+cw+10,y+7,`₹${num(m.cost_inr_mean,2)}`,{size:20,fill:COL.ink,weight:600});
-  g+=`<rect x="${tX}" y="${y-13}" width="${tw.toFixed(1)}" height="26" rx="4" fill="${COL.data}"/>`+label(tX+tw+10,y+7,`${num(m.seconds_mean,0)} s`,{size:20,fill:COL.ink,weight:600});});
+  g+=`<rect x="${cX}" y="${y-13}" width="${cw.toFixed(1)}" height="26" rx="4" fill="${BAR}"/>`+label(cX+cw+10,y+7,`₹${num(m.cost_inr_mean,2)}`,{size:20,fill:COL.ink,weight:600});
+  g+=`<rect x="${tX}" y="${y-13}" width="${tw.toFixed(1)}" height="26" rx="4" fill="${BAR}"/>`+label(tX+tw+10,y+7,`${num(m.seconds_mean,0)} s`,{size:20,fill:COL.ink,weight:600});});
  const rows=fig(W,H,g,`The opening task run ${word(runs)} times on two models: right answers, mean cost and mean time`);
- const flow=chart([{steps:[{t:'Real cases with\nknown answers',n:`${EV.cases_min} to ${EV.cases_max} of them`},{t:'Run the agent\non each'},{t:'Score every\nanswer'},{t:'Compare models\nand versions'}]}],
-  {W:1152,bh:74,fs:20,gx:52,loop:[0,3,0,'again after every change'],alt:'An eval: real cases with known answers, run the agent, score, compare; repeated after every change'});
+ const flow=chart([{steps:[{t:`${EV.cases_min} to ${EV.cases_max} real cases\nwith known answers`},{t:'Run the agent\non each'},{t:'Score every\nanswer'},{t:'Compare models\nand versions'}]}],
+  {W:1152,bh:78,fs:20,gx:52,loop:[0,3,0,'again after every change'],alt:'An eval: real cases with known answers, run the agent, score, compare; repeated after every change'});
  S_('evals','risk','Measure before you trust',{builds:2,nb:nb('part-4'),
   body:`${rows}${at(2,`<div class="p4-evflow">${flow}</div>`)}`,
   lines:[`We ran the opening task ${word(runs)} times on each of two models, with the same forecasts, and checked every answer against the best order.`,
@@ -275,7 +276,7 @@ chap('4.3','Guardrails');
   expected:[`The cheaper one: it was right just as often, at ${EV.cost_words} of the cost and ${EV.time_words} the time. Without the eval we would have guessed.`,
    'Real past cases with known right answers, including the awkward ones: the refund just over the limit, the invoice that does not match. Ours was one case run many times; yours should hold many cases.'],
   point:'An eval turns “it seems to work” into a number you can compare across models, prompts and versions.',
-  misconception:`That the bigger model is the safe default. Here the smaller one was as accurate, though less steady in how it worked: it made ${word(EV.lite_calls_min)} to ${word(EV.lite_calls_max)} tool calls a run, against ${word(EV.fast_calls_min)} to ${word(EV.fast_calls_max)}.`,
+  misconception:`That the pricier model is the safe default. Here the cheaper one was as accurate, though less steady in how it worked: it made ${word(EV.lite_calls_min)} to ${word(EV.lite_calls_max)} tool calls a run, against ${word(EV.fast_calls_min)} to ${word(EV.fast_calls_max)}.`,
   demo:`Notebook 4.4: evaluate() runs the task ${word(runs)} times per model and prints right or wrong, tool calls and cost.`,
   transition:'Part 4 in one slide.',
   source:`Notebook 4.4, ${T.date_text}: ${word(runs)} runs per model, cached forecasts, answers checked against the best order. Mean cost at paid prices.`});

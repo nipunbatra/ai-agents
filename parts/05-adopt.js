@@ -72,17 +72,17 @@ chap('5.1','What to hand over');
    'Code with tests, a number with a source: yes. A strategy memo or a diagnosis: no, so the agent drafts.',
    `Most land in one of the four zones of the stakes map. Let it run: ${byZone(zone(true,false))}. Approve: ${byZone(zone(true,true))}.`],
   point:'Two questions decide autonomy: how cheaply can the result be checked, and what does a mistake cost. They are the axes of the stakes map.',
-  misconception:'That the most capable model decides the zone. The task decides it; a better model moves a task only if it makes checking cheaper.',
+  misconception:'That a more capable model moves a task to a safer zone. It can make some checks cheaper (a second model can review the first), but what a mistake costs stays the same, so the approval before an irreversible step stays.',
   transition:'Even in the right zone, you do not start at full speed.',
   source:'The four leaves are the zones of the stakes map in Part 3, in the same words. Workflow or agent: Anthropic, “Building effective agents” (Dec 2024).'});
 }
 
 // ---------------------------------------------------------------------------------------- 5.1 a ramp to autonomy
 {
- const W=1152,H=416,base=412,sw=360,x0=20;
+ const W=1152,H=416,base=412,sw=370,x0=8;
  const STEPS=[['eye',COL.amber,'Shadow mode','It suggests; a person does the work.','Refunds: it drafts a decision, staff decide.'],
   ['approve',COL.guess,'Approve each','It acts; a person approves each case.','It prepares the refund; staff approve it.'],
-  ['zap',COL.green,'Routine on its own','Spot checks and logs; a person on call.','Small refunds go through; staff sample them.']];
+  ['zap',COL.green,'Routine on its own','Spot checks and logs; a person on call.','Small refunds go through, sampled by staff.']];
  const tops=[280,190,100],TINTS=['#AA4E080D','#8B2CDE0D','#1477370D'];
  let g='';
  STEPS.forEach(([ic,c,t,a,b],i)=>{const x=x0+i*sw,y=tops[i];
@@ -102,9 +102,9 @@ chap('5.1','What to hand over');
   lines:['Do not start at full autonomy. Start in shadow mode, where it only suggests, then let it act with approval, then let routine cases run.',
    'Climb a step only when the evals on your own past cases say so, and step back down when errors rise.'],
   ask:['Why start in shadow mode, if the agent could already act?','What would convince you to climb a step?'],
-  expected:['Because you learn its error rate on your real cases at no risk. Shadow mode is a free eval.',
+  expected:['Because you learn its error rate on your real cases at no risk: every suggestion can be compared with what the person actually did.',
    'A measured error rate on enough real cases, below what the team accepts from a person, and a plan for the errors that remain.'],
-  point:'Autonomy is earned with evidence, one step at a time, and can be taken back.',
+  point:'Raise autonomy one step at a time, when evals on your own cases support it, and lower it again when errors rise.',
   misconception:'That autonomy is a one-time decision at launch. It is a setting you revisit as the evals, the model and the stakes change.',
   transition:'At each step, someone pays for the model and for the checking. Which costs more?',
   source:'The steps correspond to Part 1’s dial: operator, approver, observer. The refund is Part 1’s example.'});
@@ -157,14 +157,14 @@ register('p5-cost',(el,ctx)=>{
 {
  const TV=D.tokens_vs_chat,f2027=CO.models.find(m=>m.id==='flash27');
  S_('cost','adopt','What does one task cost?',{builds:3,
-  body:`${widget('p5-cost',COST_ALT)}${at(3,takeaway('The model is the cheap part. Design tasks whose results are cheap to check.'))}`,
+  body:`${widget('p5-cost',COST_ALT)}${at(3,takeaway('Checking costs the most, so design results that are quick to check.'))}`,
   lines:[`Our opening run read ${big(CO.input)} tokens and wrote ${big(CO.output)}. At ${esc(T.model)} prices that is ₹${num(CO.model_inr,2)}. The price doubles on ${CO.price_change}.`,
    `Now add a person who spends ${word(CO.review_min)} minutes checking the answer, at ₹${big(CO.inr_per_hour)} an hour. The model is now ${share(CO.model_share)} of the cost.`,
    `Agents use about ${word(TV.agent)} times the tokens of a chat, multi-agent systems about ${word(TV.multi_agent)} times. Drag the steps: the person usually still costs more.`],
   ask:['Guess: what did the opening run cost?','What does five minutes of a colleague’s time cost your organisation?','So where should you spend effort to make an agent cheaper?'],
-  expected:['Most guess tens or hundreds of rupees. It is under one rupee.',`Hundreds of rupees once you count salary and overheads; the slider goes up to ₹${big(SC.hour_max)} an hour.`,
+  expected:['Most guess tens or hundreds of rupees. It is under one rupee.',`At ₹${big(CO.inr_per_hour)} an hour, five minutes is about ₹${Math.round(CO.person_inr)}; with overheads it is more, and the slider goes up to ₹${big(SC.hour_max)} an hour.`,
    'On making the check cheap: tests, totals that reconcile, a citation to click, a clear diff. Squeezing the model price matters far less.'],
-  point:'The model’s tokens are cheap; a person’s checking time is the real cost. Design tasks that are cheap to check.',
+  point:'For a run like ours the model costs under a rupee and a person’s check costs far more, so making results quick to check saves the most.',
   misconception:`That model cost is negligible at any scale. Each step rereads everything before it, so long runs grow faster than their steps, and from ${CO.price_change} ${esc(T.model)} costs $${num(f2027.price.input,2)} and $${num(f2027.price.output,2)} per million tokens in and out. Caching and a cheaper model (Part 4’s eval) cut it.`,
   demo:`Drag the steps to the maximum, switch to the January price, then set checking to one minute: the gap narrows. The figure gives every model the same tokens; in Part 4’s eval Flash-Lite used fewer and cost ₹${num(T.evals.models['Gemini 3.5 Flash-Lite'].cost_inr_mean,2)} a run.`,
   transition:'If checking is the cost, the people around the agent matter more. What changes for them?',
@@ -174,14 +174,14 @@ register('p5-cost',(el,ctx)=>{
 // ---------------------------------------------------------------------------------------- 5.2 what changes for a team
 {
  const E=D.economic_index,G=D.gartner;
- const W=1152,H=180,bx=330,bw=230;
+ const W=1152,H=180,bx=360,bw=200;
  const bar=(x,y,v,c,t,val)=>`<rect x="${x+bx}" y="${y-16}" width="${bw}" height="30" rx="5" fill="#EEF0F2"/>`+
   `<rect x="${x+bx}" y="${y-16}" width="${(v/100*bw).toFixed(1)}" height="30" rx="5" fill="${c}"/>`+label(x,y+6,t,{size:18,fill:COL.ink})+label(x+bx+bw+10,y+7,val,{size:20,fill:COL.ink,weight:700});
- const ev=label(0,22,`Anthropic Economic Index, ${E.when}`,{size:18,fill:MUTED,weight:650})+
-  bar(0,62,E.directive_from,'#C4A5EA','Whole tasks handed over, earlier',`${E.directive_from}%`)+
+ const ev=label(0,22,`Anthropic reports (Economic Index, ${E.when})`,{size:18,fill:MUTED,weight:650})+
+  bar(0,62,E.directive_from,'#C4A5EA','Whole tasks handed over, earlier data',`${E.directive_from}%`)+
   bar(0,108,E.directive_to,COL.guess,`Whole tasks handed over, ${E.when}`,`${E.directive_to}%`)+
-  bar(0,154,E.api_automation,COL.guess,'Business API use that is automation',`${E.api_automation}%`)+
-  label(700,22,`Gartner, ${G.when}`,{size:18,fill:MUTED,weight:650})+label(700,68,`Agent projects it expects cancelled by end of ${G.by}`,{size:18,fill:COL.ink})+
+  bar(0,154,E.api_automation,COL.guess,'Business API conversations: automation',`${E.api_automation}%`)+
+  label(700,22,`Gartner predicts (${G.when})`,{size:18,fill:MUTED,weight:650})+label(700,68,`Agentic AI projects cancelled by end of ${G.by}`,{size:18,fill:COL.ink})+
   `<rect x="700" y="86" width="340" height="30" rx="5" fill="#EEF0F2"/><rect x="700" y="86" width="${(G.cancelled_pct/100*340).toFixed(1)}" height="30" rx="5" fill="${COL.loss}"/>`+
   label(1050,108,`over ${G.cancelled_pct}%`,{size:20,fill:COL.ink,weight:700})+
   label(700,150,'Its reasons: rising costs, unclear business',{size:18,fill:COL.ink})+label(700,172,'value, weak risk controls.',{size:18,fill:COL.ink});
@@ -192,19 +192,19 @@ register('p5-cost',(el,ctx)=>{
   body:`<div class="p5-skills">${SK.map(([ic,c,t,d])=>`<div>${iconHTML(ic,c,34)}<div><b>${t}</b><p>${d}</p></div></div>`).join('')}</div>
    ${at(2,`<div class="p5-ev">${fig(W,H,ev,'Evidence: more whole tasks handed to AI, most business API use is automation, and many agent projects expected to be cancelled')}</div>`)}`,
   lines:['The work around the agent becomes part of the job. Someone writes the goal and the tool descriptions, reads the traces, and builds the evals.',
-   'The shift has started: people hand over more whole tasks. Many projects will also be cancelled, mostly for cost, unclear value or weak controls.'],
+   `The shift has started: people hand over more whole tasks. Gartner also predicts that over ${G.cancelled_pct}% of agentic AI projects will be cancelled by the end of ${G.by}.`],
   ask:['Who in your team already does something like this for other software?','What would keep your project out of the cancelled group?'],
   expected:['Testers, analysts who write specifications, whoever reviews pull requests or audits processes. These skills transfer.',
    'A task that is cheap to check, evals from day one, a measured cost per task, and guardrails a risk team has signed off.'],
-  point:'Adopting agents is mostly a change in work around the model: specifying, checking and measuring.',
-  misconception:'That agents remove the need for expertise. They move it: from doing each case to defining, checking and improving how cases are done.',
+  point:'Adopting agents mostly changes the work around the model: people specify the task and check the results.',
+  misconception:'That agents remove the need for expertise. They move it from doing each case to defining and checking how cases are done.',
   transition:'Part 5 in one slide.',
   source:`Anthropic Economic Index (${E.when}): “directive” conversations, where people hand over the whole task. Gartner press release (${G.when}): a prediction.`});
 }
 
 recap(5,['A workflow when the path is fixed; autonomy where checking is cheap.',
   'Climb from shadow mode as the evals allow.',
-  'The model is cheap; checking is the cost.'],
+  'A person’s checking time usually costs more than the model.'],
  'the talk in one slide, and three things to try on Monday.',
  {card:{goal:'Refunds for damaged orders',model:'Cheapest that passes the evals',tools:`${chip('database','look up order')} ${chip('file','policy')} ${chip('rupee','refund')}`,
    memory:'Case history',stop:'A refund, a hand-off, or a limit',guard:'Refunds under a set amount',human:'Approves larger refunds'},

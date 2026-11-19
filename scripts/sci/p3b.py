@@ -35,6 +35,7 @@ EVOLVE = {'date': '14 May 2025', 'compute_pct': 0.7, 'matrix': 4, 'mults': 48, '
 # Row 13, VERIFIED. PIB backgrounder of 4 Sep 2025 on Kisan e-Mitra: 11 languages, over 20,000 queries a day, more than
 # 95 lakh answered. The notes say to use these, not the later "93 lakh" press figure.
 KISAN = {'date': 'Sep 2025', 'languages': 11, 'answered_lakh': 95, 'per_day': 20000}
+KISAN['answered_m'] = KISAN['answered_lakh'] / 10     # the slide uses millions, as for Farmer.Chat: 95 lakh = 9.5 million
 # Row 14, VERIFIED with a range: Digital Green's own pages disagree, so the notes recommend "10+ languages, 6 countries,
 # 1.6 to 3 million farmers" for Farmer.Chat.
 FARMERCHAT = {'farmers_lo_m': 1.6, 'farmers_hi_m': 3, 'languages': 10, 'countries': 6}
@@ -60,14 +61,14 @@ from_forecast = [m.group(0) for m in re.finditer(r'\d+ થી \d+ નવેમ�
 from_notes = [m.group(0) for m in re.finditer(r'\d+ થી \d+ દિવસે', draft)]
 low = min(d['min_c'] for d in days)
 farm_out = {
-    'place': 'Mehsana', 'source': farm['forecast']['source'], 'first': nice(days[0]['date']), 'last': nice(days[-1]['date']),
+    'place': farm['forecast']['place'], 'source': farm['forecast']['source'], 'first': nice(days[0]['date']), 'last': nice(days[-1]['date']),
     'days': [{'day': nice(d['date']), 'max_c': d['max_c'], 'min_c': d['min_c'], 'rain_chance': d['rain_chance'],
               'rain_mm': d['rain_mm']} for d in days],
     'low_c': low, 'rain_chance_max': max(d['rain_chance'] for d in days), 'interval': interval,
     'checks': len(farm['checklist']), 'rounds': len(farm['rounds']), 'passed': farm['rounds'][-1]['verdict']['pass'],
     'draft': draft, 'words': len(draft.split()), 'from_forecast': from_forecast, 'from_notes': from_notes,
 }
-assert farm_out['passed'] and farm_out['rounds'] == 1 and farm_out['checks'] == 5
+assert farm_out['place'] == 'Mehsana' and farm_out['passed'] and farm_out['rounds'] == 1 and farm_out['checks'] == 5
 assert farm_out['rain_chance_max'] == 0 and sum(d['rain_mm'] for d in days) == 0      # "no rain" on the slide
 assert f'{low}°C' in from_forecast and '0%' in from_forecast                              # the numbers it used
 assert f'{interval[0]} થી {interval[1]} દિવસે' in from_notes

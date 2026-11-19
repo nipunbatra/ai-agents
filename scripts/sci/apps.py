@@ -14,15 +14,15 @@ OUT = ROOT / 'data' / 'apps.json'
 FAMILIES = [('knowledge', 'Knowledge work'), ('ops', 'Operations'), ('science', 'Science and engineering'),
             ('india', 'India and sustainability')]
 APPS = [  # id, family, short name, x (easy to check), y (cost of a mistake), why it sits there
-    ('coding', 'knowledge', 'Coding', .86, .45, 'Tests run in seconds, and a person reviews the pull request.'),
+    ('coding', 'knowledge', 'Coding', .86, .56, 'Tests run in seconds; merging is the step a person approves.'),
     ('research', 'knowledge', 'Deep research', .30, .30, 'Citations must be opened and read to be checked.'),
     ('analyst', 'knowledge', 'Data analysis', .62, .40, 'The code can be rerun and the numbers recomputed.'),
     ('documents', 'knowledge', 'Invoices', .74, .66, 'Rules check the match, but money moves.'),
-    ('support', 'ops', 'Customer support', .48, .56, 'Each reply is easy to read, but promises bind the company.'),
+    ('support', 'ops', 'Customer support', .56, .58, 'Small refunds are easy to check; a person approves anything over the cap.'),
     ('incident', 'ops', 'IT incidents', .56, .82, 'Metrics show whether a fix worked; a wrong rollback is an outage.'),
     ('browser', 'ops', 'Web forms', .66, .70, 'The form can be read before it is submitted; a submission is final.'),
     ('coscientist', 'science', 'Hypotheses', .14, .20, 'Only a lab can check an idea, but an idea alone harms nobody.'),
-    ('lab', 'science', 'Robot lab', .70, .50, 'Instruments measure every result; reagents and time cost money.'),
+    ('lab', 'science', 'Robot lab', .70, .56, 'Instruments measure every result; reagents and time cost money.'),
     ('evolve', 'science', 'Algorithm search', .94, .14, 'A program scores every candidate automatically.'),
     ('farmer', 'india', 'Farm advisory', .28, .76, 'Farmers act on it, and a crop lost cannot be undone.'),
     ('air', 'india', 'Air alerts', .44, .64, 'A false alarm or a missed one affects schools and hospitals.'),

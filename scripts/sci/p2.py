@@ -119,6 +119,9 @@ assert 'Pune' in D['memory']['answer'] and 'asthma' in D['memory']['answer']
 D['patterns'] = {'source_date': day('2024-12-19'), 'names': ['Prompt chaining', 'Routing', 'Parallelisation',
                                                               'Orchestrator and workers', 'Evaluator and optimizer']}
 D['routing'] = T['routing']
+# An English gloss for the slide, under the Hindi message (our translation).
+D['routing_gloss'] = {'मेरा रिफंड अभी तक नहीं आया।': 'My refund has not come yet'}
+assert all(m in [r['message'] for r in D['routing']] for m in D['routing_gloss'])
 assert len(D['routing']) == 4 and any(re.search(r'[ऀ-ॿ]', r['message']) for r in D['routing'])
 # Anthropic, "How we built our multi-agent research system", 13 Jun 2025 (verified.md row 17, VERIFIED):
 # a lead agent with subagents beat a single agent by 90.2% on their internal research eval; agents use about 4x the

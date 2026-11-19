@@ -6,15 +6,15 @@ const Q=need(await data('qr'),'slides','notebook'),APPS=need(await data('apps'),
 
 css(`.w6-sum{display:grid;grid-template-columns:.9fr 1.1fr;gap:28px;align-items:center}
 .w6-sum ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px}
-.w6-sum li{display:grid;grid-template-columns:44px 1fr;gap:10px;align-items:start;font-size:22px;line-height:1.32}
-.w6-sum li b{font-size:15px;letter-spacing:1px;color:var(--q);padding-top:5px}
+.w6-sum li{display:grid;grid-template-columns:74px 1fr;gap:10px;align-items:start;font-size:22px;line-height:1.32}
+.w6-sum li b{font-size:16px;letter-spacing:1px;color:var(--q);padding-top:4px;white-space:nowrap}
 .w6-monday{display:grid;grid-template-columns:1.5fr 1fr;gap:34px;align-items:center}
 .w6-mon{display:flex;flex-direction:column;gap:14px}
 .w6-mon>div{display:grid;grid-template-columns:46px 1fr;gap:14px;align-items:start;border:2px solid var(--line);border-radius:16px;background:#fff;padding:12px 18px}
 .w6-mon h3{font-size:24px;margin:0 0 4px}.w6-mon p{font-size:20px;line-height:1.36;color:#374151}
 .w6-qr{display:flex;gap:44px;justify-content:center;align-items:flex-start}
 .w6-qr figure{margin:0;text-align:center}.w6-qr svg{width:220px;height:220px;display:block;margin:0 auto 8px}
-.w6-qr figcaption{font-size:20px;color:var(--ink)}.w6-qr figcaption small{display:block;font-size:15px;color:var(--muted)}
+.w6-qr figcaption{font-size:22px;color:var(--ink)}.w6-qr figcaption small{display:block;font-size:20px;color:var(--muted)}
 @media(max-width:760px){.reading .w6-sum,.reading .w6-monday{grid-template-columns:minmax(0,1fr)}.reading .w6-qr{flex-direction:column;align-items:center}}`);
 
 const qr=(k,color=COL.ink)=>`<svg viewBox="-2 -2 ${Q[k].size+4} ${Q[k].size+4}" role="img" aria-label="QR code for ${esc(Q[k].url)}"><rect x="-2" y="-2" width="${Q[k].size+4}" height="${Q[k].size+4}" fill="#fff"/><path d="${Q[k].path}" fill="${color}"/></svg>`;
@@ -23,9 +23,9 @@ const SUM=[['1',`An agent is ${kA('a model')}, ${kT('tools')} and a loop.`],
  ['2','Each turn it rereads its context; tools and memory are text it reads.'],
  ['3',`It works best where results are ${kG('cheap to check')}.`],
  ['4',`Errors compound and inputs can be poisoned; ${kR('guardrails')} live in your code.`],
- ['5',`Start with a workflow, measure with evals, then raise ${kY('autonomy')}.`]];
+ ['5',`Start with a workflow, measure with evals, then raise ${kA('autonomy')}.`]];
 S_('summary','wrap','The talk in one slide',{builds:1,
- body:`<div class="w6-sum">${loopFig({W:600,H:450,at:{},tools:['sensor','code','mail','database','globe']})}<ol>${SUM.map(([k,t])=>`<li><b>PART ${k}</b><span>${t}</span></li>`).join('')}</ol></div>`,
+ body:`<div class="w6-sum">${loopFig({W:600,H:450,at:{},tools:['sensor','code','mail','database','globe'],toolSize:32})}<ol>${SUM.map(([k,t])=>`<li><b>PART ${k}</b><span>${t}</span></li>`).join('')}</ol></div>`,
  lines:['The whole talk around the picture we started with. The loop is the engine; your design decides how far it may run.'],
  ask:['Which of the five will you remember on Monday morning?'],
  expected:['Most remember Part 3 (where it works) or Part 4 (what goes wrong). Point back to the map of '+APPS.apps.length+' jobs.'],

@@ -12,11 +12,12 @@ const W2=D.walk,WT=W2.turns,PR=T.price['gemini-3.8-flash'];
 const BLUE=COL.data;
 css(`.p2-walk{display:grid;grid-template-columns:minmax(0,1.42fr) minmax(0,1fr);gap:30px;align-items:start}
 .p2-ev{display:flex;flex-direction:column;gap:8px;min-width:0;padding-top:46px}
-.p2-row{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;align-items:baseline;border-left:5px solid var(--line);padding:6px 12px;border-radius:0 10px 10px 0;font-size:20px;line-height:1.35}
-.p2-row .tag{font-size:13px;letter-spacing:.8px;text-transform:uppercase;font-weight:700;white-space:nowrap}
+.p2-row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:10px;align-items:baseline;border-left:5px solid var(--line);padding:6px 12px;border-radius:0 10px 10px 0;font-size:20px;line-height:1.35}
+.p2-row .tag{font-size:16px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;white-space:nowrap}
 .p2-row.you{border-color:var(--noise)}.p2-row.you .tag{color:var(--noise)}
 .p2-row.model{border-color:var(--q)}.p2-row.model .tag{color:var(--q)}
 .p2-row.tool{border-color:var(--p)}.p2-row.tool .tag{color:var(--p)}
+.p2-row.done{border-color:var(--d)}.p2-row.done .tag{color:var(--d)}
 .p2-row .full{display:none;min-width:0}.p2-row .brief{color:var(--muted)}
 .p2-row .th{display:block;font-style:italic;color:#4B5563;margin-bottom:4px}
 .p2-row .lbl{color:var(--muted);margin-right:6px}
@@ -30,9 +31,9 @@ ${[1,2,3,4,5,6].map(k=>`.scene[data-build="${k}"] .p2-row[data-k="${k}"] .full{d
 .p2-code .code{font-size:20px;line-height:1.55;padding:14px 18px}
 .p2-tag{display:inline-block;font:650 15px/1.25 var(--font);padding:1px 10px;border-radius:999px;color:#fff;vertical-align:1px}
 .p2-tag.agent{background:var(--q)}.p2-tag.tools{background:var(--p)}.p2-tag.done{background:var(--d)}.p2-tag.risk{background:var(--loss)}
-.p2-menu{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:30px;align-items:start}
+.p2-menu{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:30px;align-items:start}
 .p2-menu h3{font-size:22px;margin:0 0 8px;display:flex;gap:8px;align-items:center}
-.p2-menu pre.json{font-size:18px;line-height:1.5;border:2px solid #0F766E55;background:#fff;border-radius:12px;padding:10px 14px}
+.p2-menu pre.json{font-size:17px;line-height:1.5;white-space:pre;border:2px solid #0F766E55;background:#fff;border-radius:12px;padding:10px 14px}
 .p2-menu .p2-hl{background:#AA4E0817;border-radius:4px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 .p2-menu pre.bad{border-color:#BE123C66}
 .p2-keys{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;font-size:22px;line-height:1.35}
@@ -54,21 +55,22 @@ ${[1,2,3,4,5,6].map(k=>`.scene[data-build="${k}"] .p2-row[data-k="${k}"] .full{d
 .p2-pat{display:flex;flex-direction:column;gap:12px}
 .p2-pat>div>div{display:grid;grid-template-columns:230px minmax(0,1fr);gap:22px;align-items:center;border-top:2px solid var(--line);padding-top:8px}
 .p2-pat h3{font-size:23px;color:var(--q);margin:0 0 2px}.p2-pat p{font-size:19px;line-height:1.3;color:#374151}
-.p2-pat small{display:inline-block;margin-top:5px;font-size:13px;letter-spacing:.8px;text-transform:uppercase;font-weight:700;color:var(--d)}
+.p2-pat small{display:inline-block;margin-top:5px;font-size:16px;letter-spacing:.6px;text-transform:uppercase;font-weight:700;color:var(--d)}
 .p2-pat small.dz{color:var(--muted)}
 .p2-two h3{font-size:25px;color:var(--q);margin-bottom:4px}
+.scene[data-build="2"] .p2-two>.p2-l{border-color:var(--line)}.scene[data-build="2"] .p2-two>[data-at="2"]{border-color:var(--q)}
 .p2-two p{font-size:20px;line-height:1.38}
 .p2-guj{font-size:21px;line-height:1.45;color:#374151;margin:10px 0 6px}
 .p2-check{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:3px 14px;font-size:18px;line-height:1.3}
 .p2-check li{display:flex;gap:6px;align-items:center}.p2-check li>svg{flex:none}
 .p2-facts{display:grid;grid-template-columns:1.2fr 1fr 1.4fr;gap:18px}
 .p2-facts>div{border-left:5px solid var(--p);padding:2px 0 2px 14px;font-size:19px;line-height:1.35;min-width:0}
-.p2-facts b{display:block;font-size:14px;letter-spacing:.8px;text-transform:uppercase;color:var(--p);margin-bottom:2px}
+.p2-facts b{display:block;font-size:16px;letter-spacing:.6px;text-transform:uppercase;color:var(--p);margin-bottom:2px}
 @media(max-width:760px){.reading .p2-walk,.reading .p2-menu,.reading .p2-mem,.reading .p2-tips,.reading .p2-facts,.reading .p2-check{grid-template-columns:minmax(0,1fr)}
  .reading .p2-pat>div>div{grid-template-columns:minmax(0,1fr)}.reading .p2-mem>svg{transform:rotate(90deg);margin:0 auto}}`);
 
-partBreak(2,'Inside the engine','Open the bonnet on one real run: what the model reads each turn, how it picks a tool, how it remembers, and the few patterns most systems are built from.',
- ['One real run, turn by turn, with its cost','What the model reads: the tool menu and the context','Memory that outlasts a run',`${Word(D.patterns.names.length)} patterns, and a common plug for tools`],
+partBreak(2,'Inside the engine','Open the bonnet on the run from the opening: what the model does each turn, and what we build around it.',
+ ['One real run, turn by turn, with its cost','What the model reads each turn','Memory that outlasts a run',`${Word(D.patterns.names.length)} patterns most systems are built from`,'A common plug for tools'],
  {img:'part-engine.jpg',alt:'Illustration: an engine in cutaway, three gears turning in a loop, with tool icons around it',nb:nb('part-2'),
   line:'By the end of this part you can read a trace and say what the model saw, and paid for, at each step.',
   ask:'When an agent “thinks”, what do you imagine is going on inside?',
@@ -86,14 +88,14 @@ chap('2.1','One real run');
   ${row(3,'tool','Tools',`<div class="p2-fc">${cities.map(c=>`<span><b>${esc(c)}</b>${fc[c].map(v=>num(v,1)).join(' ')}</span>`).join('')}</div><span class="p2-unit">PM2.5 in µg/m³, the next ${word(fc[cities[0]].length)} days</span>`,`${word(cities.length)} forecasts back`)}
   ${row(4,'model','Turn 2',`<span class="th">thinks “${esc(t2.thought)}”</span><div class="p2-sums">${sums.slice(0,3).map(s=>`<span>${esc(s)}</span>`).join('')}<span>…</span></div>`,`${word(sums.length)} sums, at once`)}
   ${row(5,'tool','Tools',`<span class="p2-tot">${W2.totals.map(v=>num(v,1)).join(' ')}</span>`,`${word(W2.totals.length)} totals back`)}
-  ${row(6,'model','Turn 3',esc(W2.answer),'')}</div>`;
+  ${row(6,'done','Turn 3',esc(W2.answer),'')}</div>`;
  // the meter: tokens read (again or new) and written per turn, and the running totals
  const W=470,H=410,x0=82,bw=W-x0-70,sc=v=>v/W2.max_read*bw,bh=24;
  let g='';
- [[BLUE,.4,'read again'],[BLUE,1,'new to read'],[COL.guess,1,'written']].forEach(([c,o,t],i)=>{const x=[0,150,306][i];
+ [[BLUE,.6,'read again'],[BLUE,1,'new to read'],[COL.guess,1,'written']].forEach(([c,o,t],i)=>{const x=[0,150,306][i];
   g+=`<rect x="${x}" y="6" width="18" height="18" rx="3" fill="${c}" opacity="${o}"/>`+label(x+26,22,t,{size:18});});
  WT.forEach((t,i)=>{const y=58+i*96,prev=i?WT[i-1].read:0;let b='';
-  if(prev)b+=`<rect x="${x0}" y="${y}" width="${sc(prev).toFixed(1)}" height="${bh}" rx="3" fill="${BLUE}" opacity=".4"/>`;
+  if(prev)b+=`<rect x="${x0}" y="${y}" width="${sc(prev).toFixed(1)}" height="${bh}" rx="3" fill="${BLUE}" opacity=".6"/>`;
   b+=`<rect x="${(x0+sc(prev)).toFixed(1)}" y="${y}" width="${sc(t.read-prev).toFixed(1)}" height="${bh}" rx="3" fill="${BLUE}"/>`+label(x0+sc(t.read)+8,y+19,big(t.read),{size:18,fill:COL.ink,weight:600});
   b+=`<rect x="${x0}" y="${y+bh+6}" width="${sc(t.wrote).toFixed(1)}" height="${bh}" rx="3" fill="${COL.guess}"/>`+label(x0+sc(t.wrote)+8,y+2*bh+1,big(t.wrote),{size:18,fill:COL.ink,weight:600});
   g+=label(0,y+34,`Turn ${i+1}`,{size:20,fill:COL.guess,weight:650})+gat(2*i+2,b);});
@@ -104,7 +106,7 @@ chap('2.1','One real run');
  g+=tot('1',0,0,0)+tot('2-3',cum[0],t1.spent_inr,t1.elapsed)+tot('4-5',cum[1],t2.spent_inr,t2.elapsed)+tot('6',cum[2],t3.spent_inr,t3.elapsed);
  S_('trace-walk','engine','One run, one event at a time',{builds:6,nb:nb('part-2'),
   body:`<div class="p2-walk">${ev}${fig(W,H,g,'Tokens read and written in each turn of the run, with the running count of tokens, cost and seconds')}</div>`,
-  lines:['The request from the opening, replayed one event per click. On the right, what each turn read and wrote, and what it cost.',
+  lines:['The opening request, replayed one event per click. On the right: tokens read and written per turn (a token is about ¾ of a word), and the cost.',
    `Turn 1: a short thought, then ${word(t1.calls.length)} forecast requests in one go, since none depends on another. It read ${big(t1.read)} tokens to decide that.`,
    `Our code fetches the ${word(cities.length)} forecasts. The model is idle meanwhile; it sees the numbers only when we call it again.`,
    `Turn 2 rereads everything, now ${big(t2.read)} tokens, and asks for ${word(sums.length)} sums at once, one per order.`,
@@ -112,12 +114,12 @@ chap('2.1','One real run');
    `Turn 3 reads ${big(t3.read)} tokens and answers: ${num(t3.elapsed,1)} seconds and ₹${num(t3.spent_inr,2)} in all. The pale blue is text it had already read the turn before.`],
   ask:['What do you expect the model to do first?',`Why ask for all ${word(t1.calls.length)} forecasts at once, instead of one at a time?`,'While the forecasts are fetched, what is the model doing?',
    'Why did turn 2 read far more than turn 1?','Why not let the model add the numbers itself?','Where did most of the cost go: reading or writing?'],
-  expected:['Look up the forecasts. It cannot know them.','They do not depend on each other, so one turn is enough. Fewer turns means less rereading, less time and less money. Our instructions also told it to.',
+  expected:['Look up the forecasts. It cannot know them.','They do not depend on each other, so one turn is enough, and each turn saved is one fewer reread of the whole conversation. Our instructions also asked for this.',
    'Nothing. The model is not running; it is a function we call. Between calls, only our code runs.',
    `It rereads the instructions, the tool menu, the task, its own first turn and the ${word(cities.length)} results. Every turn starts from the full conversation.`,
    'Models predict digits and slip on long sums. A calculator is exact and cheap, so the agent hands arithmetic to a tool.',
    `Here, writing: ${big(A.usage.output)} tokens written cost ${num(A.usage.output*PR.output/(A.usage.input*PR.input),1)} times the ${big(A.usage.input)} read, since a written token costs ${word(PR.output/PR.input)} times as much. In long runs reading takes over, because it is repeated every turn.`],
-  point:'An agent run is a few model calls, each rereading the whole conversation, with tools run by our code in between.',
+  point:`An agent run is a few model calls, each rereading the whole conversation, with tools run by our code in between. This one took ${word(WT.length)} turns: ${word(WT.length-1)} rounds of tool calls, then the answer.`,
   misconception:'That the model keeps running and “remembers” between turns. It is called afresh each turn and reads everything again.',
   demo:'Notebook 2.1: print each turn’s tokens read and written for your own run.',
   transition:'That replay is driven by a few lines of ordinary code. Here they are, once.',
@@ -143,20 +145,29 @@ chap('2.1','One real run');
   expected:['Only chat() calls the model. Everything else is plain Python that we wrote and can read.',
    'The model can read the error and try something else: another city spelling, another tool. Crashing would end the run.',
    'A model that keeps asking for tools would loop for ever and spend money doing it. The step limit is the first guardrail (Part 4).'],
-  point:'An agent is an ordinary loop around one model call. The intelligence is in the model; the control is in your code.',
+  point:'An agent is an ordinary loop around one model call. Our code runs the tools, keeps the list of messages and decides when to stop.',
   misconception:'That agent frameworks contain some deeper machinery. They wrap this loop with conveniences: retries, tracing, memory, permissions.',
   demo:'Notebook 1.3: run_agent is this loop with printing, an approval check, and error handling.',
   transition:'Each step, the model chose a tool from a menu. What exactly is on that menu?',
   source:'Simplified from run_agent in notebook/agents.py (Part 1.3). The real one also asks a person before any tool marked for approval.'});
 }
 
-// ---------------------------------------------------------------------------------------- the tool menu
+// ---------------------------------------------------------------------------------------- 2.2 the tool menu
+chap('2.2','What the model reads');
 {
- const J=v=>JSON.stringify(v).replace(/([,:])(?=["{\[\d-])/g,'$1 ');
+ // the menu entry as the model reads it, laid out one key per line and wrapped by hand at word breaks, so no string
+ // breaks mid-word; inner double quotes are shown as single quotes ('Pune') so the slide shows no escape characters
+ const Q=v=>`"${String(v).replace(/"/g,"'")}"`;
  const hl=s=>esc(s).replace(/(&quot;[^&]*?&quot;)(\s*:)/g,'<span class="jk">$1</span>$2');
+ const fill=(words,first,width)=>{const out=[''];let lim=width-first;for(const w of words){const cur=out.at(-1);if(cur&&cur.length+1+w.length>lim){out.push(w);lim=width-3;}else out[out.length-1]=cur?cur+' '+w:w;}return out;};
  const t=D.tool,pp=t.parameters,ks=Object.keys(pp.properties);
- const real=`<pre class="json">${hl(`{"name": ${J(t.name)},`)}\n <span class="p2-hl">${hl(`"description": ${J(t.description)},`)}</span>\n${hl(` "parameters": {"type": ${J(pp.type)}, "properties": {`)}\n${ks.map((k,i)=>hl(`   ${J(k)}: ${J(pp.properties[k])}${i<ks.length-1?',':'},'}`)).join('\n')}\n${hl(`  "required": ${J(pp.required)}}}`)}</pre>`;
- const v=D.vague,bad=`<pre class="json bad">${hl(J(v))}</pre>`;
+ const dl=fill(t.description.split(' '),18,57).map((x,i,a)=>(i?'   ':' "description": "')+x+(i===a.length-1?'",':''));
+ const real=`<pre class="json">${[hl(`{"name": ${Q(t.name)},`),`<span class="p2-hl">${dl.map(hl).join('\n')}</span>`,hl(` "parameters": {"type": ${Q(pp.type)}, "properties": {`),
+  ...ks.flatMap((k,i)=>[hl(`   ${Q(k)}: {"type": ${Q(pp.properties[k].type)},`),hl(`     "description": ${Q(pp.properties[k].description)}}${i<ks.length-1?',':'},'}`)]),
+  hl(`   "required": [${pp.required.map(Q).join(', ')}]}}`)].join('\n')}</pre>`;
+ const v=D.vague,vp=v.parameters,vk=Object.keys(vp.properties);
+ const bad=`<pre class="json bad">${[hl(`{"name": ${Q(v.name)},`),hl(` "description": ${Q(v.description)},`),hl(` "parameters": {"type": ${Q(vp.type)},`),
+  hl(`   "properties": {${vk.map(k=>`${Q(k)}: {"type": ${Q(vp.properties[k].type)}}`).join(', ')}},`),hl(`   "required": [${vp.required.map(Q).join(', ')}]}}`)].join('\n')}</pre>`;
  const keys=`<ul class="p2-keys"><li><code>name</code>what the model writes when it wants this tool</li>
    <li class="p2-d"><code>description</code>its only manual: what comes back, in which units, for which days</li>
    <li><code>parameters</code>what to fill in, each with an example or a range</li></ul>`;
@@ -175,7 +186,7 @@ chap('2.1','One real run');
   misconception:'That a capable model will work out what a tool does from its name. It cannot see the code; a vague tool gets misused.',
   demo:'Notebook 1.2: print(get_air_quality.schema) shows this entry, built from the docstring and type hints.',
   transition:'The menu is one part of what the model reads every turn. What else is in there?',
-  source:'The real entry: get_air_quality’s docstring and type hints in notebook/agents.py, copied into scripts/sci/p2.py. get_data is made up for the slide.'});
+  source:'The real entry, from get_air_quality’s docstring and type hints in notebook/agents.py (copied into scripts/sci/p2.py), laid out with line breaks and with “Pune” in single quotes. get_data is made up.'});
 }
 
 // ---------------------------------------------------------------------------------------- the context
@@ -198,19 +209,19 @@ chap('2.1','One real run');
   body:`${fig(W,H,g,`Tokens read in each of the ${word(C.turns.length)} turns; turn 3 split into instructions, tool menu, task, tool results and the model’s own earlier turns`)}
    ${at(2,`<div class="p2-tips">${TIPS.map(([c,h,t])=>`<div style="border-top-color:${c}"><b>${h}</b>${t}</div>`).join('')}</div>`)}`,
   lines:[`The context is everything the model reads in a turn. Turn 3 read ${num(C.growth,1)} times what turn 1 did. Most of it is the conversation so far.`,
-   'Context engineering is deciding what goes in each turn, because every token costs money and time, and buries what matters.'],
+   'Context engineering is deciding what goes in each turn. Every token is paid for, and too much text buries what matters.'],
   ask:['Which part of the context would you have guessed was biggest?','In a long run, what would you trim first?'],
   expected:['Most guess the instructions or the tool results. It was the conversation so far, which the model rereads every turn.',
    'Old tool results and long histories: summarise them, or keep them in notes and fetch them when needed. Then the tool menu: offer only the tools the task needs.'],
-  point:`The model knows only what is in its context this turn, and you pay to send all of it, every turn. The phrase “context engineering” was popularised by Andrej Karpathy (X, ${C.karpathy.date}): filling the context window “with just the right information for the next step”.`,
-  misconception:'That a bigger context window solves this. Long contexts cost more, run slower, and models attend less well to what is buried in the middle.',
+  point:`The model knows only what is in its context this turn, and you pay to send all of it, every turn. Andrej Karpathy described context engineering (X, ${C.karpathy.date}) as filling the context window “with just the right information for the next step”.`,
+  misconception:'That a bigger context window solves this. Long contexts cost more per turn, and models attend less well to what is buried in the middle.',
   demo:'Notebook 2.1: the token count of each part, and the turn-by-turn growth.',
   transition:'The context is wiped when a run ends. So how does an agent remember you next week?',
   source:`Real run, ${T.date_text}. The ${word(P.length-1)} parts were counted separately with Gemini’s token counter; “its own earlier turns” is the rest of turn 3’s ${big(tot)} tokens, formatting included.`});
 }
 
-// ---------------------------------------------------------------------------------------- 2.2 memory
-chap('2.2','Memory');
+// ---------------------------------------------------------------------------------------- 2.3 memory
+chap('2.3','Memory');
 {
  const M=D.memory,arr=`<svg viewBox="0 0 40 24" width="40" height="24" aria-hidden="true"><path d="M2 12h30M24 4l10 8-10 8" fill="none" stroke="${BLUE}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
  const callChips=M.calls.map(c=>c.name==='read_notes'?chip('notes','read_notes','memory'):chip('sensor',esc(c.args.city))).join('');
@@ -236,20 +247,20 @@ chap('2.2','Memory');
   'Three kinds of memory: the context as a desk, notes as a notebook, documents as a filing cabinet');
  S_('memory','engine','The context forgets; notes do not',{builds:2,nb:nb('part-2'),
   body:`${only('1',runs)}${only('2',kinds)}`,
-  lines:['The context is gone when a run ends. This agent kept a note in a file, and a later run read it first.',
+  lines:['When a run ends, its context is gone. This agent kept a note in a file; a later run asked for it alongside the forecasts.',
    `Agents use ${word(KINDS.length)} kinds of memory. Which one would hold your company’s policy manual?`],
   ask:['Why did the later run ask for its notes at all?','Which kind of memory would hold your company’s policy manual?'],
   expected:['The read_notes tool says it holds preferences and facts about the user, and the question said “for me”. It asked for the notes and both forecasts in the same turn.',
    'The filing cabinet: documents it searches and quotes (retrieval). Notes are for short facts about a user or a task; the context is only today’s desk.'],
-  point:'Memory beyond one run is not in the model. It is text the agent saves with a tool and reads back with a tool.',
+  point:'Memory that outlasts a run is text the agent saves with a tool and reads back with a tool; the model itself does not change.',
   misconception:'That the model learns from your conversations as it goes. Its weights do not change; it remembers only what someone stores and feeds back.',
   demo:'Notebook 2.2: run the two conversations; open agent_notes.md in between.',
   transition:`With tools, a loop and memory, we can build bigger systems. Most are made of ${word(D.patterns.names.length)} patterns.`,
-  source:`Real run, ${T.date_text} (notebook Part 2.2): ${word(M.steps)} turns, ${word(M.calls_n)} tool calls. The earlier request and the answer are shortened here. Drawings: made for the slide.`});
+  source:`Real run, ${T.date_text} (notebook Part 2.2): ${word(M.steps)} turns: ${word(M.steps-1)} round${M.steps-1===1?'':'s'} of tool calls (${word(M.calls_n)} at once), then the answer. The earlier request and the answer are shortened here. Drawings: made for the slide.`});
 }
 
-// ---------------------------------------------------------------------------------------- 2.3 patterns
-chap('2.3','Patterns');
+// ---------------------------------------------------------------------------------------- 2.4 patterns
+chap('2.4','Patterns');
 {
  const PN=D.patterns.names,t1=WT[0],R=D.routing,dests=[...new Set(R.map(r=>r.route))];
  const box=(x,y,w,h,t,c,{fs=19,fill='#fff'}={})=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="10" fill="${fill}" stroke="${c}" stroke-width="2.6"/>`+label(x+w/2,y+h/2+fs*.36,t,{size:fs,anchor:'middle',fill:COL.ink});
@@ -259,24 +270,27 @@ chap('2.3','Patterns');
   `<path d="M546 6 L620 47 L546 88 L472 47Z" fill="#fff" stroke="${COL.green}" stroke-width="2.6"/>`+label(546,54,`${word(W2.totals.length)} totals?`,{size:18,anchor:'middle',fill:COL.green,weight:650})+
   ar(624,47,666,47)+box(670,18,206,58,'Write the answer',COL.guess),'Prompt chaining: get the forecasts, add up the orders, check, write the answer');
  // routing: four real customer messages, each sent to its queue by one model call
- const RW=880,RH=142,ry=i=>36+i*29,qy=k=>28+k*40,qx=700;
- let rg=label(505,19,'one model call each',{size:17,fill:COL.guess,weight:650});
- R.forEach((r,i)=>{const y=ry(i)-6,yd=qy(dests.indexOf(r.route))+15;
-  rg+=label(0,ry(i),`“${esc(r.message)}”`,{size:18,fill:COL.ink})+icon('spark',474,y,20,COL.guess)+
-   `<path d="M488 ${y} C590 ${y} 600 ${yd} ${qx-12} ${yd}" fill="none" stroke="#4B5563" stroke-width="2.2"/>`+`<path d="M${qx-2} ${yd} l-11 -5.5 v11z" fill="#4B5563"/>`;});
- dests.forEach((d,k)=>{rg+=box(qx,qy(k),180,30,d,COL.amber,{fs:18,fill:'#FBF7F3'});});
+ const RO=[...R].sort((a,b)=>dests.indexOf(a.route)-dests.indexOf(b.route)),GL=D.routing_gloss;   // grouped by queue: no arrows cross
+ const RW=880,RH=152,qx=700,QC={[dests[0]]:42,[dests[1]]:101,[dests[2]]:136};
+ let rg=label(505,19,'one model call each',{size:17,fill:COL.guess,weight:650}),yy=34;const seen={};
+ RO.forEach(r=>{const y=yy-6,k=seen[r.route]=(seen[r.route]??-1)+1,n=RO.filter(q=>q.route===r.route).length,yd=QC[r.route]+(n>1?(k-(n-1)/2)*12:0);
+  rg+=label(0,yy,`“${esc(r.message)}”`,{size:18,fill:COL.ink})+icon('spark',474,y,20,COL.guess)+
+   `<path d="M488 ${y} C590 ${y} 600 ${yd} ${qx-12} ${yd}" fill="none" stroke="#4B5563" stroke-width="2.2"/>`+`<path d="M${qx-2} ${yd} l-11 -5.5 v11z" fill="#4B5563"/>`;
+  if(GL[r.message]){rg+=label(14,yy+21,esc(GL[r.message]),{size:17,fill:MUTED});yy+=20;}
+  yy+=28;});
+ dests.forEach(d=>{rg+=box(qx,QC[d]-14,180,28,d,COL.amber,{fs:18,fill:'#FBF7F3'});});
  const routeFig=fig(RW,RH,rg,`Routing: ${word(R.length)} real customer messages, one in Hindi, each labelled ${dests.join(', ')} by one model call`);
  // parallelisation: the opening run's three forecasts in one turn
  const cities=t1.calls.map(c=>c.city);
  let pg=`<circle cx="44" cy="50" r="30" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon('spark',44,50,30,COL.guess)+label(44,98,'turn 1',{size:17,anchor:'middle',fill:COL.guess});
  cities.forEach((c,i)=>{const y=6+i*31;pg+=ar(78,50,236,y+13)+box(240,y,230,27,`forecast · ${esc(c)}`,COL.target,{fs:17})+ar(474,y+13,620,50);});
- pg+=label(112,100,`×${t1.calls.length} at once`,{size:17,fill:COL.target,weight:650})+`<circle cx="656" cy="50" r="30" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon('spark',656,50,30,COL.guess)+label(700,46,'turn 2 reads',{size:18,fill:COL.guess})+label(700,68,'all three results',{size:18,fill:COL.guess});
+ pg+=label(112,100,`×${t1.calls.length} at once`,{size:17,fill:MUTED,weight:650})+`<circle cx="656" cy="50" r="30" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon('spark',656,50,30,COL.guess)+label(700,46,'turn 2 reads',{size:18,fill:COL.guess})+label(700,68,'all three results',{size:18,fill:COL.guess});
  const parFig=fig(880,110,pg,`Parallelisation: ${word(t1.calls.length)} forecast requests made at once in one turn, read together in the next`);
  const ROWS=[['Fixed steps, with a check between them.',false,chainFig],['Sort first, then hand to a specialist.',true,routeFig],['Independent requests, all at once.',true,parFig]];
  const rowP=(k,name,desc,real,f)=>`<div><div><div><h3>${name}</h3><p>${desc}</p><small class="${real?'':'dz'}">${real?'real run':'a design'}</small></div>${at(k,f)}</div></div>`;
  S_('patterns','engine',`${Word(PN.length)} patterns, ${word(ROWS.length)} of them here`,{builds:ROWS.length,nb:nb('part-2'),
   body:`<div class="p2-pat">${ROWS.map(([d,real,f],i)=>rowP(i+1,PN[i],d,real,f)).join('')}</div>`,
-  lines:['Most systems are built from a few patterns. Our trip task could even be a fixed chain, because its steps never change.',
+  lines:[`Most systems are built from a few patterns. A fixed trip, always ${word(t1.calls.length)} named cities and ${word(W2.sums.length)} sums, could be a chain; ours let the model choose.`,
    `Routing, on ${word(R.length)} real customer messages: one quick model call picks the queue, including for the message in Hindi.`,
    `Parallelisation: ask for independent things at once. Our agent fetched ${word(t1.calls.length)} forecasts in one turn, and did ${word(W2.sums.length)} sums in the next.`],
   ask:['Where in your work is a fixed sequence of steps with a check in the middle?','Why use a model to route, rather than keywords?','What stops you running everything in parallel?'],
@@ -310,24 +324,24 @@ chap('2.3','Patterns');
  const SHORT=F.short;
  const snip=F.snippet.split(' ').slice(0,7).join(' ');
  S_('patterns-2','engine','Patterns with several model calls',{builds:2,nb:nb('part-3'),
-  body:`<div class="compare p2-two"><div class="a"><h3>${D.patterns.names[3]}</h3>${orch}
+  body:`<div class="compare p2-two"><div class="a p2-l"><h3>${D.patterns.names[3]}</h3>${orch}
     <p>${kG(`+${num(MU.gain_pct,1)}%`)} over a single agent on Anthropic’s internal research eval, at about ${MU.multi_x}× the tokens of a chat.</p></div>
    ${at(2,`<div class="a"><h3>${D.patterns.names[4]}</h3>${evalf}<p class="p2-guj">“${esc(snip)} …”</p>
     <ul class="p2-check">${SHORT.map(s=>`<li>${iconHTML('check',COL.green,18)}${s}</li>`).join('')}<li>${kG(`round ${F.rounds.length}: ${pass.pass?'passed':'failed'}`)}</li></ul></div>`)}</div>`,
-  lines:['Orchestrator and workers: a lead agent splits the job and sends subagents off in parallel. Anthropic measured the gain, and the bill.',
+  lines:['Orchestrator and workers: a lead agent splits the job and sends subagents off in parallel. Anthropic measured both the gain and the extra tokens.',
    `Evaluator and optimizer: one call writes, another checks against a list, the writer revises. Our Gujarati farm advisory passed in round ${word(F.rounds.length)}.`],
   ask:['Why would several agents beat one on a research question?','Why use a second model call to check the first, rather than asking the writer to be careful?'],
   expected:['Each subagent explores one direction with a clean context, and they run at the same time. The price is many more tokens.',
    'A separate check with an explicit list catches what the writer misses, and the list is something a person can read and change. It is a cheap eval run on every draft.'],
-  point:`Multi-agent systems buy quality with tokens: Anthropic reports agents use about ${MU.agent_x}× the tokens of a chat, multi-agent systems about ${MU.multi_x}×. Worth it only when the task is worth that much.`,
+  point:`Multi-agent systems buy quality with tokens: Anthropic reports agents use about ${MU.agent_x}× the tokens of a chat, multi-agent systems about ${MU.multi_x}×. Use them for tasks valuable enough to pay for that.`,
   misconception:'That more agents are always better. For most tasks a single agent, or a workflow, is cheaper and easier to debug.',
   demo:'Notebook 3.4: the writer and critic on today’s forecast; change the checklist and watch the critic fail a draft.',
   transition:`All these patterns need tools. Connecting ${word(D.mcp.n_models)} models to ${word(D.mcp.n_tools)} tools is where the plumbing gets expensive.`,
   source:`Anthropic, “How we built our multi-agent research system” (${MU.date}). Farm advisory: real run, ${T.date_text} (notebook Part 3.4), forecast for ${esc(F.place)}; the checklist is shortened here.`});
 }
 
-// ---------------------------------------------------------------------------------------- 2.4 a common plug
-chap('2.4','A common plug');
+// ---------------------------------------------------------------------------------------- 2.5 a common plug
+chap('2.5','A common plug');
 {
  const MC=D.mcp,W=1152,H=250,xm=210,xt=700,xh=455,yc=H/2;
  const ys=(k,n)=>n===1?yc:22+k*(H-44)/(n-1);
@@ -368,7 +382,7 @@ chap('2.4','A common plug');
   expected:[`One per model: ${MC.n_models} more, and every model vendor has to do it.`,'One: the new tool speaks MCP, and every model that speaks MCP can use it.',
    'Because their customers want every tool to work with every assistant. A neutral owner makes it safe to depend on.'],
   point:'MCP turns an n × m integration problem into n + m: write a tool once, and any agent that speaks MCP can use it.',
-  misconception:'That MCP makes tools safe. It standardises the plug, not what flows through it; a poisoned tool result travels just as easily (Part 4).',
+  misconception:'That MCP makes tools safe. It standardises how tools are connected; a poisoned tool result travels through it just as easily (Part 4).',
   demo:'Notebook Part 5: the forecast tool from this talk, served as an MCP server in a dozen lines.',
   transition:'Part 2 in one slide.',
   source:`Anthropic, “Introducing the Model Context Protocol” (${MC.announced}); Linux Foundation, Agentic AI Foundation (${MC.donated}). Counts on the slide are arithmetic: n × m against n + m.`});

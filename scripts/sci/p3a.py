@@ -52,7 +52,7 @@ both = turns[4]['results'][0]['result']          # the counts with > and with >=
 changed = [ln.split()[0] for ln in both.splitlines()[2:] if len(ln.split()) == 3 and ln.split()[1] != ln.split()[2]]
 assert changed == ['Ahmedabad', 'Mumbai'], changed
 code_calls = sum(c['name'] == 'run_pandas' for t in turns for c in t['calls'])
-chart_src = ROOT / 'data' / 'traces' / T['analyst_charts'][0]
+chart_src = ROOT / 'data' / 'traces' / T['analyst_charts'][0]   # kept for the notes; the slide redraws it as SVG
 chart_out = ROOT / 'figures' / 'p3a-analyst-chart.png'
 shutil.copyfile(chart_src, chart_out)
 w, h = struct.unpack('>II', chart_src.read_bytes()[16:24])
@@ -64,10 +64,9 @@ analyst = {'calls': A['calls'], 'steps': A['steps'], 'seconds': A['seconds'], 'c
            'fewest_cities': [c['city'] for c in cities if c['days_over'] == fewest],
            'period': re.search(r'\((\w+ \d{4} to \w+ \d{4})\)', A['goal']).group(1),
            # the request as the slide shows it, shortened (the source line says so)
-           'req_short': 'Last winter, which city had the worst air on average, and how many days was each city '
-                        'over the 24-hour standard? Draw a bar chart.',
+           'req_short': 'Which city had the worst air last winter? Chart each city’s days over the limit.',
            'chart': {'file': chart_out.name, 'w': w, 'h': h}}
-assert 'worst air on average' in A['goal'] and 'exceed the 24-hour standard' in A['goal'] and 'bar chart' in A['goal']
+assert 'worst air' in A['goal'] and 'exceed the 24-hour standard' in A['goal'] and 'bar chart' in A['goal']
 
 # ---------------------------------------------------------------------------------------- the demo inbox (3.3)
 I = T['inbox']

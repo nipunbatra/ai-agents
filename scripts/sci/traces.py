@@ -118,6 +118,7 @@ if 'steplimit' in D:
 
 farm = load('p3-farm')
 if farm:
+    farm['forecast']['place'] = {'Mahesāna': 'Mehsana'}.get(farm['forecast']['place'], farm['forecast']['place'])   # the usual English spelling
     D['farm'] = farm
 
 ev = load('p4-evals')

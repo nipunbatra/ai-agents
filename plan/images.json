@@ -14,7 +14,7 @@
   },
   {
    "name": "part-work",
-   "prompt": "An isometric miniature Indian town seen from above: an office tower with a flat plain rooftop (no helipad, no markings), a green cumin farm with a farmer, a research lab, a small clinic and a government office building, all connected by thin glowing violet lines to a small spark floating in the sky above the centre.",
+   "prompt": "An isometric miniature Indian town seen from above: a plain modern glass office tower with a flat empty rooftop, a green cumin farm with a farmer, a research lab, a small clinic and a plain modern low-rise civic office block (no domes, no flags, no towers with spires), all connected by thin glowing violet lines to a small spark floating in the sky above the centre. Fill the frame.",
    "aspect": "4:3"
   },
   {
@@ -79,7 +79,7 @@
   },
   {
    "name": "app-farmer",
-   "prompt": "A Gujarati farmer wearing a white kediyu and a white safa turban, standing waist-deep in a field of feathery, fine-leaved cumin plants with tiny white umbrella-shaped flower clusters, at sunrise, holding a smartphone that shows a voice-message waveform and a sun-and-cloud weather symbol. The farmer is fully inside the frame.",
+   "prompt": "A Gujarati farmer wearing a white pleated kediyu jacket, white dhoti and a plain white safa turban, standing in a field of short, knee-high cumin plants with feathery fine leaves and tiny white umbrella-shaped flower clusters, at sunrise, holding a smartphone that shows a voice-message waveform and a sun-and-cloud weather symbol. The farmer is fully inside the frame, shown from head to knees.",
    "aspect": "1:1"
   },
   {

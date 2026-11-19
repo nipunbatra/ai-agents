@@ -111,7 +111,8 @@ export function app(id,title,o){
   o.check?`<div class="f-check"><small>A person checks</small><p>${o.check}</p></div>`:'',
   o.evidence?at(evAt,`<div class="f-ev"><small>${o.evidence.label||'Evidence'}</small><p>${o.evidence.big?`<b>${o.evidence.big}</b> `:''}${o.evidence.text}</p></div>`):''].filter(Boolean);
  const right=`${request(o.req,{who:o.who||'The request'})}${trace}`;
- S_(id,o.section||'work',title,{...o,builds,
+ const src=o.img&&!/Illustration/.test(o.source||'')?`${o.source||''}${o.source?' ':''}Illustration: generated.`:o.source;
+ S_(id,o.section||'work',title,{...o,builds,source:src,
   body:`<div class="app${o.img?'':' noimg'}">${o.img?illo(o.img,o.alt||''):''}<div class="app-main">${right}</div></div>${at(factsAt,`<div class="facts f${facts.length}">${facts.join('')}</div>`)}`});
 }
 export {esc,agentCard};

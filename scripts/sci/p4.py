@@ -43,6 +43,8 @@ assert task(P, N_LONG) < 0.1
 D['failures'] = {
     # verified.md #4 (SECONDARY: The Register, Tom's Hardware). Lemkin's posts from 18 Jul 2025; the agent's own chat
     # output said it wiped records for 1,206 executives and 1,196+ companies; Masad's reply on X about 20 Jul 2025.
+    # verified.md notes on #4 (SECONDARY): one report says Lemkin later recovered the data with Replit's rollback,
+    # although the agent had said rollback was impossible.
     'replit': {'when': 'Jul 2025', 'executives': 1206, 'companies': 1196,
                'reported_by': 'The Register and Tom’s Hardware'},
     # verified.md #3 (SECONDARY: law-firm summaries; CanLII returned 403). Moffatt v. Air Canada, 2024 BCCRT 149,
@@ -53,6 +55,9 @@ D['failures'] = {
 assert abs(650.88 + 36.14 + 125 - D['failures']['air_canada']['cad']) < 0.005
 
 S = T['steplimit']
+# The date of the recorded runs, in the same short form as the other cases ("Jul 2025").
+_y, _m, _d = T['date'].split('-')
+D['run_month'] = f"{'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split()[int(_m) - 1]} {_y}"
 assert S['status'].startswith('stopped') and S['calls'] == S['steps']
 assert all('error' in r['result'] for t in S['turns'] for r in t['results'])
 
@@ -105,10 +110,12 @@ D['injection']['typical_quote'] = D['injection']['typical'].split(':', 1)[1].str
 # repository data into a public pull request. VERIFIED.
 # verified.md #8: Brave, 20 Aug 2025, indirect prompt injection in Perplexity Comet. VERIFIED.
 D['attacks'] = [
+    # found_by: the researchers who showed the attack. Only EchoLeak is recorded as patched (Microsoft published the CVE).
     {'id': 'echoleak', 'product': 'Microsoft 365 Copilot', 'when': 'Jun 2025', 'date': '11 Jun 2025', 'name': 'EchoLeak',
-     'cve': 'CVE-2025-32711', 'cvss': 9.3, 'by': 'Microsoft'},
-    {'id': 'github', 'product': 'GitHub MCP server', 'when': 'May 2025', 'date': '26 May 2025', 'by': 'Invariant Labs'},
-    {'id': 'comet', 'product': 'Perplexity Comet', 'when': 'Aug 2025', 'date': '20 Aug 2025', 'by': 'Brave'},
+     'cve': 'CVE-2025-32711', 'cvss': 9.3, 'by': 'Microsoft', 'found_by': 'Aim Labs', 'patched': True},
+    {'id': 'github', 'product': 'GitHub MCP server', 'when': 'May 2025', 'date': '26 May 2025', 'by': 'Invariant Labs',
+     'found_by': 'Invariant Labs'},
+    {'id': 'comet', 'product': 'Perplexity Comet', 'when': 'Aug 2025', 'date': '20 Aug 2025', 'by': 'Brave', 'found_by': 'Brave'},
 ]
 
 # verified.md #7: Simon Willison, "The lethal trifecta for AI agents", 16 Jun 2025. His three ingredients, verbatim.

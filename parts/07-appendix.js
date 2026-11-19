@@ -25,14 +25,12 @@ O('glossary-2','Glossary: running it safely',{
 
 O('mcp-code','The air-quality tool as an MCP server',{
  body:`${code(`from mcp.server.fastmcp import FastMCP
-
 mcp = FastMCP("air-quality")
 
 @mcp.tool()
 def get_air_quality(city: str, days: int = 3) -> dict:
     """Forecast of daily mean PM2.5 for a city, starting tomorrow."""
     ...   # the same body as in the notebook, Part 1.2
-
 mcp.run()`)}${small(`With the official Python SDK (<span class="mono">pip install mcp</span>). Any agent that speaks MCP can now discover and call this tool: the function, its name and its docstring become the menu entry, exactly as with the notebook’s <span class="mono">@tool</span>.`)}`,
  ask:['What changes for the agent when the tool moves behind MCP?'],expected:['Nothing about how it calls the tool; what changes is that every MCP-capable agent can use it without new code.'],
  point:'Writing an MCP server is as small as writing the tool itself.',source:'Model Context Protocol Python SDK, github.com/modelcontextprotocol/python-sdk.'});

@@ -99,7 +99,7 @@
    "Chennai"
   ],
   "period": "November 2025 to February 2026",
-  "req_short": "Last winter, which city had the worst air on average, and how many days was each city over the 24-hour standard? Draw a bar chart.",
+  "req_short": "Which city had the worst air last winter? Chart each city’s days over the limit.",
   "chart": {
    "file": "p3a-analyst-chart.png",
    "w": 1482,

@@ -27,7 +27,8 @@
   "date": "Sep 2025",
   "languages": 11,
   "answered_lakh": 95,
-  "per_day": 20000
+  "per_day": 20000,
+  "answered_m": 9.5
  },
  "farmerchat": {
   "farmers_lo_m": 1.6,

@@ -184,7 +184,7 @@
       "id": "tool-menu",
       "title": "What the model knows about a tool",
       "section": "engine",
-      "chapter": "2.1 One real run",
+      "chapter": "2.2 What the model reads",
       "builds": 2,
       "optional": false
     },
@@ -192,7 +192,7 @@
       "id": "context",
       "title": "What the model reads, every turn",
       "section": "engine",
-      "chapter": "2.1 One real run",
+      "chapter": "2.2 What the model reads",
       "builds": 2,
       "optional": false
     },
@@ -200,7 +200,7 @@
       "id": "memory",
       "title": "The context forgets; notes do not",
       "section": "engine",
-      "chapter": "2.2 Memory",
+      "chapter": "2.3 Memory",
       "builds": 2,
       "optional": false
     },
@@ -208,7 +208,7 @@
       "id": "patterns",
       "title": "Five patterns, three of them here",
       "section": "engine",
-      "chapter": "2.3 Patterns",
+      "chapter": "2.4 Patterns",
       "builds": 3,
       "optional": false
     },
@@ -216,7 +216,7 @@
       "id": "patterns-2",
       "title": "Patterns with several model calls",
       "section": "engine",
-      "chapter": "2.3 Patterns",
+      "chapter": "2.4 Patterns",
       "builds": 2,
       "optional": false
     },
@@ -224,7 +224,7 @@
       "id": "mcp",
       "title": "One plug instead of a tangle of wires",
       "section": "engine",
-      "chapter": "2.4 A common plug",
+      "chapter": "2.5 A common plug",
       "builds": 3,
       "optional": false
     },
@@ -246,7 +246,7 @@
     },
     {
       "id": "read-card",
-      "title": "How to read a card",
+      "title": "How to read a trace",
       "section": "work",
       "chapter": "",
       "builds": 1,

@@ -278,6 +278,9 @@
    "route": "billing"
   }
  ],
+ "routing_gloss": {
+  "मेरा रिफंड अभी तक नहीं आया।": "My refund has not come yet"
+ },
  "multi": {
   "date": "13 Jun 2025",
   "gain_pct": 90.2,

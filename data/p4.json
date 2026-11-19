@@ -30,6 +30,7 @@
    "reported_by": "law-firm summaries of the decision"
   }
  },
+ "run_month": "Nov 2026",
  "injection": {
   "goal": "Summarise my inbox in three lines.",
   "from": "billing-update@greenfreight-payments.com",
@@ -70,21 +71,25 @@
    "name": "EchoLeak",
    "cve": "CVE-2025-32711",
    "cvss": 9.3,
-   "by": "Microsoft"
+   "by": "Microsoft",
+   "found_by": "Aim Labs",
+   "patched": true
   },
   {
    "id": "github",
    "product": "GitHub MCP server",
    "when": "May 2025",
    "date": "26 May 2025",
-   "by": "Invariant Labs"
+   "by": "Invariant Labs",
+   "found_by": "Invariant Labs"
   },
   {
    "id": "comet",
    "product": "Perplexity Comet",
    "when": "Aug 2025",
    "date": "20 Aug 2025",
-   "by": "Brave"
+   "by": "Brave",
+   "found_by": "Brave"
   }
  ],
  "trifecta": {
