@@ -282,10 +282,10 @@ chap('2.4','Patterns');
  const routeFig=fig(RW,RH,rg,`Routing: ${word(R.length)} real customer messages, one in Hindi, each labelled ${dests.join(', ')} by one model call`);
  // parallelisation: the opening run's three forecasts in one turn
  const cities=t1.calls.map(c=>c.city);
- let pg=`<circle cx="44" cy="50" r="30" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon('spark',44,50,30,COL.guess)+label(44,98,'turn 1',{size:17,anchor:'middle',fill:COL.guess});
+ let pg=`<circle cx="44" cy="50" r="30" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon('spark',44,50,30,COL.guess)+label(44,102,'turn 1',{size:20,anchor:'middle',fill:COL.guess});
  cities.forEach((c,i)=>{const y=6+i*31;pg+=ar(78,50,236,y+13)+box(240,y,230,27,`forecast · ${esc(c)}`,COL.target,{fs:17})+ar(474,y+13,620,50);});
- pg+=label(112,100,`×${t1.calls.length} at once`,{size:17,fill:MUTED,weight:650})+`<circle cx="656" cy="50" r="30" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon('spark',656,50,30,COL.guess)+label(700,46,'turn 2 reads',{size:18,fill:COL.guess})+label(700,68,'all three results',{size:18,fill:COL.guess});
- const parFig=fig(880,110,pg,`Parallelisation: ${word(t1.calls.length)} forecast requests made at once in one turn, read together in the next`);
+ pg+=label(108,104,`×${t1.calls.length} at once`,{size:20,fill:MUTED,weight:650})+`<circle cx="656" cy="50" r="30" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon('spark',656,50,30,COL.guess)+label(700,46,'turn 2 reads',{size:18,fill:COL.guess})+label(700,68,'all three results',{size:18,fill:COL.guess});
+ const parFig=fig(880,112,pg,`Parallelisation: ${word(t1.calls.length)} forecast requests made at once in one turn, read together in the next`);
  const ROWS=[['Fixed steps, with a check between them.',false,chainFig],['Sort first, then hand to a specialist.',true,routeFig],['Independent requests, all at once.',true,parFig]];
  const rowP=(k,name,desc,real,f)=>`<div><div><div><h3>${name}</h3><p>${desc}</p><small class="${real?'':'dz'}">${real?'real run':'a design'}</small></div>${at(k,f)}</div></div>`;
  S_('patterns','engine',`${Word(PN.length)} patterns, ${word(ROWS.length)} of them here`,{builds:ROWS.length,nb:nb('part-2'),

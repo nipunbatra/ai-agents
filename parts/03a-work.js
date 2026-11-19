@@ -46,8 +46,10 @@ const HALO={agent:'#F3EDF9',tools:'#EBF2F2'};   // the lane tints of figures.js,
 /** The trace of an application slide, as app() wrote it into the body: [start, end] of its HTML. */
 function traceAt(s){const open='<div class="diagram-scroll lanes">',i=s.body.indexOf(open),j=s.body.indexOf('</svg></div>',i);
  if(i<0||j<i)throw new Error(`${s.id}: no trace`);return [i,j];}
-/** Draw extra SVG on top of an application slide's trace. */
-function overlay(id,svg){const s=slides.find(x=>x.id===id),[,j]=traceAt(s);s.body=s.body.slice(0,j)+svg+s.body.slice(j);}
+/** Draw extra SVG on top of an application slide's trace, after checking that geom() g still matches figures.js. */
+function overlay(id,g,svg){const s=slides.find(x=>x.id===id),[i,j]=traceAt(s);
+ if(!s.body.slice(i,j).includes(`<circle cx="${g.x(0).toFixed(1)}" cy="${g.y(0)}" r="${g.r}"`))throw new Error(`${id}: the trace geometry no longer matches figures.js`);
+ s.body=s.body.slice(0,j)+svg+s.body.slice(j);}
 /** Replace the trace of an application slide with other content from click b on. */
 function swapTrace(id,b,html){
  const s=slides.find(x=>x.id===id),[i,j0]=traceAt(s),j=j0+'</svg></div>'.length;
@@ -75,17 +77,9 @@ partBreak(3,'Agents at work',`Agents already do real jobs. Here are ${word(APPS.
  const KEY=[[node(ROLE.you,'person'),'You: the request, and any check'],[node(ROLE.agent,'spark'),'The agent decides'],
   [node(ROLE.tools,'plug'),'A tool acts on the world'],[node(ROLE.you,'approve',{filled:true}),'A person approves'],
   [node(ROLE.tools,'sensor',{n:c0}),`${Word(c0)} calls made at once`],[node(COL.green,'check',{filled:true})+node(COL.loss,'alert'),'Checked, or a risk']];
- // lanes() draws the nodes; the arrows are routed here: down into a node's top, up out of a node's right side, so
- // agent → tool → agent does not draw both arrows on one vertical line.
- const RC={laneH:96,fs:19,laneOpts:{gap:6,left:172}},g=geom(OPEN,RC,1152),x=g.x,y=g.y,r=g.r;
- const arrows=OPEN.slice(1).map((s,k)=>{const i=k+1,xm=(x(i-1)+x(i))/2;
-  return route(y(i)>y(i-1)?[[x(i-1)+r+4,y(i-1)],[x(i),y(i-1)],[x(i),y(i)-r-6]]:[[x(i-1)+r+4,y(i-1)],[xm,y(i-1)],[xm,y(i)],[x(i)-r-6,y(i)]]);}).join('');
- const trace=lanes(OPEN,{W:1152,laneH:RC.laneH,fs:RC.fs,gap:RC.laneOpts.gap,left:RC.laneOpts.left,first:OPEN.length,alt:'The opening run as a trace: you ask, the agent asks for three forecasts at once, then six sums at once, and answers; you read the answer'});
- // the arrows go under the nodes: just before the first node's circle (found by its position, which checks geom())
- const cut=trace.indexOf(`<circle cx="${x(0).toFixed(1)}" cy="${y(0)}" r="${r}"`);
- if(cut<0)throw new Error('read-card: the trace geometry no longer matches figures.js');
+ const trace=lanes(OPEN,{W:1152,laneH:96,fs:19,gap:6,alt:'The opening run as a trace: you ask, the agent asks for three forecasts at once, then six sums at once, and answers; you read the answer'});
  S_('read-card','work','How to read a trace',{builds:1,
-  body:`${trace.slice(0,cut)+arrows+trace.slice(cut)}
+  body:`${trace}
    <div class="p3a-key">${KEY.map(([n,t])=>`<div>${n}<span>${t}</span></div>`).join('')}</div>`,
   lines:['The opening run, drawn as a trace. Time runs left to right; the row says who acts. Under each one: tools, checks, evidence.'],
   ask:['Where in this run did a person have a say?'],
@@ -192,8 +186,9 @@ app('app-research','Research: a market scan with sources',{...CARD,builds:2,nb:n
   misconception:'That “AI invoice processing” means an agent reads every invoice and decides. Usually plain rules do the matching, and the model reads only what the rules cannot.',
   transition:'From the back office to the front desk: customer support.',
   source:'Trace: a design drawn for this talk; it describes no deployed system. The invoice is from the notebook’s demo inbox.'});
- const g=geom(steps,CARD),y=g.y(2);
- overlay('app-documents',route([[g.x(2)+g.r+5,y],[g.x(5)-g.r-7,y]],{dash:true,text:'match',at:[(g.x(2)+g.x(5))/2,y+24],halo:HALO.tools}));
+ // the normal path: out of Match low on its right, along under the solid arrows, into Post low on its left
+ const g=geom(steps,CARD),y=g.y(2),dy=13,dx=Math.sqrt(g.r**2-dy**2);
+ overlay('app-documents',g,route([[g.x(2)+dx+3,y+dy],[g.x(5)-dx-4,y+dy]],{dash:true,text:'match',at:[(g.x(2)+g.x(5))/2,y+dy+21],halo:HALO.tools}));
 }
 
 // ---------------------------------------------------------------------------------------- 3.2 operations
@@ -221,8 +216,9 @@ chap('3.2','Operations');
   demo:`Notebook 3.3: the inbox assistant reads this same refund email; its ${esc(D.inbox.gated_tool)} tool waits for your approval.`,
   transition:'Operations at night: an IT incident.',
   source:`Trace: a design drawn for this talk; it describes no deployed system. Klarna: press release (${KL.date}); the CEO’s interview with Bloomberg (${KL.turn_date}), as reported by Entrepreneur.`});
- const g=geom(steps,CARD),y3=g.y(3),y5=g.y(5),xm=g.x(4);
- overlay('app-support',gat(2,route([[g.x(3)+g.r+4,y3],[xm,y3],[xm,y5],[g.x(5)-g.r-7,y5]],{dash:true,text:'yes',at:[xm+24,(y3+y5)/2+6],halo:HALO.agent})));
+ // the normal path: out of "Under the cap?" low on its right, along the agent lane, down into Refund's top
+ const g=geom(steps,CARD),y3=g.y(3),y5=g.y(5),dy=11,dx=Math.sqrt(g.r**2-dy**2);
+ overlay('app-support',g,gat(2,route([[g.x(3)+dx+3,y3+dy],[g.x(5),y3+dy],[g.x(5),y5-g.r-6]],{dash:true,text:'yes',at:[g.x(4),y3+dy-7],halo:HALO.agent})));
 }
 
 app('app-incident','IT incidents: an alert in the night',{...CARD,builds:2,

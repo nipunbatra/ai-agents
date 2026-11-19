@@ -95,8 +95,8 @@ chap('5.1','What to hand over');
    `<path d="M${x2},${y2} L${(x2-h*Math.cos(a-.42)).toFixed(1)},${(y2-h*Math.sin(a-.42)).toFixed(1)} L${(x2-h*Math.cos(a+.42)).toFixed(1)},${(y2-h*Math.sin(a+.42)).toFixed(1)}Z" fill="${c}"/>`;};
  const up=(i)=>{const xr=x0+(i+1)*sw,y1=tops[i],y2=tops[i+1];
   return curve(xr-70,y1-8,xr-40,y2-40,xr+30,y2-10,COL.green)+label(xr+46,y2-16,'evals pass',{size:19,fill:COL.green,weight:700,halo:true});};
- g+=gat(2,up(0)+up(1)+curve(x0+2.58*sw,tops[2]-8,x0+1.94*sw,tops[2]-158,x0+1.5*sw,tops[1]-6,COL.loss,'7 6')+
-  label(x0+2*sw,30,'errors rise: step back',{size:19,fill:COL.loss,anchor:'middle',weight:700,halo:true}));
+ g+=gat(2,up(0)+up(1)+curve(x0+2.58*sw,tops[2]-8,x0+1.94*sw,tops[2]-146,x0+1.5*sw,tops[1]-6,COL.loss,'7 6')+
+  label(x0+2*sw,24,'errors rise: step back',{size:19,fill:COL.loss,anchor:'middle',weight:700,halo:true}));
  S_('ramp','adopt','Start small, and climb',{builds:2,
   body:fig(W,H,g,'A staircase of three steps: shadow mode, approve each case, routine cases on their own; climb when the evals pass, step back when errors rise'),
   lines:['Do not start at full autonomy. Start in shadow mode, where it only suggests, then let it act with approval, then let routine cases run.',

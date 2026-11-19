@@ -93,7 +93,7 @@ S_('eras','open','From answering to acting, in four years',{builds:3,
  for(let yr=2019;yr<=2026;yr++)axes+=line(X(yr),Tp,X(yr),H-B+6,{stroke:'#EEF0F2',w:1})+line(X(yr),H-B,X(yr),H-B+6,{stroke:AX})+label(X(yr),H-B+28,String(yr),{size:19,anchor:'middle'});
  const cut=16*60,lim=label(X(2019.1),Y(cut)-8,'above 16 hours, METR calls its measurement unreliable',{size:16,fill:COL.loss});
  const stage=p=>p.year<2023?1:p.date<'2025-06-01'?2:3;
- const PLACE={'GPT-4':[-12,-14,'end'],'Claude 3.7 Sonnet':[-14,-10,'end'],'GPT-5':[-14,-10,'end'],'Claude Opus 4.6':[-96,-2,'end',1]};
+ const PLACE={'GPT-4':[-12,-14,'end'],'Claude 3.7 Sonnet':[-14,-10,'end'],'GPT-5':[-14,-10,'end'],'Claude Opus 4.6':[-96,12,'end',1]};
  const draw=k=>M.points.filter(p=>stage(p)===k).map(p=>{const x=X(p.year),y=Y(p.p50),c=p.sota?COL.guess:'#B9A6CF';
   return line(x,Y(Math.max(p.lo,.5/60)),x,Y(Math.min(p.hi,1800)),{stroke:c,w:1.5,extra:'opacity=".45"'})+
    (p.p50>cut?`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="7" fill="#fff" stroke="${c}" stroke-width="2.5"/>`:dot(x,y,p.sota?7:5.5,{fill:c}))+

@@ -62,7 +62,7 @@
 .msgs{display:flex;flex-direction:column;gap:8px;min-width:0}
 .msg{border-radius:14px;padding:7px 14px 9px;font-size:20px;line-height:1.38;border:2px solid var(--line);background:#fff;min-width:0}
 .msg .mh{display:flex;align-items:center;gap:7px;font-size:14px;letter-spacing:.8px;text-transform:uppercase;font-weight:700;margin-bottom:2px}
-.msg .mh em{font-style:normal;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted);margin-left:auto;font-size:15px}
+.msg .mh em{font-style:normal;font-weight:600;letter-spacing:0;text-transform:none;color:var(--muted);margin-left:auto;font-size:16px}
 .msg.you{border-color:#AA4E0855;background:#AA4E080D}.msg.you .mh{color:var(--noise)}
 .msg.model,.msg.call{border-color:#8B2CDE55;background:#8B2CDE0B}.msg.model .mh,.msg.call .mh{color:var(--q)}
 .msg.thought{border-style:dashed;border-color:#8B2CDE55;color:#4B5563;font-style:italic}.msg.thought .mh{color:var(--q);font-style:normal}

@@ -9,7 +9,7 @@ import {S_,app,recap,chap,slides,css,esc,num,big,word,Word,kY,kT,kR,kG,only,msg,
 const D=need(await data('p3b'),'coscientist','lab','robin','evolve','kisan','farmerchat','clinic','farm','air');
 const APPS=need(await data('apps'),'apps','families','zones'),T=need(await data('traces'),'date_text','model');
 
-css(`.state-slot>[data-only]:has(>.p3b-adv){align-self:center}.p3b-adv .msg .mb{font-size:24px;line-height:1.6}
+css(`.state-slot>[data-only]:has(>.p3b-adv){align-self:center}.p3b-adv .msg .mb{font-size:24px;line-height:1.6}.p3b-adv .msg .mh em{font-size:17px}
 .p3b-memo{color:var(--data);font-weight:650}
 .p3b-map{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:22px;align-items:center}
 .p3b-map svg{max-height:456px}
@@ -240,8 +240,10 @@ const MW=860,MH=432,PL=64,PR=856,QT=34,QB=388,XM=(PL+PR)/2,YM=(QT+QB)/2,BAND=40;
 const MX=v=>PL+22+v*(PR-PL-44),MY=v=>QB-BAND-v*(QB-QT-2*BAND);
 // Label offsets [dx, dy, anchor] where the default (to the right) would touch a neighbour; a shorter name where the
 // full one cannot fit between its neighbours (the card shows the full name).
-const PLACE={farmer:[-20,6,'end'],air:[-20,6,'end'],research:[-20,6,'end'],building:[-20,6,'end'],evolve:[-20,6,'end'],browser:[-20,6,'end'],
- coscientist:[20,10,'start'],lab:[18,6,'start']},SHORT={support:'Support'};
+const PLACE={farmer:[-20,6,'end'],air:[-20,6,'end'],research:[-20,6,'end'],building:[-20,6,'end'],evolve:[-20,6,'end'],
+ coscientist:[20,10,'start'],lab:[18,6,'start'],browser:[108,-16,'start']},SHORT={support:'Support'};
+// In the crowded top-right zone every label sits to the right of its marker; Web forms reaches its label by a short leader.
+const LEADER={browser:[[11,-3],[104,-21]]};
 const n=APPS.apps.length,inZone=(easy,costly)=>APPS.apps.filter(a=>ZONE[a.zone].easy===easy&&ZONE[a.zone].costly===costly).length;
 const nCostly=APPS.apps.filter(a=>ZONE[a.zone].costly).length,nApprove=inZone(true,true),nRun=inZone(true,false);
 const ALT=`The ${word(n)} applications of Part 3 on two axes, how easy the result is to check and what a mistake costs, in four zones`;
@@ -264,6 +266,7 @@ function mapSVG(){
   return `<g class="p3b-pt" data-id="${a.id}" data-fam="${a.family}" tabindex="0" role="button" aria-label="${esc(a.name)}: ${esc(a.why)}">`+
    `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="20" fill="#fff" fill-opacity="0"/>`+
    `<circle class="p3b-ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="17" fill="none" stroke="${COL.ink}" stroke-width="2.5"/>`+mark(a.family,x,y)+
+   (LEADER[a.id]?line(x+LEADER[a.id][0][0],y+LEADER[a.id][0][1],x+LEADER[a.id][1][0],y+LEADER[a.id][1][1],{stroke:INK,w:1.5}):'')+
    `<text x="${(x+dx).toFixed(1)}" y="${(y+dy).toFixed(1)}" fill="${COL.ink}" font-size="18" font-weight="600" text-anchor="${an}" style="paint-order:stroke;stroke:${flat(ZCOL(z),ZA)};stroke-width:6px;stroke-linejoin:round">${esc(SHORT[a.id]||a.name)}</text></g>`;}).join(''));
  return g;}
 const famHTML=live=>`<div class="p3b-fams">${APPS.families.map(f=>live?`<button type="button" data-fam="${f.id}" aria-pressed="false">${markHTML(f.id)}${esc(f.name)}</button>`:

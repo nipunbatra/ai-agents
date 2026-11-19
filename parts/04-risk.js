@@ -35,7 +35,7 @@ css(`.p4-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22
 .p4-tri{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;font-size:24px;line-height:1.3}
 .p4-tri li{display:flex;gap:12px;align-items:center}.p4-tri i{flex:none;width:22px;height:22px;border-radius:50%;border:3px solid currentColor;opacity:.9}
 .p4-gate{display:flex;gap:10px;align-items:flex-start;font-size:22px;line-height:1.38}.p4-gate svg{flex:none;margin-top:2px}
-.p4-right{display:flex;flex-direction:column;gap:16px;min-width:0}
+.p4-right{display:flex;flex-direction:column;gap:16px;min-width:0}.p4-right .msg .mh em{font-size:17px}
 @media(max-width:760px){.reading .p4-cases,.reading .p4-attacks,.reading .p4-inj2{grid-template-columns:minmax(0,1fr)}}`);
 
 partBreak(4,'When the engine stalls','The loop that lets an agent act also lets small mistakes pile up, and lets a stranger’s text steer it. Here is how agents fail, and what contains the damage.',
@@ -195,9 +195,9 @@ chap('4.2','Poisoned inputs');
  g+=label(430,98,'Untrusted',{size:22,fill:COL.loss,anchor:'middle',weight:700})+label(430,124,'content',{size:22,fill:COL.loss,anchor:'middle',weight:700});
  g+=label(300,320,'A way to',{size:23,fill:COL.target,anchor:'middle',weight:700})+label(300,346,'send it out',{size:23,fill:COL.target,anchor:'middle',weight:700});
  g+=icon('alert',300,196,38,COL.loss,{sw:2.4});
- const tag=(x,y,t,c)=>{const w=t.length*17*.6+22;return `<rect x="${(x-w/2).toFixed(1)}" y="${y-15}" width="${w.toFixed(1)}" height="30" rx="15" fill="#fff" stroke="${c}" stroke-width="2"/>`+label(x,y+6,t,{size:17,fill:c,anchor:'middle',weight:600});};
- g+=gat(2,tag(178,160,'read_email',COL.data)+tag(420,160,'fake email',COL.loss)+tag(300,377,'send_email',COL.target)+
-  `<circle cx="452" cy="318" r="22" fill="${COL.amber}"/>`+icon('approve',452,318,26,'#fff')+label(482,312,'a person',{size:18,fill:COL.amber,weight:650})+label(482,334,'approves',{size:18,fill:COL.amber,weight:650}));
+ const tag=(x,y,t,c)=>{const w=t.length*19*.6+22;return `<rect x="${(x-w/2).toFixed(1)}" y="${y-16}" width="${w.toFixed(1)}" height="32" rx="16" fill="#fff" stroke="${c}" stroke-width="2"/>`+label(x,y+7,t,{size:19,fill:c,anchor:'middle',weight:600});};
+ g+=gat(2,tag(178,160,'read_email',COL.data)+tag(420,160,'fake email',COL.loss)+tag(300,372,'send_email',COL.target)+
+  `<circle cx="452" cy="318" r="22" fill="${COL.amber}"/>`+icon('approve',452,318,26,'#fff')+label(480,311,'a person',{size:20,fill:COL.amber,weight:650})+label(480,335,'approves',{size:20,fill:COL.amber,weight:650}));
  const venn=fig(W,H,g,'Three overlapping circles: private data, untrusted content, and a way to send it out; the agent at their overlap');
  const ap=T.inbox.approvals[0];
  const P3=D.trifecta.parts,PC=[COL.data,COL.loss,COL.target];
