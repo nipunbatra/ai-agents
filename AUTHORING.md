@@ -1,4 +1,4 @@
-# Authoring guide: The engine of autonomy (IITGN-X talk on AI agents, 3 Dec 2026)
+# Authoring guide: AI agents (IITGN-X talk, 3 Dec 2026)
 
 Read this whole file before writing a slide. Then read `parts/00-opening.js` and `parts/01-what.js`: they are the
 finished exemplars, and every part should read as if the same person wrote it. `plan/outline.md` has the plan of
@@ -144,6 +144,15 @@ Words
 - No slogan fragments ("One loop. Every agent."), no forced groups of three, no "X, not Y" endings, no rhetorical
   "It's not just A, it's B", no decorative bold, no emojis, no title case in headings, no hype words ("revolutionary",
   "game-changing", "unlock" except in the talk's given title).
+- No metaphors or images in place of the thing itself: no "engine", "bonnet", "plug", "dial", "climb", "stalls".
+  Say "the loop", "MCP", "the level of autonomy", "raise autonomy in steps", "how agents fail".
+- The model is Nipun's CLIP deck (nipunbatra.github.io/attention/clip/). Titles are a plain question ("What if the
+  right answer is missing?") or a literal statement of what the slide shows ("The classifier has 1,000 stored class
+  vectors"). Story lines report what we did or what happened, with the number ("Coffee scores above tea."). Part
+  breaks pose one key question; no "By the end of this part you can".
+- No meta lines about the slide or the talk ("The picture on the right is the whole idea", "Notice where…", "Argue
+  with them"), no aphorisms ("The context forgets; notes do not", "Measure before you trust"), no warm-up filler
+  ("Let us…", "Here is…", "very welcome").
 - No em dashes or en dashes anywhere, on slides or in notes. Write ranges as "1 to 4". Curly quotes are fine.
 - Shared terms: "agent", "the model", "tool", "the loop", "a trace" (one recorded run), "a step" (one model turn),
   "a tool call", "autonomy", "a guardrail", "an eval" (a test set you run the agent on), "the context" (what the model

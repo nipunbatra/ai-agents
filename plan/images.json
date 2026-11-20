@@ -9,7 +9,7 @@
   },
   {
    "name": "part-engine",
-   "prompt": "A stylised engine in cutaway: three large interlocking gears arranged in a circle, one violet gear with a lightbulb, one teal gear with a hand holding a wrench, one teal gear with an eye, connected by a looping belt with arrows; small tool icons (magnifier, envelope, database cylinder) orbit around it. No people.",
+   "prompt": "A violet spark-shaped helper, clearly visible and fully inside the frame, sits at a plain desk in the centre reading a long paper scroll with only wavy grey lines on it; the scroll unrolls to the right in three loops, each loop longer than the one before; three small teal tool icons (a rain cloud, a calculator, a magnifying glass) float above, each passing a blank slip of paper down to the helper; beside the desk a small pile of plain round blank tokens with no symbols or markings. No people. No currency signs.",
    "aspect": "4:3"
   },
   {
@@ -19,7 +19,7 @@
   },
   {
    "name": "part-risk",
-   "prompt": "A stylised car engine on a test bench with an amber warning light glowing, a large hand pulling a brake lever, a shield and a padlock nearby, a fishing hook dangling from above holding an envelope.",
+   "prompt": "A violet spark-shaped helper at an office desk working through a stack of task cards, one card torn in half; from above, an envelope dangles on a fishing hook towards the helper; an Indian office worker stands beside the desk with a hand on a large amber stop button; a padlock and a shield rest on a shelf behind.",
    "aspect": "4:3"
   },
   {

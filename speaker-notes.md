@@ -1,4 +1,4 @@
-# The engine of autonomy: speaker notes
+# AI agents: speaker notes
 
 Planned main route: 65 minutes, including student responses. Optional slides are outside this budget.
 
@@ -8,38 +8,38 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 |---|---:|
 | Opening | 6 |
 | Part 1 · What an agent is | 10 |
-| Part 2 · Inside the engine | 12 |
-| Part 3 · Agents at work | 20 |
-| Part 4 · When the engine stalls | 9 |
+| Part 2 · One run, step by step | 12 |
+| Part 3 · Fourteen applications | 20 |
+| Part 4 · How agents fail | 9 |
 | Part 5 · Agents in your organisation | 6 |
 | Wrap-up | 2 |
 
-## title: The engine of autonomy
+## title: AI agents
 
-**Build 1:** The picture on the right is the whole idea. By the end of the talk every part of it will mean something.
+**Build 1:** A goal goes in. The model asks for tools, reads the results, and repeats until it can answer.
 
 - Ask: Who here has used ChatGPT, Gemini or Claude this week? Who has let one of them carry out a task for them?
-- Expected: Most hands go up for the first question and few for the second. That gap is the subject of the talk.
+- Expected: Most hands go up for the first question and few for the second.
 
 **Point here:** An agent is a model that acts: it uses tools in a loop until a goal is met.
 
-**Transition:** Let us start with one request, sent to two systems.
+**Transition:** First, one request sent to two systems.
 
 **Source:** Slides, notebook and sources: github.com/nipunbatra/ai-agents
 
-## ask-vs-do: The same request, two systems
+## ask-vs-do: One question, a chatbot and an agent
 
-**Build 1:** Typed into two systems on 19 November 2026. The question needs the next three days of air, which no model has memorised.
+**Build 1:** We typed this into two systems on 19 November 2026. The answer depends on air-quality forecasts for the next three days.
 
 - Ask: Which of the two would you trust with this decision, and why?
 - Expected: The one that checks real data. Hold the answer until both have replied.
 
-**Build 2:** The chatbot answers fluently from training data. It sounds sure, and it never looked anything up.
+**Build 2:** The chatbot answered from its training data. It looked nothing up.
 
 - Ask: What did the chatbot get wrong?
 - Expected: It could not know the forecast, so it said the order does not matter. The forecast says the worst order means 24% more PM2.5 than the best.
 
-**Build 3:** The agent asked for three forecasts, added up all six orders, and answered with the numbers.
+**Build 3:** The agent asked for three forecasts, added up all six possible orders, and answered with the numbers.
 
 - Ask: What did the agent do that the chatbot could not?
 - Expected: It asked for live data, then reasoned over it. Same model; the difference is the tools and the loop.
@@ -50,23 +50,23 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Notebook:** Run Part 1 of the notebook live: the model alone, then run_agent with the air-quality tool.
 
-**Transition:** This shift, from answering to acting, happened in about four years.
+**Transition:** Products went from chatbots to agents in about four years.
 
 **Source:** Both replies are real (Gemini 3.8 Flash, 19 November 2026, notebook Part 1); the request is shortened here. Forecast: CAMS via Open-Meteo.
 
-## eras: From answering to acting, in four years
+## eras: From chatbots to agents, 2022 to 2026
 
-**Build 1:** First, a model that answers. You type, it writes back, and the conversation is all it knows.
+**Build 1:** First, a model that answers. You type, it writes back. It knows only its training data and the conversation.
 
 - Ask: What could ChatGPT not do at launch that you now take for granted?
 - Expected: Look things up, run code, read your files, act on websites.
 
-**Build 2:** Then the model learns to ask for tools in a format programs can read, even to operate a screen, and tools get a common plug called MCP.
+**Build 2:** Then models learn to request tools in a format programs can read, and some operate a screen. MCP gives tools one common format.
 
 - Ask: Why would a fixed format for tool requests matter so much?
-- Expected: Because then any program can read the request and carry it out. It is the bridge from text to action.
+- Expected: Because then any program can read the request and carry it out. Without it, our code would have to guess what the model meant.
 
-**Build 3:** Now products hand the model a goal and let it work for minutes or hours.
+**Build 3:** Now products give a model a goal and let it work on its own for minutes or hours.
 
 - Ask: Which of these have you used?
 - Expected: Many will have used deep research or a coding assistant; few will have let an agent act on a website.
@@ -94,17 +94,17 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 - Ask: If the trend held for two more years, what would that mean for your work?
 - Expected: Six doublings, so tasks of months. Treat it as a trend line and no more: the tasks are mostly software, and success is only 50%.
 
-**Point here:** Agents are getting better at long tasks fast, and the measure is human working time, which managers understand.
+**Point here:** Agents are getting better at long tasks fast, and the measure is a skilled person’s working time, which you can compare with your own tasks.
 
 **Common misconception:** The 12 hours for Claude Opus 4.6 has a 95% interval of about 5 to 61 hours, and the doubling time is our own fit (METR’s published fits: about 196 days over the whole trend, about 89 days for models since 2024). Also: 50% success on a 12-hour task does not mean it does your 12-hour job. It fails half the time, the tasks are self-contained software tasks, and the 80% horizon is several times shorter.
 
-**Transition:** So what is inside these agents? Here is today’s route.
+**Transition:** The plan for today.
 
 **Source:** Vertical axis: length of task (time a skilled person needs) that the agent completes half the time, log scale. METR Time Horizon 1.1 (metr.org/time-horizons), fetched 2026-11-19; bars are 95% intervals; hollow points are above 16 hours.
 
-## route: Today’s route
+## route: Today’s plan
 
-**Build 1:** The talk has five parts. You can run everything in a Colab notebook, with a free Gemini key or an open model.
+**Build 1:** Five parts. Every run on the slides comes from a Colab notebook that works with a free Gemini key or an open model.
 
 - Ask: Which part matters most for your work?
 - Expected: Most will say Part 3 or Part 5. Promise both, and say that Part 4 is the one to remember.
@@ -117,7 +117,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## part-1: Part 1 · What an agent is
 
-**Build 1:** By the end of this part you can say, in one sentence, what makes a chatbot an agent.
+**Build 1:** Key question: what does an agent have that a chatbot does not?
 
 - Ask: In your own words, what is an AI agent?
 - Expected: Answers vary: a bot that does tasks, an assistant that uses apps. Collect two or three; we will sharpen them.
@@ -128,12 +128,12 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## alone: On its own, a model only writes text
 
-**Build 1:** A model reads text and writes the most likely next words. However clever it sounds, that is all it does.
+**Build 1:** A model reads text and writes likely next words. That is all it does.
 
 - Ask: If a model only predicts words, how did it write a correct-looking answer about Delhi’s air?
-- Expected: From patterns in its training text: Delhi is usually polluted in winter. Plausible, unchecked.
+- Expected: From patterns in its training text: Delhi is usually polluted in winter. It sounded right, but nothing checked it.
 
-**Build 2:** So on its own it cannot see today’s data, cannot be trusted with long sums, cannot act, and forgets you.
+**Build 2:** So on its own it cannot see today’s data, add up long sums reliably, act on anything, or remember you.
 
 - Ask: Which of these limits matters most in your job?
 - Expected: Usually live data and acting on systems. Both are fixed the same way: with tools.
@@ -142,21 +142,21 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Common misconception:** That newer models “know” current facts. They know their training data, which ends at a cut-off date.
 
-**Transition:** So how does a text predictor get at a forecast? It asks.
+**Transition:** So how does a model that only writes text get a forecast? It writes a request for one.
 
 ## tool-call: A tool call is a request written as text
 
-**Build 1:** Given an air-quality tool, the model replies with a request, written in a format a program can read.
+**Build 1:** We give the model an air-quality tool. It replies with a request, in a format our program can read.
 
 - Ask: Who actually fetched the forecast: the model or our program?
 - Expected: Our program. The model only wrote the request.
 
-**Build 2:** Our code calls the forecast service and puts the result back into the conversation.
+**Build 2:** Our code calls the forecast service and adds the result to the conversation.
 
 - Ask: Why is it safer that the model only writes requests?
 - Expected: Because our program decides which requests to carry out. That is where guardrails live (Part 4).
 
-**Build 3:** Now the model has facts to reason over, and it answers with them.
+**Build 3:** The model now answers with the forecast numbers.
 
 - Ask: What else could a tool be?
 - Expected: Anything with an interface: a database query, sending an email, a calculator, a search, a robot arm.
@@ -167,23 +167,23 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Notebook:** Notebook 1.2: print the request, run get_air_quality by hand, hand back the result.
 
-**Transition:** Do that over and over, automatically, and you have an agent.
+**Transition:** An agent is our code repeating this until the model stops asking for tools.
 
 **Source:** Real request and result from the run on 19 November 2026 (Gemini 3.8 Flash); one of the three requests it made at once.
 
-## the-loop: The loop is the engine
+## the-loop: An agent repeats three steps
 
 **Build 1:** Think: the model reads everything so far and decides what to do. Act: our code runs the tools it asked for.
 
 - Ask: What decides whether the loop goes round again?
 - Expected: The model: if its reply contains a tool request, the loop continues; if not, that reply is the answer.
 
-**Build 2:** Observe: the results join the conversation, and the model thinks again, now with more facts.
+**Build 2:** Observe: the results are added to the conversation, and the model thinks again with them.
 
 - Ask: Why did it ask for six sums in one go?
 - Expected: They do not depend on each other, so it asked for all of them at once. We told it to (Part 2).
 
-**Build 3:** It stops when it answers, or when a limit is hit. Our run took three turns: two rounds of tool calls, then the answer.
+**Build 3:** It stops when it answers or hits a limit. Our run took three turns: two rounds of tool calls, then the answer.
 
 - Ask: What would make the loop never stop?
 - Expected: A tool that keeps failing, or a goal that is never met. So we always set a step limit (Part 4).
@@ -192,18 +192,18 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Notebook:** Notebook 1.3: run_agent prints each turn in these colours.
 
-**Transition:** Seven questions describe any agent. Here they are for this one.
+**Transition:** Seven questions to ask about any agent, answered for this one.
 
 **Source:** The turns of the real run on 19 November 2026: 21 seconds of model time, about ₹0.78 at paid prices.
 
-## agent-card: Seven questions describe any agent
+## agent-card: Seven questions to ask about an agent
 
-**Build 1:** Goal, model and tools make an agent work. Here they are for the run we just watched.
+**Build 1:** The first three say what the agent does: goal, model and tools. Here they are for our run.
 
 - Ask: Which of the seven would you check first before letting an agent near your work?
 - Expected: Usually tools and guardrails: what can it touch, and what can it change?
 
-**Build 2:** The other four make it safe to use. Parts 3 to 5 come back to each of them.
+**Build 2:** The other four say how it is kept safe. Parts 3 to 5 return to each.
 
 - Ask: Which of these four is missing from most demos you have seen?
 - Expected: Guardrails and the person. Demos show the happy path.
@@ -214,17 +214,17 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## workflow: A workflow or an agent?
 
-**Build 1:** A workflow: the steps are written down in advance, like an invoice that is always read, matched and posted.
+**Build 1:** A workflow: the steps are fixed in advance. An invoice, for example, is always read, matched and posted.
 
 - Ask: Is processing an invoice a workflow or an agent?
 - Expected: A workflow, mostly; an agent only for the odd invoice that does not match.
 
-**Build 2:** An agent: the model chooses the next step each time, as ours did when it decided to add up six orders.
+**Build 2:** An agent: the model picks the next step each time. Ours decided by itself to add up six orders.
 
 - Ask: What in our air-quality task could not be fixed in advance?
 - Expected: How many lookups and sums were needed depended on the request and the data.
 
-**Build 3:** Workflows are cheaper and more predictable. Pay for an agent only when the path really varies.
+**Build 3:** Workflows are cheaper and more predictable. An agent is worth it when the steps change from case to case.
 
 - Ask: Name one task in your team that is really a workflow.
 - Expected: Monthly reports, onboarding checklists, standard approvals.
@@ -237,28 +237,28 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Workflow and agent as defined in Anthropic, “Building effective agents” (19 Dec 2024).
 
-## autonomy: Autonomy is a dial you set
+## autonomy: Five levels of autonomy
 
-**Build 1:** The same refund at three of the five settings; you can drag the dial to the others. At level 1 you do the work.
+**Build 1:** One refund at three of the five levels; drag the slider for the others. At level 1 you do the work.
 
 - Ask: At which level does the agent first touch a real system?
 - Expected: Level 2: it looks up the order. Reading is low risk.
 
-**Build 2:** At level 4 the agent does everything up to the refund, then waits for your approval. Notice where the amber step sits.
+**Build 2:** At level 4 the agent does everything up to the refund, then waits for your approval: the amber step.
 
 - Ask: Why put the approval just before the refund, and not at the start?
 - Expected: Because the refund is the step that cannot be undone. Everything before it is cheap to redo.
 
 **Build 3:** At level 5 you only read the log. Which level would you allow for refunds in your company?
 
-- Ask: What would make you move this dial up a notch?
+- Ask: What would make you raise this level?
 - Expected: Evidence: a test set of past refunds it handles correctly, and a cap on the amount (the support example in Part 3).
 
 **Point here:** Autonomy is a design decision, separate from how capable the model is. You choose the level per task.
 
 **Common misconception:** That a more capable model should automatically get more autonomy. Capability and permission are different questions.
 
-**Notebook:** Drag the dial from 1 to 5 and watch the person’s steps move from doing to approving to watching.
+**Notebook:** Drag the slider from 1 to 5 and watch the person’s steps move from doing to approving to watching.
 
 **Transition:** Part 1 in one slide.
 
@@ -266,18 +266,18 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## recap-1: Part 1 in one slide
 
-**Build 1:** Next: one real run, step by step, with what the model read and what it cost.
+**Build 1:** Next: one real run, step by step: what the model read and what it cost.
 
 - Ask: Which line of the card would change if this agent could also book your train tickets?
 - Expected: Tools (a booking tool), guardrails (a spending cap) and the person (approve before paying).
 
 **Point here:** The vocabulary for the rest of the talk.
 
-**Transition:** Part 2: inside the engine.
+**Transition:** Part 2: one run, step by step.
 
-## part-2: Part 2 · Inside the engine
+## part-2: Part 2 · One run, step by step
 
-**Build 1:** By the end of this part you can read a trace and say what the model saw, and paid for, at each step.
+**Build 1:** Key question: what does the model read at each step, and what does that cost?
 
 - Ask: When an agent “thinks”, what do you imagine is going on inside?
 - Expected: Answers vary: it plans, it searches, it reasons. Keep them; the next slides show that each step is the model reading a growing text and writing a short reply.
@@ -286,19 +286,19 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Illustration: generated (Gemini image model).
 
-## trace-walk: One run, one event at a time
+## trace-walk: The opening run, turn by turn
 
-**Build 1:** The opening request, replayed one event per click. On the right: tokens read and written per turn (a token is about ¾ of a word), and the cost.
+**Build 1:** One event per click. On the right: tokens read and written per turn (a token is about ¾ of a word), and the cost.
 
 - Ask: What do you expect the model to do first?
 - Expected: Look up the forecasts. It cannot know them.
 
-**Build 2:** Turn 1: a short thought, then three forecast requests in one go, since none depends on another. It read 284 tokens to decide that.
+**Build 2:** Turn 1: a short thought, then three forecast requests in one go, since none depends on another. It read 284 tokens.
 
 - Ask: Why ask for all three forecasts at once, instead of one at a time?
 - Expected: They do not depend on each other, so one turn is enough, and each turn saved is one fewer reread of the whole conversation. Our instructions also asked for this.
 
-**Build 3:** Our code fetches the three forecasts. The model is idle meanwhile; it sees the numbers only when we call it again.
+**Build 3:** Our code fetches the three forecasts. The model does nothing until we call it again with the results.
 
 - Ask: While the forecasts are fetched, what is the model doing?
 - Expected: Nothing. The model is not running; it is a function we call. Between calls, only our code runs.
@@ -308,12 +308,12 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 - Ask: Why did turn 2 read far more than turn 1?
 - Expected: It rereads the instructions, the tool menu, the task, its own first turn and the three results. Every turn starts from the full conversation.
 
-**Build 5:** Six totals come back from the calculator. The model did not add up a single number itself.
+**Build 5:** Six totals come back from the calculator. The model did no arithmetic itself.
 
 - Ask: Why not let the model add the numbers itself?
 - Expected: Models predict digits and slip on long sums. A calculator is exact and cheap, so the agent hands arithmetic to a tool.
 
-**Build 6:** Turn 3 reads 2,464 tokens and answers: 20.7 seconds and ₹0.78 in all. The pale blue is text it had already read the turn before.
+**Build 6:** Turn 3 reads 2,464 tokens and answers: 20.7 seconds and ₹0.78 in all. Pale blue is text it already read the turn before.
 
 - Ask: Where did most of the cost go: reading or writing?
 - Expected: Here, writing: 1,466 tokens written cost 1.9 times the 3,768 read, since a written token costs five times as much. In long runs reading takes over, because it is repeated every turn.
@@ -324,23 +324,23 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Notebook:** Notebook 2.1: print each turn’s tokens read and written for your own run.
 
-**Transition:** That replay is driven by a few lines of ordinary code. Here they are, once.
+**Transition:** That rereading is done by a few lines of ordinary Python.
 
 **Source:** Real run, 19 November 2026, Gemini 3.8 Flash (notebook Part 1.3). Paid prices: $0.75 in, $3.75 out per million tokens, thinking counted as output; ₹93.5 per dollar.
 
-## loop-code: The whole engine, in eleven lines
+## loop-code: The loop in eleven lines of Python
 
-**Build 1:** This is the loop, simplified from the notebook. Keep a list of messages; each step, hand the whole list to the model and add its reply.
+**Build 1:** Simplified from the notebook. Keep a list of messages. Each step, send the whole list to the model and add its reply.
 
 - Ask: Which line is the model, and which lines are ordinary code?
 - Expected: Only chat() calls the model. Everything else is plain Python that we wrote and can read.
 
-**Build 2:** Act and observe: run every tool it asked for and add each result to the list. A tool that fails returns its error as a result.
+**Build 2:** Act and observe: run each tool it asked for and add the result to the list. A failing tool returns its error as the result.
 
 - Ask: Why send an error back to the model instead of crashing?
 - Expected: The model can read the error and try something else: another city spelling, another tool. Crashing would end the run.
 
-**Build 3:** Stop when a reply asks for nothing more, or at the step limit. Frameworks wrap these same lines with retries, logging and permissions.
+**Build 3:** Stop when a reply asks for no tool, or at the step limit. Agent frameworks add retries, logging and permissions around these lines.
 
 - Ask: What would happen with no step limit?
 - Expected: A model that keeps asking for tools would loop for ever and spend money doing it. The step limit is the first guardrail (Part 4).
@@ -357,17 +357,17 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## tool-menu: What the model knows about a tool
 
-**Build 1:** This is everything the model knows about the forecast tool: a name, a description and two parameters. It never sees our Python code.
+**Build 1:** This is all the model knows about the forecast tool: a name, a description and two parameters. It never sees our Python code.
 
 - Ask: If you were the model, which part would you read most carefully?
 - Expected: The description. It says what comes back, in what units, and from when (tomorrow), so the model could match it to the dates of the trip.
 
-**Build 2:** Suppose the entry said only get_data(x): gets data. The model would have to guess. Write each description like a note to a new colleague.
+**Build 2:** Suppose the entry said only get_data(x): gets data. The model would have to guess. The description is all it has to go on.
 
 - Ask: What would a new colleague ask about get_data?
 - Expected: Which data, what x means, what comes back. Every question you would ask, the model must guess.
 
-**Point here:** The description is the only manual the model gets. Write it like a note to a new colleague: what it does, what comes back, in what units, with an example.
+**Point here:** The description is the only manual the model gets. Say what it does, what comes back, in what units, with an example.
 
 **Common misconception:** That a capable model will work out what a tool does from its name. It cannot see the code; a vague tool gets misused.
 
@@ -377,14 +377,14 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** The real entry, from get_air_quality’s docstring and type hints in notebook/agents.py (copied into scripts/sci/p2.py), laid out with line breaks and with “Pune” in single quotes. get_data is made up.
 
-## context: What the model reads, every turn
+## context: What the model reads each turn
 
 **Build 1:** The context is everything the model reads in a turn. Turn 3 read 8.7 times what turn 1 did. Most of it is the conversation so far.
 
 - Ask: Which part of the context would you have guessed was biggest?
 - Expected: Most guess the instructions or the tool results. It was the conversation so far, which the model rereads every turn.
 
-**Build 2:** Context engineering is deciding what goes in each turn. Every token is paid for, and too much text buries what matters.
+**Build 2:** Context engineering means choosing what goes into each turn. Every token is paid for, and long contexts hide the important parts.
 
 - Ask: In a long run, what would you trim first?
 - Expected: Old tool results and long histories: summarise them, or keep them in notes and fetch them when needed. Then the tool menu: offer only the tools the task needs.
@@ -399,9 +399,9 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Real run, 19 November 2026. The four parts were counted separately with Gemini’s token counter; “its own earlier turns” is the rest of turn 3’s 2,464 tokens, formatting included.
 
-## memory: The context forgets; notes do not
+## memory: Memory across runs: a notes file
 
-**Build 1:** When a run ends, its context is gone. This agent kept a note in a file; a later run asked for it alongside the forecasts.
+**Build 1:** When a run ends, its context is gone. This agent saved a note to a file; a later run read it back alongside the forecasts.
 
 - Ask: Why did the later run ask for its notes at all?
 - Expected: The read_notes tool says it holds preferences and facts about the user, and the question said “for me”. It asked for the notes and both forecasts in the same turn.
@@ -409,7 +409,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 **Build 2:** Agents use three kinds of memory. Which one would hold your company’s policy manual?
 
 - Ask: Which kind of memory would hold your company’s policy manual?
-- Expected: The filing cabinet: documents it searches and quotes (retrieval). Notes are for short facts about a user or a task; the context is only today’s desk.
+- Expected: Documents: the agent searches them and quotes the parts it needs (retrieval). Notes hold short facts about a user or a task; the context holds only this run.
 
 **Point here:** Memory that outlasts a run is text the agent saves with a tool and reads back with a tool; the model itself does not change.
 
@@ -421,19 +421,19 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Real run, 19 November 2026 (notebook Part 2.2): two turns: one round of tool calls (three at once), then the answer. The earlier request and the answer are shortened here. Drawings: made for the slide.
 
-## patterns: Five patterns, three of them here
+## patterns: Five common patterns: the first three
 
-**Build 1:** Most systems are built from a few patterns. A fixed trip, always three named cities and six sums, could be a chain; ours let the model choose.
+**Build 1:** Prompt chaining: fixed steps with a check between them. A planner that always fetches three forecasts and does six sums could be a chain.
 
 - Ask: Where in your work is a fixed sequence of steps with a check in the middle?
 - Expected: Report preparation, invoice processing, onboarding: draft, check, then send.
 
-**Build 2:** Routing, on four real customer messages: one quick model call picks the queue, including for the message in Hindi.
+**Build 2:** Routing: one quick model call picks the queue for each customer message. We ran it on four real messages, one in Hindi.
 
 - Ask: Why use a model to route, rather than keywords?
 - Expected: Keywords miss paraphrases and other languages. “मेरा रिफंड अभी तक नहीं आया” (my refund has not arrived yet) has no English keyword, and still went to billing.
 
-**Build 3:** Parallelisation: ask for independent things at once. Our agent fetched three forecasts in one turn, and did six sums in the next.
+**Build 3:** Parallelisation: independent requests at once. Our agent fetched three forecasts in one turn and did six sums in the next.
 
 - Ask: What stops you running everything in parallel?
 - Expected: Dependencies: the sums needed the forecasts first. Parallel steps must not need each other’s results.
@@ -450,46 +450,46 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## patterns-2: Patterns with several model calls
 
-**Build 1:** Orchestrator and workers: a lead agent splits the job and sends subagents off in parallel. Anthropic measured both the gain and the extra tokens.
+**Build 1:** Orchestrator and workers: a lead agent splits the job and sends subagents off in parallel. Anthropic measured the gain and the extra tokens.
 
 - Ask: Why would several agents beat one on a research question?
 - Expected: Each subagent explores one direction with a clean context, and they run at the same time. The price is many more tokens.
 
-**Build 2:** Evaluator and optimizer: one call writes, another checks against a list, the writer revises. Our Gujarati farm advisory passed in round one.
+**Build 2:** Evaluator and optimizer: one call writes, another checks it against a list, and the writer revises. Our Gujarati farm advisory passed in round one.
 
 - Ask: Why use a second model call to check the first, rather than asking the writer to be careful?
 - Expected: A separate check with an explicit list catches what the writer misses, and the list is something a person can read and change. It is a cheap eval run on every draft.
 
-**Point here:** Multi-agent systems buy quality with tokens: Anthropic reports agents use about 4× the tokens of a chat, multi-agent systems about 15×. Use them for tasks valuable enough to pay for that.
+**Point here:** Multi-agent systems get better results by using more tokens: Anthropic reports agents use about 4× the tokens of a chat, multi-agent systems about 15×. Use them for tasks valuable enough to pay for that.
 
 **Common misconception:** That more agents are always better. For most tasks a single agent, or a workflow, is cheaper and easier to debug.
 
 **Notebook:** Notebook 3.4: the writer and critic on today’s forecast; change the checklist and watch the critic fail a draft.
 
-**Transition:** All these patterns need tools. Connecting four models to five tools is where the plumbing gets expensive.
+**Transition:** All these patterns need tools. Connecting four models to five tools takes a lot of code.
 
 **Source:** Anthropic, “How we built our multi-agent research system” (13 Jun 2025). Farm advisory: real run, 19 November 2026 (notebook Part 3.4), forecast for Mahesāna; the checklist is shortened here.
 
-## mcp: One plug instead of a tangle of wires
+## mcp: MCP: one standard for connecting tools
 
-**Build 1:** Four models, five tools. Without a standard, every pair needs its own connector: 20 pieces of glue code to write and keep working.
+**Build 1:** Four models, five tools. Without a standard, every pair needs its own connector: 20 pieces of code to write and maintain.
 
 - Ask: If you add one more tool, how many new connectors do you write?
 - Expected: One per model: 4 more, and every model vendor has to do it.
 
-**Build 2:** With one common plug, each model and each tool implements it once: 9 connections. Drag the sliders and watch the gap grow.
+**Build 2:** With one standard, each model and each tool implements it once: 9 connections. Drag the sliders to change the counts.
 
-- Ask: And with the common plug?
+- Ask: And with MCP?
 - Expected: One: the new tool speaks MCP, and every model that speaks MCP can use it.
 
-**Build 3:** That plug is MCP, the Model Context Protocol. It began at one company and now belongs to a neutral foundation.
+**Build 3:** That standard is MCP, the Model Context Protocol. Anthropic released it in 2024; a Linux Foundation body now runs it.
 
 - Ask: Why would competitors agree to share one standard?
 - Expected: Because their customers want every tool to work with every assistant. A neutral owner makes it safe to depend on.
 
 **Point here:** MCP turns an n × m integration problem into n + m: write a tool once, and any agent that speaks MCP can use it.
 
-**Common misconception:** That MCP makes tools safe. It standardises how tools are connected; a poisoned tool result travels through it just as easily (Part 4).
+**Common misconception:** That MCP makes tools safe. It standardises how tools are connected; a tool result with hidden instructions travels through it just as easily (Part 4).
 
 **Notebook:** Notebook Part 5: the forecast tool from this talk, served as an MCP server in a dozen lines.
 
@@ -499,18 +499,18 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## recap-2: Part 2 in one slide
 
-**Build 1:** Next: the jobs agents already do, each drawn on the same card.
+**Build 1:** Next: fourteen applications, each drawn as the same kind of trace.
 
 - Ask: What would you want this agent to remember about you, and what should it never write down?
 - Expected: Preferences help it; but a health condition is sensitive data. Decide what may be stored, for how long, and who can read the notes.
 
-**Point here:** The engine is a loop that rereads its context; tools, memory and patterns are what we build around it.
+**Point here:** An agent is a loop that rereads its context each turn; tools, memory and patterns are built around it.
 
-**Transition:** Part 3: agents at work.
+**Transition:** Part 3: fourteen applications.
 
-## part-3: Part 3 · Agents at work
+## part-3: Part 3 · Fourteen applications
 
-**Build 1:** By the end of this part you can say, for any job, how much freedom its agent should get.
+**Build 1:** Key question: for each job, how much should the agent do without a person?
 
 - Ask: Which job in your team would you hand to an agent first?
 - Expected: Answers vary: reports, ticket triage, data clean-up, first drafts. Keep two of them; we place them on a map at the end of the part.
@@ -523,7 +523,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## read-card: How to read a trace
 
-**Build 1:** The opening run, drawn as a trace. Time runs left to right; the row says who acts. Under each one: tools, checks, evidence.
+**Build 1:** Our opening run, drawn as a trace. Time runs left to right; each row is who acts. Below: the tools, checks and evidence.
 
 - Ask: Where in this run did a person have a say?
 - Expected: Only at the two ends: you asked, and you read the answer. In every trace that follows, look for where the person sits.
@@ -536,7 +536,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## app-coding: Coding: from a failing test to a pull request
 
-**Build 1:** It works on a copy of your code: run the tests, read, edit, run them again.
+**Build 1:** It works on a copy of the code: run the tests, read, edit, run the tests again.
 
 - Ask: The tests pass now. Is the job done?
 - Expected: Not yet. Passing tests say the failure has gone; whether the fix is the right one is a reviewer’s call.
@@ -546,7 +546,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 - Ask: Why stop at a pull request instead of merging the fix itself?
 - Expected: Merging is the step everyone else depends on. A review takes minutes, and the tests already did most of the checking.
 
-**Build 3:** How good are coding agents? Look at a public test built from real GitHub issues.
+**Build 3:** How good are coding agents? A public benchmark built from real GitHub issues:
 
 - Ask: What does a score on this test tell you about your own code?
 - Expected: Less than it seems: the 500 tasks come from public Python projects, the scores come from vendors, and the test leaked into training data. Developers use the tools anyway: 84% use or plan to use AI tools, and 23% use agents at least weekly (Stack Overflow, 2025).
@@ -555,18 +555,18 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Common misconception:** That 81% is the record. Anthropic reported 93.9% for its restricted Mythos Preview (Apr 2026), and the independent leaderboard tops out at 79%. All are claims on a test that has leaked; run your own evals (Part 4).
 
-**Transition:** Code comes with tests. Research does not.
+**Transition:** A research report has no tests to run. How do we check it?
 
 **Source:** Trace: a sketch of how coding agents such as Claude Code or Codex typically work. SWE-bench Verified scores as the vendors published them. Illustration: generated.
 
 ## app-research: Research: a market scan with sources
 
-**Build 1:** It plans, searches many sources at once, reads, and writes a report with a link after each claim.
+**Build 1:** It plans, searches many sources at once, reads them, and writes a report with a link after each claim.
 
 - Ask: Every claim has a link. Can you forward the report to your manager?
 - Expected: Not yet. A link says a source exists. Someone has to open it and read the sentence it supports.
 
-**Build 2:** A person checks the claims that matter. A small run of ours shows why a link alone is not enough.
+**Build 2:** A person still checks the claims that matter. Our own small run shows why a link alone is not enough.
 
 - Ask: Which claims would you check first?
 - Expected: The numbers, and the claims a decision rests on. In our run every link went to one Wikipedia page, and that page described the programme’s original 2019 targets. The programme has since been revised, which is exactly why a person opens the link before quoting.
@@ -581,19 +581,19 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Trace: a design drawn for this talk; it describes no deployed system. Our run: notebook 3.2 (Gemini 3.8 Flash, 19 November 2026), two tool calls. Illustration: generated.
 
-## app-analyst: Data analysis: a real run on last winter’s air
+## app-analyst: Data analysis: which city had the worst winter air?
 
-**Build 1:** A real run on daily PM2.5 for ten cities. It looks at the table, then writes code to count.
+**Build 1:** Our run on daily PM2.5 for ten cities. It first looks at the table, then writes code to count.
 
 - Ask: It has the counts. What would you check before trusting them?
 - Expected: The definition: does “over the standard” mean above 60, or 60 and above? Days at exactly 60 change the count.
 
-**Build 2:** Then it doubted its own definition: three days sat at exactly 60. It counted both ways, then drew the chart.
+**Build 2:** Three days sat at exactly 60, so it questioned its own definition. It counted both ways, then drew the chart.
 
 - Ask: Why is analysis like this cheap to check?
 - Expected: Every step is code you can read and rerun. Counting both ways changed Ahmedabad and Mumbai by a day or two; it kept “above 60”.
 
-**Build 3:** Its chart, redrawn from its numbers, and its answer. All of it can be recomputed.
+**Build 3:** Its chart, redrawn from its numbers, and its answer. Every number can be recomputed.
 
 - Ask: Would you put this headline in a report as it stands?
 - Expected: After one check: rerun the code and confirm the definition. And say what the data are: model estimates for each city, from CAMS. At the other end, Bengaluru and Chennai had one day each over the standard.
@@ -610,12 +610,12 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## app-documents: Invoices: mostly a workflow
 
-**Build 1:** Read, find the order, match, post. Only a mismatch needs judgement: the agent’s, then yours.
+**Build 1:** Read, find the order, match, post. Only a mismatch needs judgement: first the agent’s, then yours.
 
 - Ask: Which of these steps needs a model to decide anything?
 - Expected: Only the red one, explaining a mismatch. The rest is Part 1’s fixed workflow: read, match, post.
 
-**Build 2:** Most invoices take the dashed path and never reach the red step. Build the workflow, and call the agent for exceptions.
+**Build 2:** Most invoices match and never reach the red step. So build a workflow, and call the agent only for exceptions.
 
 - Ask: What share of your team’s invoices are exceptions?
 - Expected: Usually a small share. That share is where an agent pays for itself; plain rules handle the rest more cheaply.
@@ -630,17 +630,17 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## app-support: Customer support: a refund request
 
-**Build 1:** Part 1’s refund again. The agent reads, looks up the order and the policy, then checks a cap.
+**Build 1:** The refund from Part 1. The agent reads the message, looks up the order and the policy, and checks the amount against a cap.
 
 - Ask: Would you let the agent refund on its own? Up to what amount?
-- Expected: Most people choose a cap: small, clear cases run alone, large or odd ones go to a person. That is Part 1’s autonomy dial, set by amount. Keep the cap low: whatever the agent promises, the company has to honour (Air Canada, Part 4).
+- Expected: Most people choose a cap: small, clear cases run alone, large or odd ones go to a person. That is Part 1’s autonomy level, set by amount. Keep the cap low: whatever the agent promises, the company has to honour (Air Canada, Part 4).
 
-**Build 2:** Under the cap it refunds and replies. Over it, or if anything is unusual, a person approves first.
+**Build 2:** Under the cap, it refunds and replies. Over the cap, or if anything is unusual, a person approves first.
 
 - Ask: What else should send a case to a person?
 - Expected: An angry customer, a repeat claim, a legal threat, anything the policy does not cover.
 
-**Build 3:** Klarna reported that its assistant took two-thirds of chats in the first month, and errands took under 2 minutes instead of 11.
+**Build 3:** Klarna, a payments company, reported that its assistant took two-thirds of chats in its first month, and queries were resolved in under 2 minutes instead of 11.
 
 - Ask: Klarna saved money. Why did it put people back in the loop?
 - Expected: Its CEO said cost had been too dominant a factor and the result was lower quality; Klarna now offers a person for some cases. Headlines said it was hiring people again; the new staff are freelance, gig-style workers, and total headcount kept falling. Klarna said the assistant did the work of about 700 full-time agents.
@@ -655,19 +655,19 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Trace: a design drawn for this talk; it describes no deployed system. Klarna: press release (Feb 2024); the CEO’s interview with Bloomberg (May 2025), as reported by Entrepreneur. Illustration: generated.
 
-## app-incident: IT incidents: an alert in the night
+## app-incident: IT incidents: errors after a deploy
 
-**Build 1:** It reads the alert, queries logs and metrics at once, and ties the errors to the deploy.
+**Build 1:** It reads the alert, queries logs and metrics at once, and links the errors to the deploy.
 
 - Ask: At 2 a.m., would you let it roll back on its own?
 - Expected: Most say no: a wrong rollback is a second outage. Waking someone to approve one prepared step is the usual compromise.
 
-**Build 2:** One approval from the on-call engineer. Then it rolls back, watches the metrics recover, and writes the note.
+**Build 2:** The on-call engineer approves once. Then it rolls back, checks that the metrics recover, and writes the incident note.
 
 - Ask: What makes that approval quick?
 - Expected: The agent has done the reading: the spike, the deploy behind it, and the exact command. The person only judges.
 
-**Point here:** An incident agent does the night’s reading and leaves one decision for a person: the rollback. On the stakes map at the end of Part 3: “Agent acts, a person approves” (metrics show whether a fix worked; a wrong rollback is an outage).
+**Point here:** An incident agent reads the alert, logs and metrics and leaves one decision for a person: the rollback. On the stakes map at the end of Part 3: “Agent acts, a person approves” (metrics show whether a fix worked; a wrong rollback is an outage).
 
 **Common misconception:** That the risky part is the diagnosis. Reading logs is harmless; the rollback is the step that changes production, so that is where the approval goes.
 
@@ -682,7 +682,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 - Ask: Where must it stop and ask you?
 - Expected: Before paying and submitting. Both are final and in your name; everything before them can be redone.
 
-**Build 2:** It stops once, before the fee: paying and submitting are final.
+**Build 2:** It stops once, before paying the fee, because payment and submission cannot be undone.
 
 - Ask: How good are agents at screens like these? And if the best now beat people on this test, why still confirm?
 - Expected: Very good on the test: the best model scored 12.24% in the original study, and the best single model now scores 85.96% on the cleaned-up OSWorld-Verified, above the 72.36% people scored. But a benchmark averages over tidy tasks; real portals have timeouts and unusual forms, and one wrong submission is yours to fix. (An agent framework scores 90.19%.)
@@ -695,17 +695,17 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Trace: a design drawn for this talk; it describes no deployed system. OSWorld: Xie et al. (2024), and the OSWorld-Verified leaderboard (Aug 2026). Illustration: generated.
 
-## app-coscientist: A co-scientist that argues with itself
+## app-coscientist: Google’s AI co-scientist: several agents, one goal
 
-**Build 1:** Google’s AI co-scientist takes a research goal and hands it to several agents, each with its own job.
+**Build 1:** It splits a research goal across several agents, each with its own job.
 
 - Ask: How would you check whether a new hypothesis is any good?
 - Expected: Only an experiment can tell. Until then an idea costs nothing, which is why the agents can afford to generate many.
 
-**Build 2:** The agents generate, debate, rank and refine. A scientist sees only the winners.
+**Build 2:** The agents generate, debate, rank and refine ideas. The scientists see only the top-ranked ones.
 
 - Ask: Where are the checks in this loop?
-- Expected: Twice: the agents’ own debate and tournament, which are cheap and imperfect, then the scientist and the lab, which are slow and real.
+- Expected: Twice: the agents’ own debate and tournament, which cost little and can be wrong; then the scientists’ lab experiments, which are slower and test the idea directly.
 
 **Point here:** Agents can generate and filter ideas cheaply; checking them still takes a scientist and a lab.
 
@@ -715,14 +715,14 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Google Research blog, 19 Feb 2025 (built on Gemini 2.0); the two days are from Google’s paper, arXiv 2502.18864. Trace simplified; it also searches the literature. Illustration: generated.
 
-## app-lab: A robot lab runs the experiment
+## app-lab: A chemistry experiment on a lab robot
 
-**Build 1:** A chemistry goal, a web search and the robot’s manual. Can a model turn these into a real experiment?
+**Build 1:** A chemistry goal, a web search and the robot’s manual. Can a model turn these into a working experiment?
 
 - Ask: What would worry you about letting a model drive lab equipment?
 - Expected: Safety and cost: wrong reagents, wasted materials, a damaged instrument. The robot does exactly what the code says.
 
-**Build 2:** Notice where the one approval sits: just before reagents are spent.
+**Build 2:** The one approval comes just before reagents are used.
 
 - Ask: Why put the approval there, and not at the end?
 - Expected: Measuring is cheap and automatic; spending reagents is not. Approve before the costly step, then let the instruments check the result.
@@ -735,14 +735,14 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Coscientist: Boiko, MacKnight, Kline and Gomes, Nature, 20 Dec 2023. Robin: FutureHouse, 20 May 2025. The approval step is our addition. Illustration: generated.
 
-## app-evolve: AlphaEvolve: the check is a program
+## app-evolve: AlphaEvolve: a program scores every attempt
 
-**Build 1:** This time the request arrives with its own judge: a program that rates any code the agent writes.
+**Build 1:** Here the request comes with a scoring program that rates any code the agent writes.
 
 - Ask: Who has to look at each attempt?
 - Expected: No person: the program scores each attempt in seconds, day and night.
 
-**Build 2:** Notice the two green steps: the program checks every attempt. The engineers read only the winner.
+**Build 2:** The two green steps: the program checks every attempt. The engineers read only the best one.
 
 - Ask: Which problems in your work come with an automatic scorer?
 - Expected: Scheduling, routing, compression, anything with a test suite or a cost model. AlphaEvolve also multiplied 4×4 complex matrices with 48 multiplications, and its faster kernel cut Gemini’s training time by 1%.
@@ -757,22 +757,22 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## app-farmer: A farm advisory in Gujarati, by voice
 
-**Build 1:** A farmer near Mehsana sends a voice note in Gujarati. What does an agent need to answer him well?
+**Build 1:** A farmer near Mehsana sends a voice note in Gujarati. What does an agent need to answer it?
 
 - Ask: What could go wrong with an answer to this farmer?
-- Expected: The wrong weather, advice meant for another region, or a language he does not read. Hence the forecast, the local crop notes and Gujarati.
+- Expected: The wrong weather, advice meant for another region, or a language the farmer does not read. Hence the forecast, the local crop notes and Gujarati.
 
-**Build 2:** Two checks before anyone hears it: a critic model, then an agronomist.
+**Build 2:** Two checks before the farmer hears it: a critic model, then an agronomist.
 
 - Ask: Why both a critic model and an agronomist?
 - Expected: The critic catches unsupported claims cheaply. The agronomist owns the advice, because a lost crop cannot be undone, and a photo of a sick plant needs a trained eye.
 
-**Build 3:** Our real run’s reply: teal numbers from the forecast, blue from the crop notes.
+**Build 3:** The reply from our run. Teal numbers come from the forecast, blue from the crop notes.
 
 - Ask: Where did each number in the reply come from?
 - Expected: In English: rain chance 0% from 19 Nov to 23 Nov, nights down to 16.4 °C; cool, dry weather suits cumin, so sow this week and water lightly at once, then every 8 to 10 days. It passed all five of the critic’s checks in round one.
 
-**Point here:** For a farmer the agent works in his language, by voice, with local data; a person approves the advice and takes the hard cases.
+**Point here:** For a farmer the agent works in the farmer’s language, by voice, with local data; a person approves the advice and takes the hard cases.
 
 **Common misconception:** That a chatbot alone can advise farmers. Without the forecast and local crop notes it would guess, as the chatbot in the opening did. (Kisan e-Mitra: “more than 95 lakh” answers in 11 languages, over 20,000 a day, per the PIB note.)
 
@@ -782,19 +782,19 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** Click 3: our real run (notebook Part 3, 19 November 2026); crop notes illustrative; voice steps and approval are a design. Kisan e-Mitra: PIB, Sep 2025. Farmer.Chat: Digital Green. Illustration: generated.
 
-## app-air: A city air-quality desk, every morning
+## app-air: Air-quality alerts for a city
 
-**Build 1:** Every morning a city’s pollution desk decides where to warn people. Which parts could an agent do?
+**Build 1:** Each morning a city’s pollution desk decides where to warn people. Which parts could an agent do?
 
 - Ask: Who should be warned when PM2.5 spikes?
 - Expected: Schools, hospitals, outdoor workers, people with asthma. Each needs a different message.
 
-**Build 2:** The agent does the daily gathering and drafting. Why keep a person for the last step?
+**Build 2:** The agent gathers the data and drafts the alerts. An officer approves each alert before it is sent.
 
 - Ask: What would a false alarm cost, and a missed one?
 - Expected: Closed schools and lost trust for a false alarm; children breathing bad air for a missed one. The officer owns that decision.
 
-**Point here:** An agent can do the gathering and drafting every morning; a person signs an alert that changes what a whole city does.
+**Point here:** An agent can gather the data and draft the alerts every morning; a person signs each alert, because schools and hospitals act on it.
 
 **Common misconception:** That CAMS numbers are station measurements. They are estimates from a model that takes in satellite data; a real desk would check them against its own stations.
 
@@ -802,14 +802,14 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** The trace is our design. Days over the standard, Nov 2025 to Feb 2026: our analyst run (notebook Part 3, Gemini 3.8 Flash) on CAMS estimates via Open-Meteo. Illustration: generated.
 
-## app-building: Cooling a campus for less
+## app-building: Building energy: when to cool the lecture halls
 
-**Build 1:** A campus wants cool lecture halls and a smaller electricity bill. What would an agent need to know?
+**Build 1:** A campus wants cool lecture halls and a lower electricity bill. What would an agent need to know?
 
 - Ask: Which data would you give it?
 - Expected: When the rooms are used, how hot it will be, and when power is cheap. Cooling before the peak tariff saves money.
 
-**Build 2:** Classes, weather and the hourly tariff decide when to pre-cool, ahead of the peak price.
+**Build 2:** The class timetable, the weather and the hourly tariff decide when to pre-cool, before the peak price.
 
 - Ask: Why can this run with less supervision than the air alerts?
 - Expected: Checking is cheap: the simulator scores a plan before it runs, the meter after. A bad schedule costs some rupees and comfort for a day, and is fixed the next.
@@ -820,14 +820,14 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Source:** The trace is our design. Illustration: generated.
 
-## app-clinic: A scribe in the clinic
+## app-clinic: Clinic notes: a draft from the consultation
 
-**Build 1:** A doctor spends much of the evening writing notes. Could an agent listen and write them instead?
+**Build 1:** A doctor in a busy OPD sees patient after patient, then writes the notes. Could an agent listen and draft them?
 
 - Ask: What must happen before the recorder is switched on?
 - Expected: The patient agrees. Consent is the first step of the trace, and a person gives it.
 
-**Build 2:** Notice the two amber steps: the patient’s consent first, the doctor’s signature last.
+**Build 2:** Two amber steps: the patient’s consent first, the doctor’s signature last.
 
 - Ask: Would you let the scribe file notes without the doctor’s signature?
 - Expected: No: the note goes into a medical record. The time saved comes from editing a draft instead of writing from scratch; the review stays.
@@ -842,7 +842,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## stakes-map: How much freedom should each job get?
 
-**Build 1:** Two questions place every job: how easily can the result be checked, and what does a mistake cost?
+**Build 1:** We place each job with two questions: how easily can the result be checked, and what does a mistake cost?
 
 - Ask: Before the points appear: where would you put a coding agent? A clinic scribe?
 - Expected: Coding: tests make it easy to check, and a merged change can break production, so the right-hand side, just above the middle. The scribe: the doctor can read it, but errors reach patients, so near the top.
@@ -852,7 +852,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 - Ask: Which point would you move, and why?
 - Expected: Common moves: support higher, because promises bind the company; research further right, because key claims can be spot-checked. Moving a point moves its advice with it.
 
-**Build 3:** Read the two arrows together. Where would your team’s most repeated task sit?
+**Build 3:** Each quadrant suggests a level of autonomy. Where would your team’s most repeated task sit?
 
 - Ask: Where does your team’s most repeated task sit?
 - Expected: Most operational work lands top right: let the agent do the work, with approval before the step that cannot be undone. Part 5 starts there.
@@ -869,18 +869,18 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## recap-3: Part 3 in one slide
 
-**Build 1:** Next: Part 4, when the engine stalls: errors that compound, inputs that lie, and guardrails.
+**Build 1:** Next: Part 4, how agents fail: errors that compound, misleading inputs, and guardrails.
 
 - Ask: Pick one task from your week. Which zone of the map does it fall in?
 - Expected: Most land top right: the agent can do the work if a person approves the irreversible step. That is where Part 5 begins.
 
-**Point here:** Part 3 in one rule: give autonomy where checking is cheap, keep a person where mistakes are costly.
+**Point here:** Two things set how much an agent may do alone: how cheaply its result can be checked, and what a mistake costs.
 
-**Transition:** Even in the right zone, agents fail in ways worth knowing. Part 4.
+**Transition:** Even in the right zone, agents fail. Part 4 shows how.
 
-## part-4: Part 4 · When the engine stalls
+## part-4: Part 4 · How agents fail
 
-**Build 1:** By the end of this part you can name the guardrails an agent needs before you let it act on anything that matters.
+**Build 1:** Key question: what must be in place before an agent acts on anything that matters?
 
 - Ask: Has software ever done something you did not mean it to? What stopped the damage?
 - Expected: Autocorrect, an email to the wrong list, a script that deleted files. Usually an undo, a backup, or a person who noticed in time.
@@ -896,12 +896,12 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 - Ask: Guess: 95% a step, twenty steps. What share of tasks come out fully right?
 - Expected: Most guess well above half. The answer surprises people.
 
-**Build 2:** Only 36%. Every step must be right, so the chances multiply. Drag the steps up: long tasks punish even small error rates.
+**Build 2:** Only 36%. Every step must be right, so the probabilities multiply. Drag the number of steps up to see longer tasks.
 
 - Ask: At 95% a step, what happens to a task of 50 steps?
 - Expected: It almost never finishes cleanly: 8%. Long autonomous tasks need far more reliable steps, or checks.
 
-**Build 3:** Now check each step and retry once when the check fails. The same twenty steps now come out right 95% of the time.
+**Build 3:** Now check each step and retry once if the check fails. The same twenty steps come out right 95% of the time.
 
 - Ask: What counts as a check in your work?
 - Expected: Running the tests, comparing a number with its source, validating a form against a rule, a second model reviewing, a person approving.
@@ -912,18 +912,18 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Notebook:** Notebook 4.1 prints the same numbers. On the slide, drag the per-step slider up and watch how much the long tasks gain.
 
-**Transition:** That is the arithmetic. Here is what it looks like when it goes wrong for real.
+**Transition:** Now three real failures.
 
 **Source:** Computed in scripts/sci/p4.py. With checking, a step is right unless both tries fail.
 
-## failures: When it goes wrong for real
+## failures: Three real failures
 
-**Build 1:** Three failures, from a coding tool, an airline and our own notebook. Look at what each one was allowed to do.
+**Build 1:** From a coding tool, an airline and our own notebook. Look at what each system was allowed to do.
 
 - Ask: Which of the three could happen in your organisation this year?
 - Expected: Most say the chatbot: many already have one on their website. Coding agents with production access are becoming common too.
 
-**Build 2:** Each has a plain fix, and each fix lives in the system around the model.
+**Build 2:** Each has a simple fix, and each fix is in the code around the model.
 
 - Ask: Which of these fixes would a better model have made unnecessary?
 - Expected: None of them. A better model would make such mistakes less frequent; each fix limits the damage when one happens anyway.
@@ -934,23 +934,23 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Notebook:** Notebook 4.3: the flaky lookup always times out; with max_steps set, the run stops after four steps (13.2 s, ₹0.23).
 
-**Transition:** Those agents were wrong on their own. The next failure needs an attacker, and nothing more than an email.
+**Transition:** Nobody attacked those three systems. In the next case, an attacker only has to send the agent an email.
 
 **Source:** Replit (Jul 2025): reported by The Register and Tom’s Hardware. Air Canada: Moffatt v. Air Canada, 2024 BCCRT 149, decided 14 Feb 2024, reported by law-firm summaries of the decision. Ours: notebook 4.3, 19 November 2026.
 
-## injection: A poisoned email
+## injection: An email with instructions hidden in it
 
 **Build 1:** One email in our demo inbox ends with lines addressed to the assistant. We asked the agent to summarise the inbox.
 
 - Ask: What do you expect the agent to do with this email?
 - Expected: Some say forward the invoices, some say ignore it. The model reads instructions and data in one stream of text, so either can happen.
 
-**Build 2:** Neither model ever tried to forward the invoices. But nine summaries in ten passed on the fake bank details as routine news.
+**Build 2:** Neither model ever tried to forward the invoices. But in nine of ten summaries, the fake bank details were reported as routine news.
 
 - Ask: Which is worse: forwarding the invoices, or a calm summary that mentions “updated bank details”?
-- Expected: The summary. You trust it, and the next step is someone paying a fraudster. The agent did not act; it laundered the fraud into a summary you trust.
+- Expected: The summary. You trust it, and the next step is someone paying a fraudster. The agent sent nothing, but its summary passed on the fraudster’s bank details as routine news.
 
-**Build 3:** The same trick works on real products. Follow the path along the bottom.
+**Build 3:** The same trick has worked on real products. Researchers demonstrated each of these attacks.
 
 - Ask: What do the three attacks have in common?
 - Expected: Each agent read text from outside, could see private data, and had a way to send it out. That is the next slide.
@@ -961,18 +961,18 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Notebook:** Notebook 4.2 adds the poisoned email and runs the summary with and without an approval gate, then five times on each model.
 
-**Transition:** Why were those products exposed? Three ingredients, all present at once.
+**Transition:** Why could those products be tricked? Each had the same three things at once.
 
 **Source:** Our runs: notebook 4.2, 19 November 2026, ten runs with no gate, Gemini 3.8 Flash and Gemini 3.5 Flash-Lite. Microsoft 365 Copilot: Aim Labs, Microsoft, CVE-2025-32711 (11 Jun 2025); GitHub MCP server: Invariant Labs (26 May 2025); Perplexity Comet: Brave (20 Aug 2025).
 
-## trifecta: The lethal trifecta
+## trifecta: Simon Willison’s lethal trifecta
 
 **Build 1:** Simon Willison’s rule of thumb: an agent that has all three can be tricked into sending your data to an attacker.
 
 - Ask: Which of the three does the assistant in your company’s email or chat tool have?
 - Expected: Most have the first two: your files and anything pasted or fetched. The danger starts when it can also send, post or open links.
 
-**Build 2:** Our inbox agent had all three. Cut one: send_email waits for a person, whatever the model decides.
+**Build 2:** Our inbox agent had all three. We removed one: send_email now waits for a person, whatever the model decides.
 
 - Ask: Which of the three is easiest to cut in your case?
 - Expected: Usually the third: nothing goes out without approval. Sometimes the second: it only reads trusted sources.
@@ -981,23 +981,23 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Common misconception:** That our gate was tested by the attack. In our runs the model never tried to send the invoices, so the gate never had to refuse. We cannot plan on that luck; the gate holds whatever the model decides. (In the recorded runs a scripted stand-in answered the gate; in the live notebook, ask_human asks you.)
 
-**Transition:** An approval gate is one guardrail. Here is the whole set.
+**Transition:** An approval step is one guardrail. The full set:
 
 **Source:** Simon Willison, “The lethal trifecta for AI agents” (16 Jun 2025); the three labels in his words on the right. The approval is from our inbox run (notebook Part 3, 19 November 2026).
 
 ## guardrails: Guardrails before, during and after a run
 
-**Build 1:** Before it runs, decide what it can touch. Replit’s agent could reach the live database; in a sandbox the damage would have stayed in a copy.
+**Build 1:** Before it runs: decide what it can touch. Replit’s agent could reach the live database; in a sandbox, only a copy would have been lost.
 
 - Ask: Which tools would a first version of your agent really need?
 - Expected: Usually read-only ones: search, look up, read. Writing and sending can come later.
 
-**Build 2:** While it runs, a person stands before anything that cannot be undone, and limits cap the loop. Our stuck agent cost only ₹0.23 because a step limit stopped it.
+**Build 2:** While it runs: a person approves anything that cannot be undone, and limits cap the loop. A step limit stopped our stuck agent at ₹0.23.
 
 - Ask: Which steps in your process cannot be undone?
 - Expected: Payments, emails to customers, deletions, orders, anything published.
 
-**Build 3:** After it runs, keep every trace so you can see what went wrong, and rerun the evals whenever the model, the prompt or a tool changes.
+**Build 3:** After it runs: keep every trace, and rerun the evals whenever the model, the prompt or a tool changes.
 
 - Ask: Who in your team would read the traces?
 - Expected: Often nobody, at first. Name an owner before launch, as you would for any production system.
@@ -1006,23 +1006,23 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Common misconception:** That a guardrail is a sentence in the prompt (“never delete anything”). Prompts are advice the model may ignore; permissions, gates and limits are enforced by code.
 
-**Transition:** The last layer, measurement, deserves its own slide.
+**Transition:** The last layer is measurement.
 
 **Source:** The layers follow common practice for any production system. Every example in grey is earlier in this part.
 
-## evals: Measure before you trust
+## evals: An eval: ten runs on each of two models
 
 **Build 1:** We ran the opening task ten times on each of two models, with the same forecasts, and checked every answer against the best order.
 
 - Ask: Which model would you deploy, and why?
 - Expected: The cheaper one: it was right just as often, at about a quarter of the cost and half the time. Without the eval we would have guessed.
 
-**Build 2:** Both were right every time; Gemini 3.5 Flash-Lite cost about a quarter as much and took half the time. Measure like this, then use the cheapest model that passes.
+**Build 2:** Both were right every time; Gemini 3.5 Flash-Lite cost about a quarter as much and took half the time. So for this task, the cheaper model is enough.
 
 - Ask: What would your first ten test cases be?
 - Expected: Real past cases with known right answers, including the awkward ones: the refund just over the limit, the invoice that does not match. Ours was one case run many times; yours should hold many cases.
 
-**Point here:** An eval turns “it seems to work” into a number you can compare across models, prompts and versions.
+**Point here:** An eval runs real cases with known answers and counts how many come out right. Compare that count across models, prompts and versions.
 
 **Common misconception:** That the pricier model is the safe default. Here the cheaper one was as accurate, though less steady in how it worked: it made four to fourteen tool calls a run, against seven to nine.
 
@@ -1045,7 +1045,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## part-5: Part 5 · Agents in your organisation
 
-**Build 1:** By the end of this part you can decide, for one task in your team, whether to hand it to an agent and how.
+**Build 1:** Key question: should a given task in your team go to an agent, and with how much freedom?
 
 - Ask: Which task in your team would you hand to an agent first?
 - Expected: Weekly reports, ticket triage, reconciliations, first drafts. Keep two answers: we will run them through the next slide.
@@ -1056,17 +1056,17 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## should-agent: Should this task be an agent?
 
-**Build 1:** First question: does the path change from case to case? If you can draw the steps in advance, build a workflow. It is cheaper and more predictable.
+**Build 1:** First: do the steps change from case to case? If you can write them down in advance, build a workflow. It is cheaper and more predictable.
 
 - Ask: Take your task from the last slide. Does its path change from case to case?
 - Expected: Many “agent” ideas are really workflows: the same steps every time. That is good news: they are cheaper to build and run.
 
-**Build 2:** If it needs an agent, can a person check the result cheaply? If not, the agent drafts and a person decides, or leads when mistakes are costly.
+**Build 2:** If it needs an agent: can a person check the result cheaply? If not, the agent drafts and a person decides; if mistakes are costly, a person leads.
 
 - Ask: Can someone check its result in a minute or two?
 - Expected: Code with tests, a number with a source: yes. A strategy memo or a diagnosis: no, so the agent drafts.
 
-**Build 3:** If checking is cheap, ask what a mistake costs. Costly or irreversible: a person approves that step. Otherwise let it run, with spot checks and logs.
+**Build 3:** If checking is cheap: is a mistake costly or irreversible? Then a person approves that step. If not, let it run, with spot checks and logs.
 
 - Ask: Where does your task land?
 - Expected: Most land in one of the four zones of the stakes map. Let it run: Data analysis, Algorithm search, Building energy. Approve: Coding, Invoices, Customer support, IT incidents, Web forms, Robot lab, Clinic notes.
@@ -1075,20 +1075,20 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Common misconception:** That a more capable model moves a task to a safer zone. It can make some checks cheaper (a second model can review the first), but what a mistake costs stays the same, so the approval before an irreversible step stays.
 
-**Transition:** Even in the right zone, you do not start at full speed.
+**Transition:** Even then, start with little autonomy.
 
 **Source:** The four leaves are the zones of the stakes map in Part 3, in the same words. Workflow or agent: Anthropic, “Building effective agents” (Dec 2024).
 
-## ramp: Start small, and climb
+## ramp: Raise autonomy in steps
 
-**Build 1:** Do not start at full autonomy. Start in shadow mode, where it only suggests, then let it act with approval, then let routine cases run.
+**Build 1:** Start in shadow mode, where the agent only suggests. Then let it act with approval. Then let routine cases run on their own.
 
 - Ask: Why start in shadow mode, if the agent could already act?
 - Expected: Because you learn its error rate on your real cases at no risk: every suggestion can be compared with what the person actually did.
 
-**Build 2:** Climb a step only when the evals on your own past cases say so, and step back down when errors rise.
+**Build 2:** Move up a step only when evals on your own past cases support it, and move back down when errors rise.
 
-- Ask: What would convince you to climb a step?
+- Ask: What would convince you to move up a step?
 - Expected: A measured error rate on enough real cases, below what the team accepts from a person, and a plan for the errors that remain.
 
 **Point here:** Raise autonomy one step at a time, when evals on your own cases support it, and lower it again when errors rise.
@@ -1097,7 +1097,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 **Transition:** At each step, someone pays for the model and for the checking. Which costs more?
 
-**Source:** The steps correspond to Part 1’s dial: operator, approver, observer. The refund is Part 1’s example.
+**Source:** The steps correspond to Part 1’s levels: operator, approver, observer. The refund is Part 1’s example.
 
 ## cost: What does one task cost?
 
@@ -1106,12 +1106,12 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 - Ask: Guess: what did the opening run cost?
 - Expected: Most guess tens or hundreds of rupees. It is under one rupee.
 
-**Build 2:** Now add a person who spends five minutes checking the answer, at ₹1,000 an hour. The model is now 0.9% of the cost.
+**Build 2:** Add a person who spends five minutes checking the answer, at ₹1,000 an hour. The model is now 0.9% of the cost.
 
 - Ask: What does five minutes of a colleague’s time cost your organisation?
 - Expected: At ₹1,000 an hour, five minutes is about ₹83; with overheads it is more, and the slider goes up to ₹5,000 an hour.
 
-**Build 3:** Agents use about four times the tokens of a chat, multi-agent systems about fifteen times. Drag the steps: the person usually still costs more.
+**Build 3:** Agents use about four times the tokens of a chat, multi-agent systems about fifteen times. Even so, the person usually costs more. Drag the steps to check.
 
 - Ask: So where should you spend effort to make an agent cheaper?
 - Expected: On making the check cheap: tests, totals that reconcile, a citation to click, a clear diff. Squeezing the model price matters far less.
@@ -1128,19 +1128,19 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## skills: What changes for a team
 
-**Build 1:** The work around the agent becomes part of the job. Someone writes the goal and the tool descriptions, reads the traces, and builds the evals.
+**Build 1:** Someone has to write the goal and the tool descriptions, read the traces, and build the evals. This work becomes part of the job.
 
 - Ask: Who in your team already does something like this for other software?
 - Expected: Testers, analysts who write specifications, whoever reviews pull requests or audits processes. These skills transfer.
 
-**Build 2:** The shift has started: people hand over more whole tasks. Gartner also predicts that over 40% of agentic AI projects will be cancelled by the end of 2027.
+**Build 2:** People already hand over more whole tasks to AI. Gartner also predicts that over 40% of agentic AI projects will be cancelled by the end of 2027.
 
 - Ask: What would keep your project out of the cancelled group?
 - Expected: A task that is cheap to check, evals from day one, a measured cost per task, and guardrails a risk team has signed off.
 
 **Point here:** Adopting agents mostly changes the work around the model: people specify the task and check the results.
 
-**Common misconception:** That agents remove the need for expertise. They move it from doing each case to defining and checking how cases are done.
+**Common misconception:** That agents remove the need for expertise. The expertise is still needed: experts write the instructions and check the agent’s cases.
 
 **Transition:** Part 5 in one slide.
 
@@ -1151,15 +1151,15 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 **Build 1:** Next: the talk in one slide, and three things to try on Monday.
 
 - Ask: Where on the ramp would you start this refund agent, and what eval would move it up a step?
-- Expected: Shadow mode on last month’s refunds; climb when it matches staff decisions on nearly all of them, with no large refund wrong.
+- Expected: Shadow mode on last month’s refunds; move up when it matches staff decisions on nearly all of them, with no large refund wrong.
 
 **Point here:** Every decision of this part lands on the agent card.
 
-**Transition:** To close: the whole talk in one slide.
+**Transition:** To close: a summary.
 
-## summary: The talk in one slide
+## summary: Summary
 
-**Build 1:** The whole talk around the picture we started with. The loop is the engine; your design decides how far it may run.
+**Build 1:** The loop from the first slide, with one line from each part.
 
 - Ask: Which of the five will you remember on Monday morning?
 - Expected: Most remember Part 3 (where it works) or Part 4 (what goes wrong). Point back to the map of 14 jobs.
@@ -1170,12 +1170,12 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## monday: Three things to try on Monday
 
-**Build 1:** Small steps you can take this week, none of which needs a budget or a vendor.
+**Build 1:** Three small steps for this week.
 
 - Ask: Which task in your team would you write the card for?
 - Expected: Reconciliations, weekly reports, ticket triage, document checks.
 
-**Build 2:** Scan this to open the notebook. Every run in this talk came from it.
+**Build 2:** Scan to open the notebook. Every run in this talk came from it.
 
 - Ask: Who has a laptop open? Try the first cell now.
 - Expected: A few will open it; promise help after the session.
@@ -1186,7 +1186,7 @@ Planned main route: 65 minutes, including student responses. Optional slides are
 
 ## thanks: Thank you. Questions?
 
-**Build 1:** Questions, and examples from your own work, are very welcome.
+**Build 1:** Slides, notebook, data and sources are in one repository.
 
 - Ask: Which application did we not cover that you would like to see?
 - Expected: Common asks: HR screening, legal contracts, sales outreach, manufacturing quality. Map each onto the card and the two axes.

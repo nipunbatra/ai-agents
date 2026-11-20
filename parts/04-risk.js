@@ -38,10 +38,10 @@ css(`.p4-cases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22
 .p4-right{display:flex;flex-direction:column;gap:16px;min-width:0}.p4-right .msg .mh em{font-size:17px}
 @media(max-width:760px){.reading .p4-cases,.reading .p4-attacks,.reading .p4-inj2{grid-template-columns:minmax(0,1fr)}}`);
 
-partBreak(4,'When the engine stalls','The loop that lets an agent act also lets small mistakes pile up, and lets a stranger’s text steer it. Here is how agents fail, and what contains the damage.',
- ['Why small errors add up over many steps','Real failures, our own included','Poisoned inputs and the lethal trifecta','Guardrails, and evals to measure'],
- {img:'part-risk.jpg',alt:'Illustration: an engine on a test bench with a warning light, a hand on a brake lever, and a hook dangling an envelope',nb:nb('part-4'),
-  line:'By the end of this part you can name the guardrails an agent needs before you let it act on anything that matters.',
+partBreak(4,'How agents fail','Over many steps, small mistakes add up, and text from a stranger can steer the agent. We look at real failures and at the limits that contain them.',
+ ['Why small errors add up over many steps','Real failures, our own included','Hidden instructions and the lethal trifecta','Guardrails and evals'],
+ {img:'part-risk.jpg',alt:'Illustration: a small helper at a desk with a torn task card, an envelope on a hook, and a person with a hand on a stop button',nb:nb('part-4'),
+  line:'Key question: what must be in place before an agent acts on anything that matters?',
   ask:'Has software ever done something you did not mean it to? What stopped the damage?',
   expected:'Autocorrect, an email to the wrong list, a script that deleted files. Usually an undo, a backup, or a person who noticed in time.',
   transition:'Start with a little arithmetic.',source:'Illustration: generated (Gemini image model).'});
@@ -97,8 +97,8 @@ register('p4-compound',(el,ctx)=>{
 S_('compound','risk','Small errors add up over many steps',{builds:3,nb:nb('part-4'),
  body:`${widget('p4-compound',COMPOUND_ALT)}<p class="caption">The simple model: steps fail independently, and all must be right.<span data-at="3"> The check catches every wrong step.</span></p>`,
  lines:[`Say each step of a task is right ${pc(CP.p)} of the time, and the task takes ${word(CP.n)} steps. How often is the whole task right?`,
-  `Only ${pc(CP.task)}. Every step must be right, so the chances multiply. Drag the steps up: long tasks punish even small error rates.`,
-  `Now check each step and retry once when the check fails. The same ${word(CP.n)} steps now come out right ${pc(CP.task_checked)} of the time.`],
+  `Only ${pc(CP.task)}. Every step must be right, so the probabilities multiply. Drag the number of steps up to see longer tasks.`,
+  `Now check each step and retry once if the check fails. The same ${word(CP.n)} steps come out right ${pc(CP.task_checked)} of the time.`],
  ask:[`Guess: ${pc(CP.p)} a step, ${word(CP.n)} steps. What share of tasks come out fully right?`,
   `At ${pc(CP.p)} a step, what happens to a task of ${CP.n_long} steps?`,'What counts as a check in your work?'],
  expected:['Most guess well above half. The answer surprises people.',
@@ -107,7 +107,7 @@ S_('compound','risk','Small errors add up over many steps',{builds:3,nb:nb('part
  point:'Reliability multiplies across steps, so long autonomous runs need checks inside the loop as well as a better model.',
  misconception:`That a model right ${pc(CP.p)} of the time gives tasks right ${pc(CP.p)} of the time. That holds only for one-step tasks. Real steps are not independent and real checks miss things, so treat the curves as a trend.`,
  demo:'Notebook 4.1 prints the same numbers. On the slide, drag the per-step slider up and watch how much the long tasks gain.',
- transition:'That is the arithmetic. Here is what it looks like when it goes wrong for real.',
+ transition:'Now three real failures.',
  source:'Computed in scripts/sci/p4.py. With checking, a step is right unless both tries fail.'});
 
 // ---------------------------------------------------------------------------------------- 4.1 real failures
@@ -128,20 +128,20 @@ S_('compound','risk','Small errors add up over many steps',{builds:3,nb:nb('part
   mini([...Array.from({length:k},()=>['refresh',COL.loss,'']),['stop','#374151','step limit',{box:true}]],`Our agent retried a failing tool ${word(k)} times; the step limit stopped it`)];
  const CASES=[
   ['database','Replit',F.replit.when,'Its coding agent deleted a company’s live database during a code freeze.','Work on a copy of the data.'],
-  ['chat','Air Canada',F.air_canada.when,`Its chatbot promised a refund against policy. The airline had to pay CAD ${num(F.air_canada.cad,2)}.`,'You answer for what it says.'],
+  ['chat','Air Canada',F.air_canada.when,`Its chatbot promised a refund against policy. The airline had to pay CAD ${num(F.air_canada.cad,2)}.`,'The company had to honour what its chatbot said.'],
   ['terminal','Our own agent',D.run_month,`Told to keep trying, it retried a failing tool until the limit stopped it.`,'Cap the steps and the spend.']];
- S_('failures','risk','When it goes wrong for real',{builds:2,nb:nb('part-4'),
+ S_('failures','risk','Three real failures',{builds:2,nb:nb('part-4'),
   body:`<div class="p4-cases">${CASES.map(([ic,t,w,d,l],i)=>`<div class="p4-case"><div class="hd">${iconHTML(ic,COL.loss,32)}<div><b>${t}</b><small>${esc(w)}</small></div></div>
    <p>${d}</p>${PICS[i]}${at(2,`<p class="p4-lesson">${iconHTML('shield',COL.green,22)}<span>${l}</span></p>`)}</div>`).join('')}</div>`,
-  lines:['Three failures, from a coding tool, an airline and our own notebook. Look at what each one was allowed to do.',
-   'Each has a plain fix, and each fix lives in the system around the model.'],
+  lines:['From a coding tool, an airline and our own notebook. Look at what each system was allowed to do.',
+   'Each has a simple fix, and each fix is in the code around the model.'],
   ask:['Which of the three could happen in your organisation this year?','Which of these fixes would a better model have made unnecessary?'],
   expected:['Most say the chatbot: many already have one on their website. Coding agents with production access are becoming common too.',
    'None of them. A better model would make such mistakes less frequent; each fix limits the damage when one happens anyway.'],
   point:'Real failures come from what an agent is allowed to touch and say, and from loops nobody bounded.',
   misconception:`That these are stories about bad models. Replit (as reported): the agent had write access to production; its own chat log said it wiped records of ${big(F.replit.executives)} executives and ${big(F.replit.companies)} companies; the chief executive replied that Replit had started separating development and production databases automatically; one report says the data was later recovered with Replit’s rollback. Air Canada: the chatbot told a grieving customer he could claim a bereavement fare after travelling, and the policy said otherwise; in the tribunal’s words, Air Canada “in effect” suggested the chatbot was a separate legal entity, and lost. Strictly it was a chatbot, and the lesson is about who is liable. Ours: the instruction to keep trying met a tool that never answers.`,
   demo:`Notebook 4.3: the flaky lookup always times out; with max_steps set, the run stops after ${word(S.steps)} steps (${num(S.seconds,1)} s, ₹${num(S.cost_inr,2)}).`,
-  transition:'Those agents were wrong on their own. The next failure needs an attacker, and nothing more than an email.',
+  transition:'Nobody attacked those three systems. In the next case, an attacker only has to send the agent an email.',
   source:`Replit (${F.replit.when}): reported by ${F.replit.reported_by}. Air Canada: ${F.air_canada.case}, decided ${F.air_canada.decided}, reported by ${F.air_canada.reported_by}. Ours: notebook 4.3, ${T.date_text}.`});
 }
 
@@ -167,21 +167,21 @@ chap('4.2','Poisoned inputs');
  const ATEXT={echoleak:a=>`${kR('A crafted email')} could make it disclose data. Microsoft rated its severity ${num(a.cvss,1)} of 10 (critical).`,
   github:()=>`${kR('A public issue')} led an agent to leak private repository data.`,
   comet:()=>`${kR('Text on a web page')} steered the browser agent.`};
- S_('injection','risk','A poisoned email',{builds:3,nb:nb('part-4'),
+ S_('injection','risk','An email with instructions hidden in it',{builds:3,nb:nb('part-4'),
   body:`<div class="state-slot p4-slot">${only('1',`<div class="p4-inj1">${request(esc(I.goal))}${mail(false)}</div>`)}
    ${only('2',`<div class="p4-inj2"><div>${mail(true)}</div><div>${dots}${msg('model',`“…${esc(I.typical_quote)}”`,{note:'a typical summary'})}</div></div>`)}
    ${only('3',`<div class="p4-inj3"><div class="p4-attacks">${A.map(a=>`<div>${iconHTML(AIC[a.id],COL.loss,32)}<b>${esc(a.product)}</b><small>${esc(a.when)}${a.name?` · ${esc(a.name)}`:''}</small><p>${ATEXT[a.id](a)}</p></div>`).join('')}</div>${small(`Researchers showed each on a real product and reported it; Microsoft has patched ${esc(A.find(a=>a.patched).name)}.`)}${path3}</div>`)}</div>`,
   lines:['One email in our demo inbox ends with lines addressed to the assistant. We asked the agent to summarise the inbox.',
-   `Neither model ever tried to forward the invoices. But ${word(TR.passed_on)} summaries in ${word(TR.runs)} passed on the fake bank details as routine news.`,
-   'The same trick works on real products. Follow the path along the bottom.'],
+   `Neither model ever tried to forward the invoices. But in ${word(TR.passed_on)} of ${word(TR.runs)} summaries, the fake bank details were reported as routine news.`,
+   'The same trick has worked on real products. Researchers demonstrated each of these attacks.'],
   ask:['What do you expect the agent to do with this email?','Which is worse: forwarding the invoices, or a calm summary that mentions “updated bank details”?','What do the three attacks have in common?'],
   expected:['Some say forward the invoices, some say ignore it. The model reads instructions and data in one stream of text, so either can happen.',
-   'The summary. You trust it, and the next step is someone paying a fraudster. The agent did not act; it laundered the fraud into a summary you trust.',
+   'The summary. You trust it, and the next step is someone paying a fraudster. The agent sent nothing, but its summary passed on the fraudster’s bank details as routine news.',
    'Each agent read text from outside, could see private data, and had a way to send it out. That is the next slide.'],
   point:'Prompt injection: an agent cannot reliably tell data from instructions, so the risk covers what it reports to you as well as what it does.',
   misconception:`That a smarter model simply ignores injected text. Ours did ignore the instruction, and still passed the fraud on. The defence has to sit outside the model. Only ${word(TR.warned)} summary in ${word(TR.runs)} called the email suspicious.`,
   demo:`Notebook 4.2 adds the poisoned email and runs the summary with and without an approval gate, then ${word(TR.models[0].runs)} times on each model.`,
-  transition:'Why were those products exposed? Three ingredients, all present at once.',
+  transition:'Why could those products be tricked? Each had the same three things at once.',
   source:`Our runs: notebook 4.2, ${T.date_text}, ${word(TR.runs)} runs with no gate, ${TR.models.map(m=>esc(m.name)).join(' and ')}. ${D.attacks.map(a=>`${esc(a.product)}: ${esc(a.found_by)}${a.by!==a.found_by?`, ${esc(a.by)}`:''}${a.cve?`, ${a.cve}`:''} (${a.date})`).join('; ')}.`});
 }
 
@@ -201,20 +201,20 @@ chap('4.2','Poisoned inputs');
  const venn=fig(W,H,g,'Three overlapping circles: private data, untrusted content, and a way to send it out; the agent at their overlap');
  const ap=T.inbox.approvals[0];
  const P3=D.trifecta.parts,PC=[COL.data,COL.loss,COL.target];
- S_('trifecta','risk','The lethal trifecta',{builds:2,
+ S_('trifecta','risk','Simon Willison’s lethal trifecta',{builds:2,
   body:cols(venn,`<div class="state-slot">${only('1',`<div class="p4-right"><ul class="p4-tri">${P3.map((t,i)=>`<li style="color:${PC[i]}"><i></i><span style="color:var(--ink)">${esc(t)}</span></li>`).join('')}</ul>
-    ${ps('Each is useful on its own. Together, a stranger’s text can make the agent send your data to the stranger.')}</div>`)}
+    ${ps('An agent needs each of these to do useful work. With all three, an attacker’s text can make it send your data to the attacker.')}</div>`)}
    ${only('2',`<div class="p4-right">${msg('call',jsonHTML({name:ap.call,args:{to:ap.args.to,body:ap.args.body}}),{note:'our inbox run'})}
-    <p class="p4-gate">${iconHTML('approve',COL.amber,28)}<span>${kY('It waited for a yes')} before it went: even harmless sends wait.</span></p>
+    <p class="p4-gate">${iconHTML('approve',COL.amber,28)}<span>${kY('It waited for approval')} before sending. Every email waits, even a harmless one.</span></p>
     <p class="p4-gate">${iconHTML('check',COL.green,28)}<span>${kG('No invoice left the inbox')} in any of our runs.</span></p></div>`)}</div>`,'1fr 1fr'),
   lines:['Simon Willison’s rule of thumb: an agent that has all three can be tricked into sending your data to an attacker.',
-   'Our inbox agent had all three. Cut one: send_email waits for a person, whatever the model decides.'],
+   'Our inbox agent had all three. We removed one: send_email now waits for a person, whatever the model decides.'],
   ask:['Which of the three does the assistant in your company’s email or chat tool have?','Which of the three is easiest to cut in your case?'],
   expected:['Most have the first two: your files and anything pasted or fetched. The danger starts when it can also send, post or open links.',
    'Usually the third: nothing goes out without approval. Sometimes the second: it only reads trusted sources.'],
   point:'Willison’s lethal trifecta: private data, untrusted content and a way to communicate out. Remove any one and this attack fails.',
   misconception:'That our gate was tested by the attack. In our runs the model never tried to send the invoices, so the gate never had to refuse. We cannot plan on that luck; the gate holds whatever the model decides. (In the recorded runs a scripted stand-in answered the gate; in the live notebook, ask_human asks you.)',
-  transition:'An approval gate is one guardrail. Here is the whole set.',
+  transition:'An approval step is one guardrail. The full set:',
   source:`Simon Willison, “The lethal trifecta for AI agents” (${D.trifecta.when}); the three labels in his words on the right. The approval is from our inbox run (notebook Part 3, ${T.date_text}).`});
 }
 
@@ -238,15 +238,15 @@ chap('4.3','Guardrails');
   return s+gat(i+1,it);}).join('');
  S_('guardrails','risk','Guardrails before, during and after a run',{builds:3,
   body:fig(W,H,g,'Guardrails in three layers: before the agent runs, while it runs, and after it runs'),
-  lines:['Before it runs, decide what it can touch. Replit’s agent could reach the live database; in a sandbox the damage would have stayed in a copy.',
-   `While it runs, a person stands before anything that cannot be undone, and limits cap the loop. Our stuck agent cost only ₹${num(S.cost_inr,2)} because a step limit stopped it.`,
-   'After it runs, keep every trace so you can see what went wrong, and rerun the evals whenever the model, the prompt or a tool changes.'],
+  lines:['Before it runs: decide what it can touch. Replit’s agent could reach the live database; in a sandbox, only a copy would have been lost.',
+   `While it runs: a person approves anything that cannot be undone, and limits cap the loop. A step limit stopped our stuck agent at ₹${num(S.cost_inr,2)}.`,
+   'After it runs: keep every trace, and rerun the evals whenever the model, the prompt or a tool changes.'],
   ask:['Which tools would a first version of your agent really need?','Which steps in your process cannot be undone?','Who in your team would read the traces?'],
   expected:['Usually read-only ones: search, look up, read. Writing and sending can come later.','Payments, emails to customers, deletions, orders, anything published.',
    'Often nobody, at first. Name an owner before launch, as you would for any production system.'],
   point:'Guardrails sit in the code around the model: what it can touch before, what needs approval during, and what is measured after.',
   misconception:'That a guardrail is a sentence in the prompt (“never delete anything”). Prompts are advice the model may ignore; permissions, gates and limits are enforced by code.',
-  transition:'The last layer, measurement, deserves its own slide.',
+  transition:'The last layer is measurement.',
   source:'The layers follow common practice for any production system. Every example in grey is earlier in this part.'});
 }
 
@@ -268,23 +268,23 @@ chap('4.3','Guardrails');
  const rows=fig(W,H,g,`The opening task run ${word(runs)} times on two models: right answers, mean cost and mean time`);
  const flow=chart([{steps:[{t:`${EV.cases_min} to ${EV.cases_max} real cases\nwith known answers`},{t:'Run the agent\non each'},{t:'Score every\nanswer'},{t:'Compare models\nand versions'}]}],
   {W:1152,bh:78,fs:20,gx:52,loop:[0,3,0,'again after every change'],alt:'An eval: real cases with known answers, run the agent, score, compare; repeated after every change'});
- S_('evals','risk','Measure before you trust',{builds:2,nb:nb('part-4'),
+ S_('evals','risk','An eval: ten runs on each of two models',{builds:2,nb:nb('part-4'),
   body:`${rows}${at(2,`<div class="p4-evflow">${flow}</div>`)}`,
   lines:[`We ran the opening task ${word(runs)} times on each of two models, with the same forecasts, and checked every answer against the best order.`,
-   `Both were right every time; ${esc(EV.cheap)} cost ${EV.cost_words} as much and took ${EV.time_words} the time. Measure like this, then use the cheapest model that passes.`],
+   `Both were right every time; ${esc(EV.cheap)} cost ${EV.cost_words} as much and took ${EV.time_words} the time. So for this task, the cheaper model is enough.`],
   ask:['Which model would you deploy, and why?','What would your first ten test cases be?'],
   expected:[`The cheaper one: it was right just as often, at ${EV.cost_words} of the cost and ${EV.time_words} the time. Without the eval we would have guessed.`,
    'Real past cases with known right answers, including the awkward ones: the refund just over the limit, the invoice that does not match. Ours was one case run many times; yours should hold many cases.'],
-  point:'An eval turns “it seems to work” into a number you can compare across models, prompts and versions.',
+  point:'An eval runs real cases with known answers and counts how many come out right. Compare that count across models, prompts and versions.',
   misconception:`That the pricier model is the safe default. Here the cheaper one was as accurate, though less steady in how it worked: it made ${word(EV.lite_calls_min)} to ${word(EV.lite_calls_max)} tool calls a run, against ${word(EV.fast_calls_min)} to ${word(EV.fast_calls_max)}.`,
   demo:`Notebook 4.4: evaluate() runs the task ${word(runs)} times per model and prints right or wrong, tool calls and cost.`,
   transition:'Part 4 in one slide.',
   source:`Notebook 4.4, ${T.date_text}: ${word(runs)} runs per model, cached forecasts, answers checked against the best order. Mean cost at paid prices.`});
 }
 
-recap(4,['Errors multiply over steps; checks inside the loop contain them.',
-  'Text an agent reads can steer it, or slip a fraud into its summary.',
-  'Guardrails live in code: permissions, approvals, limits, logs and evals.'],
+recap(4,['Errors multiply over steps. A check and a retry at each step keep the task on track.',
+  'Text the agent reads can steer it, or put false details into its summary.',
+  'Guardrails are code: permissions, approvals, limits, logs and evals.'],
  'which tasks to hand to an agent, how to raise its autonomy, and what one task costs.',
  {card:{goal:'Summarise my inbox',model:esc(T.model),tools:`${chip('list','list_emails')} ${chip('mail','read_email')} ${chip('send','send_email')}`,
    memory:'The conversation',stop:`An answer, or ${D.max_steps} steps`,guard:'send_email waits for a person',human:'Approves every email'},

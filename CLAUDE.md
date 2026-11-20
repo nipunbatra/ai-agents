@@ -19,6 +19,11 @@
   files in the main session (they have crashed sessions); have a subagent look at them.
 - House rules (from Nipun's other decks): one move per click; story line at most 30 words; a state at most 100 words;
   no em or en dashes; no slogans; no non-vegetarian examples; caveats in the notes. `AUTHORING.md` has them all.
+- Voice: plain and literal, like Nipun's CLIP deck (nipunbatra.github.io/attention/clip/). No metaphors (engine,
+  plug, dial, climb), no aphorisms, no meta lines. Titles are questions or literal statements. The organisers' session
+  title, "The Engine of Autonomy", appears only on the cover's who-line and in the README.
 - Check: `python3 scripts/serve.py` (port 8795), then `node scripts/verify.mjs`, `node scripts/density.mjs`,
   `node scripts/export.mjs` (PDFs in `exports/`). One part: `DECK_PART=03a node scripts/verify.mjs`.
+- Prose passes: `node scripts/dump-lines.mjs > qa/lines.md` (titles, story lines, notes) and
+  `node scripts/dump-text.mjs > qa/text.md` (visible body text and figure labels).
 - Gemini prices change on 1 Jan 2027 (3.8 Flash doubles); the cost slides say so.

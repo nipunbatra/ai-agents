@@ -8,20 +8,20 @@ export * from './widgets.js';
 export * from './figures.js';
 
 export const meta={
- id:'ai-agents',kicker:'IITGN-X',title:'The engine of autonomy',series:'IITGN-X Residency Program',
- subtitle:'Unlocking the true power of AI agents',date:'3 December 2026',minutes:65,
+ id:'ai-agents',kicker:'IITGN-X',title:'AI agents',series:'IITGN-X Residency Program',
+ subtitle:'Language models that use tools in a loop',date:'3 December 2026',minutes:65,
  sections:[
   {id:'open',title:'Opening',minutes:6},
   {id:'what',title:'Part 1 · What an agent is',minutes:10},
-  {id:'engine',title:'Part 2 · Inside the engine',minutes:12},
-  {id:'work',title:'Part 3 · Agents at work',minutes:20},
-  {id:'risk',title:'Part 4 · When the engine stalls',minutes:9},
+  {id:'engine',title:'Part 2 · One run, step by step',minutes:12},
+  {id:'work',title:'Part 3 · Fourteen applications',minutes:20},
+  {id:'risk',title:'Part 4 · How agents fail',minutes:9},
   {id:'adopt',title:'Part 5 · Agents in your organisation',minutes:6},
   {id:'wrap',title:'Wrap-up',minutes:2},
   {id:'optional',title:'Appendix · More depth',minutes:0},
  ]};
 /** The five parts: [section id, short name for the route strip]. */
-export const PARTS=[['what','What an agent is'],['engine','Inside the engine'],['work','Agents at work'],['risk','When it stalls'],['adopt','In your organisation']];
+export const PARTS=[['what','What an agent is'],['engine','One run, step by step'],['work','Fourteen applications'],['risk','How agents fail'],['adopt','In your organisation']];
 export const REPO='https://github.com/nipunbatra/ai-agents';
 export const SITE='https://nipunbatra.github.io/ai-agents/';
 export const COLAB='https://colab.research.google.com/github/nipunbatra/ai-agents/blob/main/notebook/agents.ipynb';

@@ -9,3 +9,5 @@ qa/parts/
 notebook/agent_notes.md
 notebook/chart-*.png
 exports/*.tmp
+qa/lines.md
+qa/text.md

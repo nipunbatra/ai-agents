@@ -37,7 +37,7 @@ mcp.run()`)}${small(`With the official Python SDK (<span class="mono">pip instal
 
 const READ=[
  ['Anthropic, “Building effective agents” (2024)','Part 2’s patterns'],
- ['Feng, McDonald and Zhang, “Levels of Autonomy for AI Agents” (2025)','The autonomy dial'],
+ ['Feng, McDonald and Zhang, “Levels of Autonomy for AI Agents” (2025)','The five levels of autonomy'],
  ['METR, “Measuring AI Ability to Complete Long Tasks” (2025)','The opening chart'],
  ['Simon Willison, “The lethal trifecta for AI agents” (2025)','Part 4’s risk'],
  ['Anthropic, “How we built our multi-agent research system” (2025)','Agent teams and their cost'],

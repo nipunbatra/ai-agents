@@ -53,7 +53,7 @@ function swapAt(id,k,main,strip){
 // ---------------------------------------------------------------------------------------- 3.3 science and engineering
 chap('3.3','Science and engineering');
 const CS=D.coscientist;
-app('app-coscientist','A co-scientist that argues with itself',{...CARD,img:'app-coscientist.jpg',
+app('app-coscientist','Google’s AI co-scientist: several agents, one goal',{...CARD,img:'app-coscientist.jpg',
  alt:'Illustration: three scientists at a whiteboard of molecules, hypothesis cards pinned in a tournament bracket',
  who:'A microbiology team',req:'How do these genetic islands spread across bacteria? Give us testable ideas.',
  names:{you:'Scientists',agent:'Agents'},
@@ -63,18 +63,18 @@ app('app-coscientist','A co-scientist that argues with itself',{...CARD,img:'app
  tools:[['search','web search'],['file','papers'],['flask','the team’s lab']],
  check:'Scientists choose which ideas earn lab time, then run the experiments.',
  evidence:{big:`${CS.days} days`,text:'to propose the mechanism an Imperial College team had found but not yet published.'},
- lines:['Google’s AI co-scientist takes a research goal and hands it to several agents, each with its own job.',
-  'The agents generate, debate, rank and refine. A scientist sees only the winners.'],
+ lines:['It splits a research goal across several agents, each with its own job.',
+  'The agents generate, debate, rank and refine ideas. The scientists see only the top-ranked ones.'],
  ask:['How would you check whether a new hypothesis is any good?','Where are the checks in this loop?'],
  expected:['Only an experiment can tell. Until then an idea costs nothing, which is why the agents can afford to generate many.',
-  'Twice: the agents’ own debate and tournament, which are cheap and imperfect, then the scientist and the lab, which are slow and real.'],
+  'Twice: the agents’ own debate and tournament, which cost little and can be wrong; then the scientists’ lab experiments, which are slower and test the idea directly.'],
  point:'Agents can generate and filter ideas cheaply; checking them still takes a scientist and a lab.',
  misconception:'That the co-scientist discovered something unknown. It reached, on its own, a result the Imperial team had found but not yet published; the experiments were theirs.',
  transition:'What if the agent could run the experiment too?',
  source:`Google Research blog, ${CS.date} (built on ${CS.model}); the ${word(CS.days)} days are from Google’s paper, arXiv ${CS.arxiv}. Trace simplified; it also searches the literature.`});
 
 const L=D.lab,RB=D.robin;
-app('app-lab','A robot lab runs the experiment',{...CARD,img:'app-lab.jpg',
+app('app-lab','A chemistry experiment on a lab robot',{...CARD,img:'app-lab.jpg',
  alt:'Illustration: a robotic arm pipetting liquid into test tubes and a well plate in a bright laboratory',
  who:'A chemistry lab',req:'Plan and run a palladium-catalysed coupling on our liquid-handling robot.',
  names:{you:'Chemist'},
@@ -84,8 +84,8 @@ app('app-lab','A robot lab runs the experiment',{...CARD,img:'app-lab.jpg',
  tools:[['search','web search'],['file','robot manual'],['robot','liquid handler'],['chart','plate reader']],
  check:'Our design: a chemist approves the plan before the robot runs. Instruments check every result.',
  evidence:{big:'Coscientist',text:`(${L.journal}, ${L.year}) ran these couplings on lab robots. Robin (${RB.year}) proposed a drug for an eye disease.`},
- lines:['A chemistry goal, a web search and the robot’s manual. Can a model turn these into a real experiment?',
-  'Notice where the one approval sits: just before reagents are spent.'],
+ lines:['A chemistry goal, a web search and the robot’s manual. Can a model turn these into a working experiment?',
+  'The one approval comes just before reagents are used.'],
  ask:['What would worry you about letting a model drive lab equipment?','Why put the approval there, and not at the end?'],
  expected:['Safety and cost: wrong reagents, wasted materials, a damaged instrument. The robot does exactly what the code says.',
   'Measuring is cheap and automatic; spending reagents is not. Approve before the costly step, then let the instruments check the result.'],
@@ -95,7 +95,7 @@ app('app-lab','A robot lab runs the experiment',{...CARD,img:'app-lab.jpg',
  source:`Coscientist: Boiko, MacKnight, Kline and Gomes, ${L.journal}, ${L.date}. Robin: FutureHouse, ${RB.date}. The approval step is our addition.`});
 
 const E=D.evolve;
-app('app-evolve','AlphaEvolve: the check is a program',{...CARD,img:'app-evolve.jpg',
+app('app-evolve','AlphaEvolve: a program scores every attempt',{...CARD,img:'app-evolve.jpg',
  alt:'Illustration: a tree of code blocks growing upward beside rows of data-centre servers',
  who:'Google’s engineers',req:'Find a better rule for placing jobs on our servers. Our code scores each one.',
  names:{you:'Engineers'},
@@ -105,8 +105,8 @@ app('app-evolve','AlphaEvolve: the check is a program',{...CARD,img:'app-evolve.
  tools:[['terminal','automatic evaluator'],['database','store of programs']],
  check:'Engineers write the scorer, then read the winning code before it ships.',
  evidence:{big:`${num(E.compute_pct,1)}%`,text:`of Google’s worldwide compute recovered by a scheduling rule it found. A Gemini kernel: ${E.kernel_pct}% faster.`},
- lines:['This time the request arrives with its own judge: a program that rates any code the agent writes.',
-  'Notice the two green steps: the program checks every attempt. The engineers read only the winner.'],
+ lines:['Here the request comes with a scoring program that rates any code the agent writes.',
+  'The two green steps: the program checks every attempt. The engineers read only the best one.'],
  ask:['Who has to look at each attempt?','Which problems in your work come with an automatic scorer?'],
  expected:['No person: the program scores each attempt in seconds, day and night.',
   `Scheduling, routing, compression, anything with a test suite or a cost model. AlphaEvolve also multiplied ${E.matrix}×${E.matrix} complex matrices with ${E.mults} multiplications, and its faster kernel cut Gemini’s training time by ${E.training_pct}%.`],
@@ -144,14 +144,14 @@ app('app-farmer',`A farm advisory in Gujarati, by voice`,{...CARD,builds:3,nb:nb
  tools:[['mic','speech to text'],['thermo','weather forecast'],['notes','crop notes'],['send','WhatsApp voice']],
  check:'An agronomist approves each advisory before it goes out.',
  evidence:{big:`${K.answered_m} million+`,text:`questions answered by Kisan e-Mitra. Farmer.Chat serves ${FC.farmers_lo_m} to ${FC.farmers_hi_m} million farmers.`},
- lines:[`A farmer near ${esc(F.place)} sends a voice note in Gujarati. What does an agent need to answer him well?`,
-  'Two checks before anyone hears it: a critic model, then an agronomist.',
-  'Our real run’s reply: teal numbers from the forecast, blue from the crop notes.'],
+ lines:[`A farmer near ${esc(F.place)} sends a voice note in Gujarati. What does an agent need to answer it?`,
+  'Two checks before the farmer hears it: a critic model, then an agronomist.',
+  'The reply from our run. Teal numbers come from the forecast, blue from the crop notes.'],
  ask:['What could go wrong with an answer to this farmer?','Why both a critic model and an agronomist?','Where did each number in the reply come from?'],
- expected:['The wrong weather, advice meant for another region, or a language he does not read. Hence the forecast, the local crop notes and Gujarati.',
+ expected:['The wrong weather, advice meant for another region, or a language the farmer does not read. Hence the forecast, the local crop notes and Gujarati.',
   'The critic catches unsupported claims cheaply. The agronomist owns the advice, because a lost crop cannot be undone, and a photo of a sick plant needs a trained eye.',
   `In English: rain chance ${F.rain_chance_max}% from ${F.first} to ${F.last}, nights down to ${num(F.low_c,1)} °C; cool, dry weather suits cumin, so sow this week and water lightly at once, then every ${F.interval[0]} to ${F.interval[1]} days. It passed all ${word(F.checks)} of the critic’s checks in round ${word(F.rounds)}.`],
- point:'For a farmer the agent works in his language, by voice, with local data; a person approves the advice and takes the hard cases.',
+ point:'For a farmer the agent works in the farmer’s language, by voice, with local data; a person approves the advice and takes the hard cases.',
  misconception:`That a chatbot alone can advise farmers. Without the forecast and local crop notes it would guess, as the chatbot in the opening did. (Kisan e-Mitra: “more than ${K.answered_lakh} lakh” answers in ${K.languages} languages, over ${big(K.per_day)} a day, per the PIB note.)`,
  demo:'Notebook 3.4: run the writer and the critic; change the place or the crop and watch the checks.',
  transition:'The same loop can watch a whole city’s air.',
@@ -165,7 +165,7 @@ app('app-farmer',`A farm advisory in Gujarati, by voice`,{...CARD,builds:3,nb:nb
 swapAt('app-farmer',3,advisory(),forecastStrip());
 
 const AQ=D.air,city=n=>AQ.cities.find(c=>c.city===n);
-app('app-air','A city air-quality desk, every morning',{...CARD,nb:nb('part-3'),img:'app-air.jpg',
+app('app-air','Air-quality alerts for a city',{...CARD,nb:nb('part-3'),img:'app-air.jpg',
  alt:'Illustration: a hazy city skyline, an air-quality sensor pole, a school, and a phone alert with a mask symbol',
  who:'A city air-quality desk',names:{you:'Officer'},req:'Where will PM2.5 cross the standard tomorrow, and whom should we warn?',
  steps:[{lane:'tools',icon:'clock',t:'Every\nmorning'},{lane:'tools',icon:'pin',t:'Station\nreadings'},{lane:'tools',icon:'wind',t:'Air\nforecast'},
@@ -175,17 +175,17 @@ app('app-air','A city air-quality desk, every morning',{...CARD,nb:nb('part-3'),
  check:'An officer approves every advisory before it is sent.',
  evidence:{label:'From our data',big:`${AQ.cities[0].over} of ${AQ.days}`,
   text:`winter days over ${AQ.standard}&nbsp;µg/m³ in ${AQ.cities[0].city}; Delhi ${city('Delhi').over}, Gandhinagar ${city('Gandhinagar').over}. Model estimates (CAMS).`},
- lines:['Every morning a city’s pollution desk decides where to warn people. Which parts could an agent do?',
-  'The agent does the daily gathering and drafting. Why keep a person for the last step?'],
+ lines:['Each morning a city’s pollution desk decides where to warn people. Which parts could an agent do?',
+  'The agent gathers the data and drafts the alerts. An officer approves each alert before it is sent.'],
  ask:['Who should be warned when PM2.5 spikes?','What would a false alarm cost, and a missed one?'],
  expected:['Schools, hospitals, outdoor workers, people with asthma. Each needs a different message.',
   'Closed schools and lost trust for a false alarm; children breathing bad air for a missed one. The officer owns that decision.'],
- point:'An agent can do the gathering and drafting every morning; a person signs an alert that changes what a whole city does.',
+ point:'An agent can gather the data and draft the alerts every morning; a person signs each alert, because schools and hospitals act on it.',
  misconception:'That CAMS numbers are station measurements. They are estimates from a model that takes in satellite data; a real desk would check them against its own stations.',
  transition:'Buildings are easier: there, a simulator and a meter check every decision.',
  source:`The trace is our design. Days over the standard, ${AQ.from} to ${AQ.to}: our analyst run (notebook Part 3, ${esc(AQ.model)}) on CAMS estimates via Open-Meteo.`});
 
-app('app-building','Cooling a campus for less',{...CARD,img:'app-building.jpg',
+app('app-building','Building energy: when to cool the lecture halls',{...CARD,img:'app-building.jpg',
  alt:'Illustration: a campus building with rooftop solar panels and air-conditioning units, and a facilities manager with a tablet',
  who:'A campus facilities team',req:'Keep the lecture halls cool for this week’s classes at the lowest electricity bill.',
  names:{you:'Manager'},
@@ -195,8 +195,8 @@ app('app-building','Cooling a campus for less',{...CARD,img:'app-building.jpg',
  tools:[['calendar','timetable'],['thermo','forecast'],['rupee','tariff'],['code','simulator'],['zap','building controls']],
  check:'The manager approves the first schedules, then spot-checks.',
  evidence:{label:'Why it can run',text:'A simulator scores each schedule before it runs, and the meter shows what it saved.'},
- lines:['A campus wants cool lecture halls and a smaller electricity bill. What would an agent need to know?',
-  'Classes, weather and the hourly tariff decide when to pre-cool, ahead of the peak price.'],
+ lines:['A campus wants cool lecture halls and a lower electricity bill. What would an agent need to know?',
+  'The class timetable, the weather and the hourly tariff decide when to pre-cool, before the peak price.'],
  ask:['Which data would you give it?','Why can this run with less supervision than the air alerts?'],
  expected:['When the rooms are used, how hot it will be, and when power is cheap. Cooling before the peak tariff saves money.',
   'Checking is cheap: the simulator scores a plan before it runs, the meter after. A bad schedule costs some rupees and comfort for a day, and is fixed the next.'],
@@ -205,7 +205,7 @@ app('app-building','Cooling a campus for less',{...CARD,img:'app-building.jpg',
  source:'The trace is our design.'});
 
 const CL=D.clinic;
-app('app-clinic','A scribe in the clinic',{...CARD,img:'app-clinic.jpg',
+app('app-clinic','Clinic notes: a draft from the consultation',{...CARD,img:'app-clinic.jpg',
  alt:'Illustration: a doctor and a patient talking across a desk in a small Indian clinic, a recorder and a tablet on the desk',
  who:'A doctor in a busy clinic',req:'Listen to this consultation, in Gujarati and English, and draft my notes.',
  names:{you:'People'},
@@ -214,8 +214,8 @@ app('app-clinic','A scribe in the clinic',{...CARD,img:'app-clinic.jpg',
  tools:[['mic','microphone'],['file','speech to text'],['database','health record']],
  check:'The doctor reads, corrects and signs every note before it is filed.',
  evidence:{big:`About ${big(CL.hours)} hours`,text:`of note-writing saved for ${big(CL.physicians)} doctors over ${CL.encounters_m} million visits, in about ${CL.months} months.`},
- lines:['A doctor spends much of the evening writing notes. Could an agent listen and write them instead?',
-  'Notice the two amber steps: the patient’s consent first, the doctor’s signature last.'],
+ lines:['A doctor in a busy OPD sees patient after patient, then writes the notes. Could an agent listen and draft them?',
+  'Two amber steps: the patient’s consent first, the doctor’s signature last.'],
  ask:['What must happen before the recorder is switched on?','Would you let the scribe file notes without the doctor’s signature?'],
  expected:['The patient agrees. Consent is the first step of the trace, and a person gives it.',
   'No: the note goes into a medical record. The time saved comes from editing a draft instead of writing from scratch; the review stays.'],
@@ -271,7 +271,7 @@ function mapSVG(){
  return g;}
 const famHTML=live=>`<div class="p3b-fams">${APPS.families.map(f=>live?`<button type="button" data-fam="${f.id}" aria-pressed="false">${markHTML(f.id)}${esc(f.name)}</button>`:
  `<span style="cursor:default">${markHTML(f.id)}${esc(f.name)}</span>`).join('')}</div>`;
-const JUDGE=`<p class="p3b-judge">${iconHTML('person',COL.amber,20)}<span>The positions are my judgement. Argue with them.</span></p>`;
+const JUDGE=`<p class="p3b-judge">${iconHTML('person',COL.amber,20)}<span>The positions are my judgement, not measurements.</span></p>`;
 const QS=`<div class="p3b-qs"><div>${iconHTML('check',COL.green,30)}<div><h3>Checking</h3><p>Easy: a test passes or fails. Hard: only a lab can tell.</p></div></div>
  <div>${iconHTML('alert',COL.loss,30)}<div><h3>A mistake</h3><p>Cheap: a draft you throw away. Costly: money moved, a patient harmed.</p></div></div></div>`;
 const cardHTML=a=>{const z=ZONE[a.zone];
@@ -293,9 +293,9 @@ register('p3b-map',(el,ctx)=>{
 });
 S_('stakes-map','work','How much freedom should each job get?',{builds:3,
  body:widget('p3b-map',ALT),
- lines:['Two questions place every job: how easily can the result be checked, and what does a mistake cost?',
+ lines:['We place each job with two questions: how easily can the result be checked, and what does a mistake cost?',
   `${Word(nCostly)} of the ${word(n)} sit in the top half, where a mistake is costly.`,
-  'Read the two arrows together. Where would your team’s most repeated task sit?'],
+  'Each quadrant suggests a level of autonomy. Where would your team’s most repeated task sit?'],
  ask:['Before the points appear: where would you put a coding agent? A clinic scribe?','Which point would you move, and why?','Where does your team’s most repeated task sit?'],
  expected:['Coding: tests make it easy to check, and a merged change can break production, so the right-hand side, just above the middle. The scribe: the doctor can read it, but errors reach patients, so near the top.',
   'Common moves: support higher, because promises bind the company; research further right, because key claims can be spot-checked. Moving a point moves its advice with it.',
@@ -308,11 +308,11 @@ S_('stakes-map','work','How much freedom should each job get?',{builds:3,
 
 recap(3,[`Science: an ${kG('automatic scorer')} lets an agent run unattended.`,
   `India: the same loop works by voice, in Gujarati, with ${kY('a person')} for hard cases.`,
-  `The map: ${word(nApprove)} of ${word(n)} jobs need ${kY('approval')} before an ${kR('irreversible')} step; ${word(nRun)} can simply run.`],
- 'Part 4, when the engine stalls: errors that compound, inputs that lie, and guardrails.',
+  `The map: ${word(nApprove)} of ${word(n)} jobs need ${kY('approval')} before an ${kR('irreversible')} step; ${word(nRun)} can run on their own.`],
+ 'Part 4, how agents fail: errors that compound, misleading inputs, and guardrails.',
  {card:{stop:'The check passes, or a step limit',guard:'Approval before any step that cannot be undone',human:'Leads where mistakes are costly; spot-checks the rest'},
   hi:['guard','human'],title:'The map, on the card',
   ask:'Pick one task from your week. Which zone of the map does it fall in?',
   expected:'Most land top right: the agent can do the work if a person approves the irreversible step. That is where Part 5 begins.',
-  point:'Part 3 in one rule: give autonomy where checking is cheap, keep a person where mistakes are costly.',
-  transition:'Even in the right zone, agents fail in ways worth knowing. Part 4.'});
+  point:'Two things set how much an agent may do alone: how cheaply its result can be checked, and what a mistake costs.',
+  transition:'Even in the right zone, agents fail. Part 4 shows how.'});

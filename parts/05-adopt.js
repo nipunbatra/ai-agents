@@ -16,10 +16,10 @@ css(`.p5-skills{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2
 .p5-cost .w-controls{gap:10px 18px}.p5-cost .w-controls label{min-width:260px}.p5-br{flex-basis:100%;height:0}
 @media(max-width:760px){.reading .p5-skills{grid-template-columns:minmax(0,1fr)}}`);
 
-partBreak(5,'Agents in your organisation','You have seen what agents do and how they fail. This part turns that into decisions: which tasks to hand over, how fast to raise autonomy, and what it costs.',
- ['Should this task be an agent at all?','A ramp from suggestions to autonomy','What one task costs','What changes for a team'],
+partBreak(5,'Agents in your organisation','Which tasks to hand to an agent, how quickly to raise its autonomy, and what one task costs.',
+ ['Should this task be an agent at all?','Raising autonomy in steps','What one task costs','What changes for a team'],
  {img:'part-adopt.jpg',alt:'Illustration: colleagues at a table looking at a flowchart on a screen, with a small staircase beside them',nb:nb('part-5'),
-  line:'By the end of this part you can decide, for one task in your team, whether to hand it to an agent and how.',
+  line:'Key question: should a given task in your team go to an agent, and with how much freedom?',
   ask:'Which task in your team would you hand to an agent first?',
   expected:'Weekly reports, ticket triage, reconciliations, first drafts. Keep two answers: we will run them through the next slide.',
   transition:'Start with the first decision: does it need an agent at all?',source:'Illustration: generated (Gemini image model).'});
@@ -64,16 +64,16 @@ chap('5.1','What to hand over');
  const byZone=z=>APPS.apps.filter(a=>a.zone===z.name).map(a=>a.name).join(', ');
  S_('should-agent','adopt','Should this task be an agent?',{builds:3,
   body:fig(W,H,g,'A decision flowchart: does the path change case to case, can the result be checked cheaply, and is a mistake costly; it ends in a workflow or one of four zones'),
-  lines:['First question: does the path change from case to case? If you can draw the steps in advance, build a workflow. It is cheaper and more predictable.',
-   'If it needs an agent, can a person check the result cheaply? If not, the agent drafts and a person decides, or leads when mistakes are costly.',
-   'If checking is cheap, ask what a mistake costs. Costly or irreversible: a person approves that step. Otherwise let it run, with spot checks and logs.'],
+  lines:['First: do the steps change from case to case? If you can write them down in advance, build a workflow. It is cheaper and more predictable.',
+   'If it needs an agent: can a person check the result cheaply? If not, the agent drafts and a person decides; if mistakes are costly, a person leads.',
+   'If checking is cheap: is a mistake costly or irreversible? Then a person approves that step. If not, let it run, with spot checks and logs.'],
   ask:['Take your task from the last slide. Does its path change from case to case?','Can someone check its result in a minute or two?','Where does your task land?'],
   expected:['Many “agent” ideas are really workflows: the same steps every time. That is good news: they are cheaper to build and run.',
    'Code with tests, a number with a source: yes. A strategy memo or a diagnosis: no, so the agent drafts.',
    `Most land in one of the four zones of the stakes map. Let it run: ${byZone(zone(true,false))}. Approve: ${byZone(zone(true,true))}.`],
   point:'Two questions decide autonomy: how cheaply can the result be checked, and what does a mistake cost. They are the axes of the stakes map.',
   misconception:'That a more capable model moves a task to a safer zone. It can make some checks cheaper (a second model can review the first), but what a mistake costs stays the same, so the approval before an irreversible step stays.',
-  transition:'Even in the right zone, you do not start at full speed.',
+  transition:'Even then, start with little autonomy.',
   source:'The four leaves are the zones of the stakes map in Part 3, in the same words. Workflow or agent: Anthropic, “Building effective agents” (Dec 2024).'});
 }
 
@@ -97,17 +97,17 @@ chap('5.1','What to hand over');
   return curve(xr-70,y1-8,xr-40,y2-40,xr+30,y2-10,COL.green)+label(xr+46,y2-16,'evals pass',{size:19,fill:COL.green,weight:700,halo:true});};
  g+=gat(2,up(0)+up(1)+curve(x0+2.58*sw,tops[2]-8,x0+1.94*sw,tops[2]-146,x0+1.5*sw,tops[1]-6,COL.loss,'7 6')+
   label(x0+2*sw,24,'errors rise: step back',{size:19,fill:COL.loss,anchor:'middle',weight:700,halo:true}));
- S_('ramp','adopt','Start small, and climb',{builds:2,
-  body:fig(W,H,g,'A staircase of three steps: shadow mode, approve each case, routine cases on their own; climb when the evals pass, step back when errors rise'),
-  lines:['Do not start at full autonomy. Start in shadow mode, where it only suggests, then let it act with approval, then let routine cases run.',
-   'Climb a step only when the evals on your own past cases say so, and step back down when errors rise.'],
-  ask:['Why start in shadow mode, if the agent could already act?','What would convince you to climb a step?'],
+ S_('ramp','adopt','Raise autonomy in steps',{builds:2,
+  body:fig(W,H,g,'A staircase of three steps: shadow mode, approve each case, routine cases on their own; move up when the evals pass, step back when errors rise'),
+  lines:['Start in shadow mode, where the agent only suggests. Then let it act with approval. Then let routine cases run on their own.',
+   'Move up a step only when evals on your own past cases support it, and move back down when errors rise.'],
+  ask:['Why start in shadow mode, if the agent could already act?','What would convince you to move up a step?'],
   expected:['Because you learn its error rate on your real cases at no risk: every suggestion can be compared with what the person actually did.',
    'A measured error rate on enough real cases, below what the team accepts from a person, and a plan for the errors that remain.'],
   point:'Raise autonomy one step at a time, when evals on your own cases support it, and lower it again when errors rise.',
   misconception:'That autonomy is a one-time decision at launch. It is a setting you revisit as the evals, the model and the stakes change.',
   transition:'At each step, someone pays for the model and for the checking. Which costs more?',
-  source:'The steps correspond to Part 1’s dial: operator, approver, observer. The refund is Part 1’s example.'});
+  source:'The steps correspond to Part 1’s levels: operator, approver, observer. The refund is Part 1’s example.'});
 }
 
 // ---------------------------------------------------------------------------------------- 5.2 the cost of one task
@@ -159,8 +159,8 @@ register('p5-cost',(el,ctx)=>{
  S_('cost','adopt','What does one task cost?',{builds:3,
   body:`${widget('p5-cost',COST_ALT)}${at(3,takeaway('Checking costs the most, so design results that are quick to check.'))}`,
   lines:[`Our opening run read ${big(CO.input)} tokens and wrote ${big(CO.output)}. At ${esc(T.model)} prices that is ₹${num(CO.model_inr,2)}. The price doubles on ${CO.price_change}.`,
-   `Now add a person who spends ${word(CO.review_min)} minutes checking the answer, at ₹${big(CO.inr_per_hour)} an hour. The model is now ${share(CO.model_share)} of the cost.`,
-   `Agents use about ${word(TV.agent)} times the tokens of a chat, multi-agent systems about ${word(TV.multi_agent)} times. Drag the steps: the person usually still costs more.`],
+   `Add a person who spends ${word(CO.review_min)} minutes checking the answer, at ₹${big(CO.inr_per_hour)} an hour. The model is now ${share(CO.model_share)} of the cost.`,
+   `Agents use about ${word(TV.agent)} times the tokens of a chat, multi-agent systems about ${word(TV.multi_agent)} times. Even so, the person usually costs more. Drag the steps to check.`],
   ask:['Guess: what did the opening run cost?','What does five minutes of a colleague’s time cost your organisation?','So where should you spend effort to make an agent cheaper?'],
   expected:['Most guess tens or hundreds of rupees. It is under one rupee.',`At ₹${big(CO.inr_per_hour)} an hour, five minutes is about ₹${Math.round(CO.person_inr)}; with overheads it is more, and the slider goes up to ₹${big(SC.hour_max)} an hour.`,
    'On making the check cheap: tests, totals that reconcile, a citation to click, a clear diff. Squeezing the model price matters far less.'],
@@ -185,30 +185,30 @@ register('p5-cost',(el,ctx)=>{
   `<rect x="700" y="86" width="340" height="30" rx="5" fill="#EEF0F2"/><rect x="700" y="86" width="${(G.cancelled_pct/100*340).toFixed(1)}" height="30" rx="5" fill="${COL.loss}"/>`+
   label(1050,108,`over ${G.cancelled_pct}%`,{size:20,fill:COL.ink,weight:700})+
   label(700,150,'Its reasons: rising costs, unclear business',{size:18,fill:COL.ink})+label(700,172,'value, weak risk controls.',{size:18,fill:COL.ink});
- const SK=[['pen',COL.guess,'Write goals and tools','A tool’s description is the only manual the model gets.'],
+ const SK=[['pen',COL.guess,'Write goals and tools','The model knows a tool only from its description.'],
   ['eye',COL.target,'Read traces','When a run goes wrong, the trace shows which step, and why.'],
   ['flask',COL.green,'Build evals','Real cases with known answers decide when to trust it.']];
  S_('skills','adopt','What changes for a team',{builds:2,
   body:`<div class="p5-skills">${SK.map(([ic,c,t,d])=>`<div>${iconHTML(ic,c,34)}<div><b>${t}</b><p>${d}</p></div></div>`).join('')}</div>
    ${at(2,`<div class="p5-ev">${fig(W,H,ev,'Evidence: more whole tasks handed to AI, most business API use is automation, and many agent projects expected to be cancelled')}</div>`)}`,
-  lines:['The work around the agent becomes part of the job. Someone writes the goal and the tool descriptions, reads the traces, and builds the evals.',
-   `The shift has started: people hand over more whole tasks. Gartner also predicts that over ${G.cancelled_pct}% of agentic AI projects will be cancelled by the end of ${G.by}.`],
+  lines:['Someone has to write the goal and the tool descriptions, read the traces, and build the evals. This work becomes part of the job.',
+   `People already hand over more whole tasks to AI. Gartner also predicts that over ${G.cancelled_pct}% of agentic AI projects will be cancelled by the end of ${G.by}.`],
   ask:['Who in your team already does something like this for other software?','What would keep your project out of the cancelled group?'],
   expected:['Testers, analysts who write specifications, whoever reviews pull requests or audits processes. These skills transfer.',
    'A task that is cheap to check, evals from day one, a measured cost per task, and guardrails a risk team has signed off.'],
   point:'Adopting agents mostly changes the work around the model: people specify the task and check the results.',
-  misconception:'That agents remove the need for expertise. They move it from doing each case to defining and checking how cases are done.',
+  misconception:'That agents remove the need for expertise. The expertise is still needed: experts write the instructions and check the agent’s cases.',
   transition:'Part 5 in one slide.',
   source:`Anthropic Economic Index (${E.when}): “directive” conversations, where people hand over the whole task. Gartner press release (${G.when}): a prediction.`});
 }
 
-recap(5,['A workflow when the path is fixed; autonomy where checking is cheap.',
-  'Climb from shadow mode as the evals allow.',
+recap(5,['Use a workflow when the steps are fixed. Give more autonomy where checking is cheap.',
+  'Start in shadow mode; move up as the evals allow.',
   'A person’s checking time usually costs more than the model.'],
  'the talk in one slide, and three things to try on Monday.',
  {card:{goal:'Refunds for damaged orders',model:'Cheapest that passes the evals',tools:`${chip('database','look up order')} ${chip('file','policy')} ${chip('rupee','refund')}`,
    memory:'Case history',stop:'A refund, a hand-off, or a limit',guard:'Refunds under a set amount',human:'Approves larger refunds'},
   hi:['model','guard','human'],title:'A card for a first agent: refunds',
   ask:'Where on the ramp would you start this refund agent, and what eval would move it up a step?',
-  expected:'Shadow mode on last month’s refunds; climb when it matches staff decisions on nearly all of them, with no large refund wrong.',
-  point:'Every decision of this part lands on the agent card.',transition:'To close: the whole talk in one slide.'});
+  expected:'Shadow mode on last month’s refunds; move up when it matches staff decisions on nearly all of them, with no large refund wrong.',
+  point:'Every decision of this part lands on the agent card.',transition:'To close: a summary.'});

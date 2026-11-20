@@ -22,11 +22,11 @@ const qr=(k,color=COL.ink)=>`<svg viewBox="-2 -2 ${Q[k].size+4} ${Q[k].size+4}" 
 const SUM=[['1',`An agent is ${kA('a model')}, ${kT('tools')} and a loop.`],
  ['2','Each turn it rereads its context; tools and memory are text it reads.'],
  ['3',`It works best where results are ${kG('cheap to check')}.`],
- ['4',`Errors compound and inputs can be poisoned; ${kR('guardrails')} live in your code.`],
+ ['4',`Errors compound, and text the agent reads can carry hidden instructions; ${kR('guardrails')} are code you write.`],
  ['5',`Start with a workflow, measure with evals, then raise ${kA('autonomy')}.`]];
-S_('summary','wrap','The talk in one slide',{builds:1,
+S_('summary','wrap','Summary',{builds:1,
  body:`<div class="w6-sum">${loopFig({W:600,H:450,at:{},tools:['sensor','code','mail','database','globe'],toolSize:32})}<ol>${SUM.map(([k,t])=>`<li><b>PART ${k}</b><span>${t}</span></li>`).join('')}</ol></div>`,
- lines:['The whole talk around the picture we started with. The loop is the engine; your design decides how far it may run.'],
+ lines:['The loop from the first slide, with one line from each part.'],
  ask:['Which of the five will you remember on Monday morning?'],
  expected:['Most remember Part 3 (where it works) or Part 4 (what goes wrong). Point back to the map of '+APPS.apps.length+' jobs.'],
  point:'The whole talk in five sentences.',transition:'And what to do next.'});
@@ -38,8 +38,8 @@ const ICON={play:'zap',list:'notes',check:'check'};
 S_('monday','wrap','Three things to try on Monday',{builds:2,nb:nb('part-0','▶ The notebook'),
  body:`<div class="w6-monday"><div class="w6-mon">${MON.map(([k,t,d],i)=>`<div>${iconHTML(ICON[k],[COL.guess,COL.target,COL.green][i],34)}<div><h3>${t}</h3><p>${d}</p></div></div>`).join('')}</div>
   ${at(2,`<div class="w6-qr"><figure>${qr('notebook')}<figcaption>The notebook<small>Colab · Gemini key or an open model</small></figcaption></figure></div>`)}</div>`,
- lines:['Small steps you can take this week, none of which needs a budget or a vendor.',
-  'Scan this to open the notebook. Every run in this talk came from it.'],
+ lines:['Three small steps for this week.',
+  'Scan to open the notebook. Every run in this talk came from it.'],
  ask:['Which task in your team would you write the card for?','Who has a laptop open? Try the first cell now.'],
  expected:['Reconciliations, weekly reports, ticket triage, document checks.','A few will open it; promise help after the session.'],
  point:'Concrete next steps: run it, describe one task as an agent card, and write the evals first.',
@@ -49,7 +49,7 @@ S_('thanks','wrap','Thank you. Questions?',{builds:1,
  body:`<div class="w6-qr"><figure>${qr('slides')}<figcaption>These slides<small>${esc(SITE.replace('https://',''))}</small></figcaption></figure>
   <figure>${qr('notebook')}<figcaption>The notebook<small>notebook/agents.ipynb in the same repository</small></figcaption></figure></div>
   ${small(`Slides, notebook, data and sources: github.com/nipunbatra/ai-agents. Every agent run shown was recorded with the notebook.`)}`,
- lines:['Questions, and examples from your own work, are very welcome.'],
+ lines:['Slides, notebook, data and sources are in one repository.'],
  ask:['Which application did we not cover that you would like to see?'],
  expected:['Common asks: HR screening, legal contracts, sales outreach, manufacturing quality. Map each onto the card and the two axes.'],
  point:'Close, and open the floor.',transition:'',

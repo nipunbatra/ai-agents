@@ -1,7 +1,7 @@
-# The engine of autonomy: unlocking the true power of AI agents
+# AI agents: language models that use tools in a loop
 
 A talk for the **IITGN-X Residency Program** (eMasters, IIT Gandhinagar), 3 December 2026, by Nipun Batra, with a
-companion notebook.
+companion notebook. The session is listed as “The Engine of Autonomy: Unlocking the True Power of AI Agents”.
 
 - **Slides:** https://nipunbatra.github.io/ai-agents/ (arrow keys or space to step; `F` to present; `N` for notes)
 - **Read as notes:** https://nipunbatra.github.io/ai-agents/?reading
