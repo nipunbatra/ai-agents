@@ -1,354 +1,244 @@
-// Part 3b: agents at work, second half, at the slow pace. A turn to science and to India, then five applications,
-// each in two steps: the task (the illustration, the request, and what it would need), then what the agent does and
-// who checks it. AlphaEvolve; a farm advisory in Gujarati (run live in notebook 3.4, then our recorded run: the reply
-// and the critic's verdict); air-quality alerts; building energy; clinic notes. Then the stakes map of every
-// application (a live figure in three clicks) and the recap of Part 3. The co-scientist and the lab robot are in the
-// appendix (parts/09-more-apps.js).
-// Numbers: data/p3b.json (scripts/sci/p3b.py: verified.md rows 12 to 15, and figures read from the farm and analyst
-// runs), data/apps.json (the map), data/traces.json (the farm run's checklist and verdict).
-import {S_,app,recap,chap,css,esc,num,big,word,kY,kT,kG,at,msg,jsonHTML,data,need,illo,request,chip,
- label,line,arrow,gat,gonly,fig,COL,icon,widget,register,nbRun} from '../kit.js';
+// Part 3, second half: where the same loop is used in the real world, and how much freedom each job should get.
+// A turn from our small agent to real products (the same loop, other tools), then four real jobs, one light slide
+// each: the illustration, what the agent does in four steps (a check is a filled step: green for a program, amber for
+// a person), and one published number. Then who checked the work in each, the stakes map (axes, our own three jobs,
+// the real jobs, the zones) and the recap of Part 3. More jobs are in the appendix (parts/08 and 09), drawn by job().
+// Numbers: data/p3a.json and data/p3b.json (scripts/sci/p3a.py, p3b.py: rows of plan/research/verified.md), and
+// data/apps.json (scripts/sci/apps.py: the map). Nothing here is read from a run except the model's name.
+import {S_,recap,chap,css,esc,num,big,word,kY,kA,kT,kG,kR,data,need,illo,iconHTML,
+ label,line,arrow,gat,gonly,fig,COL,chip,widget,register,loopStrip} from '../kit.js';
 
-const D=need(await data('p3b'),'evolve','kisan','farmerchat','clinic','farm','air');
-const APPS=need(await data('apps'),'apps','families','zones'),T=need(await data('traces'),'farm','date_text','model');
-const E=D.evolve,F=D.farm,K=D.kisan,FC=D.farmerchat,AQ=D.air,CL=D.clinic;
-const APP=id=>{const a=APPS.apps.find(x=>x.id===id);if(!a)throw new Error('No application '+id);return a;};
+const A=need(await data('p3a'),'swe','klarna'),B=need(await data('p3b'),'evolve','clinic','kisan');
+const APPS=need(await data('apps'),'apps','zones'),MODEL=need(await data('traces'),'model').model;
+const SW=A.swe,KL=A.klarna,E=B.evolve,CL=B.clinic,K=B.kisan;
+const APP=id=>{const a=APPS.apps.find(x=>x.id===id);if(!a)throw new Error('No job '+id);return a;};
 
-css(`.p3b-turn{display:grid;grid-template-columns:auto auto;justify-content:center;gap:56px}
-.p3b-turn h3{font-size:24px;line-height:1.2;margin:0 0 14px;padding-top:12px;border-top:5px solid var(--line);white-space:nowrap}
-.p3b-turn .row{display:flex;gap:20px}
-.p3b-turn .illo{width:184px}.p3b-turn .illo img{width:184px;height:184px;object-fit:cover;border-radius:16px}
-.p3b-turn figcaption{font-size:23px;line-height:1.25;color:var(--ink);text-align:left}
-.p3b-task{display:grid;grid-template-columns:400px minmax(0,1fr);gap:46px;align-items:center}
-.p3b-task .illo img{max-height:400px;border-radius:18px}
-.p3b-task .req{font-size:31px;line-height:1.35;padding:16px 24px;border-radius:20px 20px 20px 6px}.p3b-task .req b{font-size:16px}
-.p3b-need{margin-top:36px}
-.p3b-need>small{display:block;font-size:17px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--p);margin-bottom:14px}
-.p3b-need .chips{gap:12px}.p3b-need .tchip{font-size:25px;padding:6px 18px 6px 12px}
-.p3b-adv{width:100%;max-width:1040px;margin:0 auto}
-.p3b-adv .msg{padding:12px 26px 18px}.p3b-adv .msg .mb{font-size:31px;line-height:1.65}.p3b-adv .msg .mh em{font-size:17px}
-.p3b-adv .kT,.p3b-memo{border-radius:6px;padding:0 5px}.p3b-adv .kT{background:#0F766E14}.p3b-memo{color:var(--data);font-weight:650;background:#245EDB14}
-.p3b-crit{display:grid;grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:40px;align-items:center}
-.p3b-rules{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:18px}
-.p3b-rules li{display:flex;gap:16px;align-items:center;font-size:28px;line-height:1.3}
-.p3b-tick{flex:none;width:34px}
-.p3b-crit .msg .mb pre.json{font-size:28px;line-height:1.5}
-.p3b-map .diagram-scroll svg{max-height:392px}
+css(`.p3b-turn{display:flex;flex-direction:column;align-items:center;gap:30px;width:100%}
+.p3b-turn .lstrip{width:640px;max-width:100%}
+.p3b-sets{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;width:100%}
+.p3b-sets>div{border:2px solid var(--line);border-top:6px solid var(--p);border-radius:16px;background:#fff;padding:16px 20px 18px;min-width:0;display:flex;flex-direction:column;gap:10px}
+.p3b-sets h3{font-size:25px;line-height:1.2;display:flex;align-items:center;gap:10px;margin:0}
+.p3b-sets ul{list-style:none;margin:0;padding:0;font-size:23px;line-height:1.42;color:var(--p)}
+.p3b-sets li{display:flex;align-items:center;gap:10px}.p3b-sets li::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--p);opacity:.55}
+.p3b-sets .mono{font-size:21px;font-weight:650}
+.scene[data-build="1"] .p3b-sets>div.later{border:2px dashed var(--line);background:none}
+.p3b-job{display:grid;grid-template-columns:400px minmax(0,1fr);gap:50px;align-items:center;width:100%}
+.p3b-job .illo img{max-height:400px;border-radius:18px}
+.p3b-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px}
+.p3b-steps li{display:flex;align-items:center;gap:16px;font-size:27px;line-height:1.25;position:relative;min-height:48px}
+.p3b-steps li>i{flex:none;width:48px;height:48px;border-radius:50%;border:2.6px solid var(--c);background:#fff;display:grid;place-items:center;position:relative;z-index:1}
+.p3b-steps li.chk>i{background:var(--c)}.p3b-steps li.chk>span{font-weight:650}
+.p3b-steps li:not(:last-child)::after{content:"";position:absolute;left:22.7px;top:50%;height:calc(100% + 14px);width:2.6px;background:#C9D0D7}
+.p3b-steps .tag{margin-left:auto;flex:none;font:650 16px/1 var(--font);color:#fff;background:var(--t,var(--c));border-radius:999px;padding:6px 12px 7px;white-space:nowrap}
+.p3b-num{display:flex;align-items:center;gap:24px;margin-top:24px;padding-top:20px;border-top:2px solid var(--line)}
+.p3b-num b{flex:none;font-size:58px;line-height:1;font-weight:700;letter-spacing:-1.5px;color:var(--d);font-variant-numeric:tabular-nums;white-space:nowrap}
+.p3b-num b small{display:block;font-size:20px;line-height:1;letter-spacing:0;font-weight:650;margin-bottom:5px}
+.p3b-num p{font-size:24px;line-height:1.35;color:#374151;text-wrap:balance}
+.p3b-who{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:28px;width:100%}
+.p3b-who>div{display:flex;flex-direction:column;gap:12px;min-width:0}
+.p3b-who .illo img{max-height:none;border-radius:18px}
+.p3b-who h3{font-size:24px;line-height:1.2;margin:2px 0 0;font-weight:650;color:#374151}
+.p3b-who p{font-size:23px;line-height:1.3;color:#374151}.p3b-who p b{display:block;font-size:26px;font-weight:650;color:var(--c)}
+.p3b-map .diagram-scroll svg{max-height:424px}
 .p3b-pt{cursor:pointer;outline:none}.p3b-pt .p3b-ring{opacity:0}.p3b-pt.on .p3b-ring,.p3b-pt:focus-visible .p3b-ring{opacity:1}
-.p3b-why{font-size:23px;line-height:1.35;min-height:32px;margin-top:14px;padding-left:16px;border-left:6px solid var(--line)}
-.p3b-why b{font-weight:650}
-.scene[data-build="1"] .p3b-z,.scene[data-build="2"] .p3b-z{visibility:hidden}
-.scene[data-build="2"] .p3b-why{border-left-color:var(--line)!important}
-@media(max-width:760px){.reading .p3b-turn,.reading .p3b-task,.reading .p3b-crit{grid-template-columns:minmax(0,1fr)}.reading .p3b-turn .row{flex-wrap:wrap}
- .reading .p3b-task .req{font-size:20px}.reading .p3b-need .tchip{font-size:17px}.reading .p3b-adv .msg .mb{font-size:20px}.reading .p3b-rules li{font-size:19px}.reading .p3b-why{font-size:18px}}`);
+.p3b-why{font-size:22px;line-height:1.3;min-height:29px;margin-top:4px;padding-left:14px;border-left:5px solid var(--line);visibility:hidden;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p3b-why.on{visibility:visible}.p3b-why b{font-weight:650}
+@media(max-width:760px){.reading .p3b-sets,.reading .p3b-job,.reading .p3b-who{grid-template-columns:minmax(0,1fr)}.reading .p3b-turn .lstrip{width:100%}
+ .reading .p3b-steps li{font-size:19px}.reading .p3b-steps .tag{display:none}.reading .p3b-num{flex-direction:column;align-items:flex-start;gap:8px}.reading .p3b-num b{font-size:40px}
+ .reading .p3b-num p,.reading .p3b-who p,.reading .p3b-sets ul{font-size:18px}.reading .p3b-why{white-space:normal}.reading .p3b-who .illo img{max-height:220px;width:auto}}`);
 
-/** The first slide of an application: its illustration, the request, and the question “What would it need?”, whose
- answer (the tools, as chips) appears at click 2. need: [[icon, text, role]]; role 'memory' for stored data. */
-function task(id,title,o){
- S_(id,'work',title,{builds:2,
-  body:`<div class="p3b-task">${illo(o.img,o.alt)}<div>${request(o.req,{who:o.who})}
-   <div class="p3b-need"><small>What would it need?</small>${at(2,`<div class="chips">${o.need.map(([ic,t,r])=>chip(ic,t,r)).join('')}</div>`)}</div></div></div>`,
+// ---------------------------------------------------------------------------------------- one job, one slide
+const ROLEC={agent:COL.guess,tools:COL.target,you:COL.amber,done:COL.green,risk:COL.loss};
+/** One real job on one slide: its illustration; what happens, in three or four steps; and one number at click 2.
+ steps: [[role, icon, text, tag]]; role is 'agent' (purple), 'tools' (teal), 'you' (a person, amber) or 'done' (a
+ program's check, green). A step with a tag is a check: its badge is filled, and the tag says who checks
+ ('a program checks'); a tag [text, role] takes another role's colour. fact: {big, pre, text}. */
+export function job(id,title,o){
+ const row=([role,ic,text,tag])=>{const c=ROLEC[role],[tt,tr]=Array.isArray(tag)?tag:[tag,role],fill=!!tag&&tr===role;
+  return `<li${fill?' class="chk"':''} style="--c:${c}"><i>${iconHTML(ic,fill?'#fff':c,26)}</i><span>${text}</span>${tt?`<em class="tag" style="--t:${ROLEC[tr]};font-style:normal">${tt}</em>`:''}</li>`;};
+ const f=o.fact;
+ S_(id,o.section||'work',title,{builds:2,optional:o.optional,nb:o.nb,
+  body:`<div class="p3b-job">${illo(o.img,o.alt)}<div><ol class="p3b-steps">${o.steps.map(row).join('')}</ol>
+   <div class="p3b-num" data-at="2"><b>${f.pre?`<small>${f.pre}</small>`:''}${f.big}</b><p>${f.text}</p></div></div></div>`,
   lines:o.lines,ask:o.ask,expected:o.expected,point:o.point,misconception:o.misconception,transition:o.transition,
-  source:o.source||'Illustration: generated.'});
+  source:`${o.source} Illustration: generated.`});
 }
-/** The second slide's trace settings: full width, no illustration. The last `late` steps (the person's check and
- what follows it) appear at click 2 with the facts strip; the rest are there from click 1. app() always draws the
- request bubble; the task slide has just shown it, so on these slides it is hidden and the trace gets the room. */
-const TRACE={laneH:104,fs:20,laneOpts:{gap:4,left:204}};
-const steps=(list,late)=>list.map((s,i)=>i<list.length-late?{...s,at:1}:s);
-const TRACES=['app-evolve','app-farmer','app-air','app-building','app-clinic'].map(id=>`[data-scene-id="${id}"]`).join(',');
-css(`:is(${TRACES}) .content{justify-content:center}:is(${TRACES}) .app-main>.req{display:none}:is(${TRACES}) .lanes svg{max-height:330px}:is(${TRACES}) .facts{margin-top:10px}`);
 
 // ---------------------------------------------------------------------------------------- the turn
-chap();
+chap('3.3','Real products');
 {
- const fam=id=>APPS.families.find(f=>f.id===id).name;
- const THUMB=[['science',[['evolve','app-evolve.jpg','a tree of code blocks beside data-centre servers']]],
-  ['india',[['farmer','app-farmer.jpg','a farmer with a phone in a cumin field'],['air','app-air.jpg','a hazy city, a sensor pole and a school'],
-   ['building','app-building.jpg','a campus building with solar panels'],['clinic','app-clinic.jpg','a doctor and a patient in a small clinic']]]];
- S_('work-beyond','work','Outside the office, who checks the work?',{builds:1,
-  body:`<div class="p3b-turn">${THUMB.map(([f,items])=>`<div><h3>${fam(f)}</h3><div class="row">${items.map(([id,img,alt])=>
-   illo(img,`Illustration: ${alt}`,{cap:esc(APP(id).name)})).join('')}</div></div>`).join('')}</div>`,
-  lines:['First a science project at Google DeepMind, then jobs in India. For each one, watch who checks the result.'],
-  ask:['In your own work, who checks a result before anyone acts on it?'],
-  expected:['Sometimes a program, such as a test or a reconciliation. Often a colleague or a manager. Every job next has one or the other, or both.'],
-  point:'From here on we ask one thing of each job: what checks the result, a program or a person?',
-  transition:'First, a job where a program checks every attempt.',
-  source:'Illustrations: generated.'});
+ const SETS=[['terminal','Our agent',['read_file','write_file','edit_file','bash'],1],['code','Coding agents',['the same four','search','git']],
+  ['chat','A support desk',['order lookup','refund','reply']],['mic','A clinic',['microphone','transcript','health record']]];
+ S_('work-real','work','Real products run the same loop',{builds:2,
+  body:`<div class="p3b-turn">${loopStrip({model:'1',tool:'1,2',result:'1'})}
+   <div class="p3b-sets">${SETS.map(([ic,name,tools,ours])=>`<div${ours?'':' class="later"'}><h3${ours?'':' data-at="2"'}>${iconHTML(ic,COL.target,28)}${name}</h3>
+    <ul${ours?'':' data-at="2"'}>${tools.map(t=>`<li>${ours?`<span class="mono">${t}</span>`:t}</li>`).join('')}</ul></div>`).join('')}</div></div>`,
+  lines:['Our loop once more, and the four tools it can ask for.',
+   'Real products keep this loop. What changes is the set of tools.'],
+  ask:['What would we change to turn our agent into a support agent?','What tools would an agent need in your team?'],
+  expected:['Only the tools: an order lookup, a refund and a reply in place of files and a terminal. The model and the loop stay.',
+   'Usually three or four: look something up, change a record, send a message. Each is one function, like read_file.'],
+  point:'An agent product is the same loop, with tools chosen for one job.',
+  misconception:'That each product is a different kind of AI. The loop is the one we wrote; the tools and the checks around it differ.',
+  transition:'First, the product closest to what we built.'});
 }
 
-// ---------------------------------------------------------------------------------------- 3.3 science
-chap('3.3','Science and engineering');
-const EVREQ='Find a better rule for placing jobs on our servers. Our code scores any rule.';
-task('app-evolve-task','AlphaEvolve: a better rule for Google’s servers',{img:'app-evolve.jpg',
+// ---------------------------------------------------------------------------------------- four real jobs
+job('app-coding','Coding agents work the way ours did',{img:'app-coding.jpg',
+ alt:'Illustration: a developer at a laptop in the evening, a small helper beside it',
+ steps:[['agent','spark','Reads the issue and the code'],['tools','pen','Edits the files'],
+  ['done','check','Runs the tests after each change','a program checks'],['you','approve','A person reviews and merges','a person approves']],
+ fact:{big:`${num(SW.leaderboard_pct,0)}%`,text:`of ${SW.tasks} real GitHub issues fixed, on a public test.`},
+ lines:['Claude Code, Codex and Cursor work as our agent did: read, edit, run the tests, repeat.',
+  'How good are they? This public test gives an agent real issues from open-source projects.'],
+ ask:['What does a product add to our sixty lines?','Does that score mean an agent can do most of a developer’s job?'],
+ expected:['A stronger model, more tools (search, git, a browser), permissions and logs. The loop is the same.',
+  `No. The ${SW.tasks} tasks are small fixes with the tests already written, and the test has leaked into training data: OpenAI stopped reporting it in ${SW.dropped}. Vendors report higher scores (${num(SW.late.pct,1)}% for the restricted ${esc(SW.late.model)}); the independent leaderboard is the safer number. ${esc(SW.start.model)} scored ${num(SW.start.pct,1)}% in ${SW.start.date}. Run your own evals (Part 4).`],
+ point:'A coding agent can do much of the work because tests check each change in seconds, and a person approves the merge.',
+ misconception:'That the score measures a developer’s job. It measures small, well-described fixes that come with tests.',
+ transition:'Next, a job with no tests: answering customers.',
+ source:`SWE-bench Verified (${SW.tasks} tasks): the top score on the independent swebench.com leaderboard. The steps are a sketch of how coding agents work.`});
+
+job('app-support','Customer support: it answers the routine chats',{img:'app-support.jpg',
+ alt:'Illustration: a customer with a phone, and a support desk where a small helper types a reply',
+ steps:[['agent','chat','Reads the customer’s message'],['tools','database','Looks up the order and the policy'],
+  ['agent','send','Answers routine questions itself',['nobody reads it first','risk']],['you','person','A person takes the hard cases']],
+ fact:{big:KL.share.replace(/^./,c=>c.toUpperCase()),text:'of Klarna’s customer chats, in its assistant’s first month.'},
+ lines:['A support agent reads the message, looks up the order and the policy, and replies.',
+  `Answers took under ${KL.minutes_after} minutes, down from ${KL.minutes_before}. Later, Klarna’s CEO said quality had dropped.`],
+ ask:['Which of these steps can go wrong without anyone seeing?',`It handled ${KL.share} of the chats. Is ${KL.share} of the job done?`],
+ expected:['The reply. It goes to the customer at once, so the customer is the first person to read it.',
+  `No. Those ${KL.chats} chats were the routine ones. In ${KL.turn_date} Klarna’s CEO told Bloomberg that cost had been too dominant a factor, and the result was lower quality. Klarna offers a person again for some cases, with freelance staff, while its headcount keeps falling. Klarna had said the assistant did the work of ${KL.fte} full-time agents, with ${KL.repeat_drop_pct}% fewer repeat inquiries.`],
+ point:'A support agent settles routine chats quickly. Nobody reads each reply first, so its quality has to be measured another way.',
+ misconception:'That Klarna went back to people. The new staff are freelance, and total headcount kept falling.',
+ transition:'Now a job where a program checks every attempt.',
+ source:`Klarna press release (${KL.date}); its CEO’s interview with Bloomberg (${KL.turn_date}), as reported by Entrepreneur. The steps are a sketch of a typical support agent.`});
+
+job('app-evolve','AlphaEvolve: a program scores every attempt',{img:'app-evolve.jpg',
  alt:'Illustration: a tree of code blocks growing upward beside rows of data-centre servers',
- who:'Google’s engineers',req:EVREQ,
- need:[['terminal','run the code'],['target','the scoring program'],['database','the best attempts so far','memory']],
- lines:['Google’s engineers want a better rule for placing jobs on their servers. They already have code that scores any rule.',
-  'With these, it can try a rule, see its score and try again, without waiting for a person.'],
- ask:['What would an agent need to work on this?','Who has to look at each attempt?'],
- expected:['A way to run code, the scoring program, and somewhere to keep what worked.',
-  'Nobody. The scoring program rates each attempt in seconds, so no person has to read them.'],
- point:'This job comes with its own check: a program that scores any rule.',
- transition:'So what does the agent do with it?'});
+ steps:[['you','target','Engineers write a scoring program'],['agent','code','It writes a rule for placing jobs'],
+  ['done','check','The program scores the rule','a program checks'],['agent','refresh','It keeps the best, and tries again']],
+ fact:{big:`${num(E.compute_pct,1)}%`,text:'of Google’s worldwide computing recovered, on average.'},
+ lines:['Which server should each job run on? Google’s engineers wrote a program that scores any rule.',
+  'It tries far more rules than a team could read. The best one now runs in Google’s data centres.'],
+ ask:['Who has to read each attempt?','Which problems in your work come with a scorer like this?'],
+ expected:['Nobody. The program scores every rule, so the loop does not wait for a person. Engineers read the winner before it is used.',
+  'Scheduling, routing, packing: anything with a cost that a program can compute.'],
+ point:'When a program can score the result, the loop can run without a person looking at each attempt.',
+ misconception:`That AlphaEvolve is a smarter model. It is a loop around existing Gemini models, and the scorer does much of the work. It also found a way to multiply ${E.matrix}×${E.matrix} complex matrices with ${E.mults} multiplications, and a faster kernel that cut Gemini’s training time by ${E.training_pct}%.`,
+ transition:'Most jobs have no scorer. In a clinic, the check is a doctor.',
+ source:`Google DeepMind blog, ${E.date}. The steps are simplified.`});
 
-app('app-evolve','AlphaEvolve: a program scores every attempt',{...TRACE,
- who:'Google’s engineers',req:EVREQ,names:{you:'Engineers'},
- steps:steps([{lane:'you',icon:'target',t:'Goal and\nscorer'},{lane:'agent',icon:'code',t:'Write a\nnew rule'},
-  {lane:'tools',icon:'terminal',t:'Run and\nscore it',kind:'done'},{lane:'tools',icon:'database',t:'Keep the\nbest'},
-  {lane:'agent',icon:'branch',t:'Change the\nbest, repeat'},{lane:'you',icon:'approve',t:'Read the\nwinner',kind:'check'}],1),
- check:'Engineers write the scorer and read the winner.',
- evidence:{big:`${num(E.compute_pct,1)}%`,text:'of Google’s worldwide compute recovered by its rule.'},
- lines:['The agent writes a rule, the program scores it, and the best rules are kept and changed again, over and over.',
-  'Nobody reads each attempt, so it can try far more than a team could check.'],
- ask:['How many attempts could it make in a day?','Which problems in your work come with a scorer like this?'],
- expected:['Far more than any person could read: each one is scored in seconds, day and night.',
-  'Scheduling, routing, compression: anything with a test suite or a cost model.'],
- point:'Because the check is a program, the loop can run without a person looking at each attempt.',
- misconception:`That AlphaEvolve is a smarter model. It is a loop around existing Gemini models, and the scorer does much of the work. The same loop found a way to multiply ${E.matrix}×${E.matrix} complex matrices with ${E.mults} multiplications, and a faster kernel that cut Gemini’s training time by ${E.training_pct}%.`,
- transition:'Most jobs have no scorer like that. A farmer’s question is one of them.',
- source:`Google DeepMind blog, ${E.date}. The trace is simplified.`});
-
-// ---------------------------------------------------------------------------------------- 3.4 India and sustainability
-chap('3.4','India and sustainability');
-task('app-farmer-task',`A voice note from a farmer near ${esc(F.place)}`,{img:'app-farmer.jpg',
- alt:'Illustration: a farmer in a white turban in a flowering cumin field at sunrise, holding a phone with a voice message',
- who:'A cumin farmer, by voice',req:'Is it time to sow and water my cumin?',
- need:[['mic','speech to text'],['thermo','weather forecast'],['notes','crop notes','memory'],['send','a voice reply']],
- lines:[`A farmer near ${esc(F.place)} asks this in a voice note, in Gujarati. The answer depends on this week’s weather.`,
-  'The forecast and the crop notes give it facts. Without them it would guess, as the model on its own did.'],
- ask:['What would it need to answer well?','What could go wrong with the answer?'],
- expected:['The weather for the next few days, what cumin needs, and Gujarati both ways.',
-  'The wrong weather, advice meant for another region, or a reply the farmer cannot read. Bad advice can cost a season’s crop.'],
- point:'The agent answers from the local forecast and crop notes, in the farmer’s own language.',
- transition:'In the notebook we build the middle part of this job.'});
-
-nbRun('nb-farm','work','3.4','A farm advisory, written and checked',{
- run:'draft = write(feedback)\nverdict = critique(draft)',
- look:['The draft: in Gujarati, with numbers from the forecast','The verdict: a pass, or a list of problems'],
- line:`One call writes the advisory from the real forecast. A second call checks it against ${word(F.checks)} rules.`,
- ask:'What should happen if the draft breaks a rule?',
- expected:'The checker sends back the problems, and the writer tries again.',
- point:'A second call that checks the first against a fixed list is a cheap check you can always add.',
- transition:'This is what our run wrote.'});
-
-// The real advisory: the numbers it took from the forecast in teal, the one from the crop notes in blue.
-{
- let h=esc(F.draft);
- for(const x of F.from_forecast)h=h.replace(esc(x),kT(esc(x)));
- for(const x of F.from_notes)h=h.replace(esc(x),`<span class="p3b-memo">${esc(x)}</span>`);
- const low=F.days.find(d=>d.min_c===F.low_c).day;
- S_('farm-reply','work','The advisory our run wrote',{builds:1,
-  body:`<div class="p3b-adv">${msg('model',`<span lang="gu">${h}</span>`,{note:`round ${word(F.rounds)}`})}</div>`,
-  lines:['The teal numbers come from the forecast. The blue one comes from the crop notes.'],
-  ask:['Who here reads Gujarati? Does it sound like something a farmer would act on?'],
-  expected:[`In English: no rain from ${F.first} to ${F.last} (chance ${F.rain_chance_max}%), nights down to ${num(F.low_c,1)} °C on ${low}. Cool, dry weather suits cumin, so sow this week and water lightly at once, then every ${F.interval[0]} to ${F.interval[1]} days.`],
-  point:'Every number in the advice comes from a source we gave it: the forecast or the crop notes.',
-  transition:'Before anyone sends it, the second call checks it.',
-  source:`Our run (notebook 3.4, ${esc(T.model)}, ${T.date_text}). Forecast: ${esc(F.source)}. The crop notes are illustrative, not agronomic advice.`});
-}
-
-{
- const RULES=T.farm.checklist,V=T.farm.rounds.at(-1).verdict;
- if(RULES.length!==F.checks||!V.pass)throw new Error('farm-critic: the recorded verdict no longer matches data/p3b.json');
- const empty=`<svg viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><circle cx="17" cy="17" r="13" fill="none" stroke="#AAB3BC" stroke-width="2.5"/></svg>`;
- const tick=`<svg viewBox="0 0 34 34" width="34" height="34" aria-hidden="true"><circle cx="17" cy="17" r="15" fill="${COL.green}"/>${icon('check',17,17,20,'#fff',{sw:3})}</svg>`;
- S_('farm-critic','work','Did the draft pass the checks?',{builds:2,
-  body:`<div class="p3b-crit"><ul class="p3b-rules">${RULES.map(r=>`<li><div class="p3b-tick"><div data-only="1">${empty}</div><div data-only="2">${tick}</div></div><span>${esc(r.replace(/^./,c=>c.toUpperCase()))}</span></li>`).join('')}</ul>
-   ${at(2,msg('model',jsonHTML(V),{note:'the critic'}))}</div>`,
-  lines:[`The second call, the critic, read the draft against these ${word(F.checks)} rules. Which one is hardest to check?`,
-   `All ${word(F.checks)} passed in round ${word(F.rounds)}. Any problems would have gone back to the writer.`],
-  ask:['Which rule is hardest for a model to check?','Is a pass from the critic enough to send it to farmers?'],
-  expected:['The last one: “says nothing the forecast or crop notes do not support”. It needs judgement, and the critic is a model too.',
-   'No. The critic is a model checking a model. Someone who knows farming should approve the advice, because a farmer’s crop depends on it.'],
-  point:'A checking call catches broken rules cheaply, but it is a model too, so it should not be the last check.',
-  transition:'So where would a person come in?',
-  source:`The critic’s real reply, from our run (notebook 3.4, ${T.date_text}).`});
-}
-
-app('app-farmer','Who checks the advice before a farmer hears it?',{...TRACE,
- who:'A cumin farmer, by voice',req:'Is it time to sow and water my cumin?',names:{you:'People'},
- steps:steps([{lane:'you',icon:'mic',t:'Voice\nnote'},{lane:'tools',icon:'chat',t:'Speech\nto text'},{lane:'tools',icon:'thermo',t:'Forecast,\ncrop notes'},
-  {lane:'agent',icon:'pen',t:'Draft in\nGujarati'},{lane:'agent',icon:'check',t:'Critic\nchecks',kind:'done'},
-  {lane:'you',icon:'approve',t:'Agronomist\napproves',kind:'check'},{lane:'tools',icon:'send',t:'Voice\nreply'}],2),
- check:'An agronomist approves each advisory.',
- evidence:{big:`${K.answered_m} million+`,text:'questions answered by Kisan e-Mitra, the government’s farmer chatbot.'},
- lines:['Our notebook ran the middle: the draft and the critic. A real service adds the voice at both ends.',
-  'The critic is a model too. Bad advice can cost a farmer the season’s crop, so an agronomist approves.'],
- ask:['Which steps did our notebook leave out?','Why both a critic and an agronomist?'],
- expected:['The voice at both ends: speech to text coming in, a voice reply going out.',
-  'The critic catches broken rules cheaply. The agronomist answers for the advice, and a photo of a sick plant needs a trained eye.'],
- point:'For a farmer, the agent works by voice, in Gujarati, from local data, and a person approves the advice.',
- misconception:`That a chatbot alone can advise farmers. Without the forecast and the crop notes it would guess, as the model on its own did in the opening. (Kisan e-Mitra: more than ${K.answered_lakh} lakh answers in ${K.languages} languages, over ${big(K.per_day)} a day, per PIB. Digital Green’s Farmer.Chat serves ${FC.farmers_lo_m} to ${FC.farmers_hi_m} million farmers.)`,
- transition:'The same loop can watch a city’s air.',
- source:`The trace is our design; the draft and the critic are our run (notebook 3.4). Kisan e-Mitra: PIB, ${K.date}.`});
-
-const AQREQ='Where will PM2.5 cross the standard tomorrow, and whom should we warn?',top=AQ.cities[0],city=n=>AQ.cities.find(c=>c.city===n);
-task('app-air-task','Whom should a city warn about tomorrow’s air?',{img:'app-air.jpg',
- alt:'Illustration: a hazy city skyline, an air-quality sensor pole, a school, and a phone alert with a mask symbol',
- who:'A city air-quality desk',req:AQREQ,
- need:[['pin','station readings'],['wind','an air forecast'],['database','schools and hospitals','memory'],['send','SMS and WhatsApp']],
- lines:['Every morning a city’s pollution desk decides where to warn people. The answer changes from day to day.',
-  'Most of this job is gathering and drafting, every morning. That is the part an agent can take.'],
- ask:['What would it need?','Which part of this job is the same every morning?'],
- expected:['Station readings, a forecast, a list of schools and hospitals, and a way to send the alerts.',
-  'Collecting the numbers, finding the hotspots, drafting the messages. The decision to send is not routine.'],
- point:'The routine part of the desk’s morning is data gathering and drafting.',
- transition:'So what would the agent do, and who approves the alerts?'});
-
-app('app-air','Air-quality alerts, every morning',{...TRACE,
- who:'A city air-quality desk',req:AQREQ,names:{you:'Officer'},
- steps:steps([{lane:'tools',icon:'clock',t:'Every\nmorning'},{lane:'tools',icon:'pin',t:'Station\nreadings'},{lane:'tools',icon:'wind',t:'Air\nforecast'},
-  {lane:'agent',icon:'target',t:'Find\nhotspots'},{lane:'agent',icon:'pen',t:'Draft\nalerts'},
-  {lane:'you',icon:'approve',t:'Officer\napproves',kind:'check'},{lane:'tools',icon:'send',t:'Alert\nschools'}],2),
- check:'An officer approves every alert before it is sent.',
- evidence:{label:'Our analyst run',big:`${top.over} of ${AQ.days}`,text:`winter days over ${AQ.standard}&nbsp;µg/m³ in ${esc(top.city)}.`},
- lines:['Each morning it gathers the readings and the forecast, finds the hotspots and drafts the alerts.',
-  'A false alarm closes schools; a missed one harms children. A person makes that call.'],
- ask:['Should the alerts go out on their own?','Why should a person make that call, and not the agent?'],
- expected:['No. Schools and hospitals act on them, and a wrong alert costs trust.',
-  `Someone has to answer for a closed school or a missed warning, and the forecast is only an estimate. (In our analyst run Delhi was over the standard on ${city('Delhi').over} days, Gandhinagar on ${city('Gandhinagar').over}.)`],
- point:'An agent can do the daily gathering and drafting; a person approves each alert, because schools and hospitals act on it.',
- misconception:'That CAMS numbers are station measurements. They are estimates from a model that takes in satellite data; a real desk would check them against its own stations.',
- transition:'Buildings are easier to check: a simulator and a meter do it.',
- source:`The trace is our design. Days over the standard, ${AQ.from} to ${AQ.to}: our analyst run (notebook 3.1, ${esc(AQ.model)}) on CAMS estimates via Open-Meteo.`});
-
-const BREQ='Keep the lecture halls cool for this week’s classes, at the lowest electricity bill.';
-task('app-building-task','When should a campus cool its lecture halls?',{img:'app-building.jpg',
- alt:'Illustration: a campus building with rooftop solar panels and air-conditioning units, and a facilities manager with a tablet',
- who:'A campus facilities team',req:BREQ,
- need:[['calendar','class timetable','memory'],['thermo','weather forecast'],['rupee','hourly tariff'],['code','a simulator'],['zap','building controls']],
- lines:['A campus wants cool lecture halls and a lower electricity bill. Power costs more at some hours than at others.',
-  'With the timetable, forecast and tariff, it can cool rooms early, before the price goes up.'],
- ask:['What would it need to know?','How could it save money without making anyone hot?'],
- expected:['When the rooms are used, how hot it will be, and when power is cheap.',
-  'Cool the halls before the peak tariff, and skip the rooms nobody is using.'],
- point:'The savings come from timing: cool before the price goes up, and only the rooms in use.',
- transition:'And who checks the plan?'});
-
-app('app-building','Building energy: a schedule for the week',{...TRACE,
- who:'A campus facilities team',req:BREQ,names:{you:'Manager'},
- steps:steps([{lane:'tools',icon:'calendar',t:'Timetable'},{lane:'tools',icon:'thermo',t:'Forecast,\ntariff'},{lane:'agent',icon:'list',t:'Plan the\ncooling'},
-  {lane:'tools',icon:'code',t:'Simulate\nthe week',kind:'done'},{lane:'you',icon:'approve',t:'Manager\napproves',kind:'check'},
-  {lane:'tools',icon:'building',t:'Set the\nschedule'},{lane:'tools',icon:'pulse',t:'Meter\nreports',kind:'done'}],3),
- check:'The manager approves each plan at first, then spot-checks.',
- evidence:{label:'Programs check',text:'The simulator before it runs, the meter after.'},
- lines:['The agent plans when to cool each hall. A simulator checks the plan’s comfort and cost before anything runs.',
-  'A bad schedule costs a warm afternoon, and is fixed the next day.'],
- ask:['Who checks the plan before it runs?','Why can this run with less supervision than the air alerts?'],
- expected:['A program: the simulator works out comfort and cost for the week.',
-  'Checking is cheap, before and after, and a bad schedule costs some rupees and some comfort for a day, then is fixed the next.'],
- point:'When a simulator and a meter check every decision, the agent can run day to day while a person reads the weekly report.',
- transition:'Last, a clinic, where every note is about a patient.',
- source:'The trace is our design.'});
-
-const CREQ='Listen to this consultation, in Gujarati and English, and draft my notes.';
-task('app-clinic-task','Could an agent write a doctor’s notes?',{img:'app-clinic.jpg',
+job('app-clinic','Clinic notes: the doctor signs every note',{img:'app-clinic.jpg',
  alt:'Illustration: a doctor and a patient talking across a desk in a small Indian clinic, a recorder and a tablet on the desk',
- who:'A doctor in a busy clinic',req:CREQ,
- need:[['mic','a microphone'],['file','speech to text'],['database','the health record','memory']],
- lines:['A doctor sees patient after patient, then writes the notes. Could an agent listen and draft them?',
-  'And one thing that is not a tool: the patient’s permission to record.'],
- ask:['What would it need?','What must happen before the recorder is switched on?'],
- expected:['A microphone, speech to text that handles two languages, and the patient’s record.',
-  'The patient agrees. Consent comes first, and a person gives it.'],
- point:'Before any tool runs, a person has to agree to be recorded.',
- transition:'So what does it do with the recording?'});
-
-app('app-clinic','Clinic notes: from the consultation to the record',{...TRACE,
- who:'A doctor in a busy clinic',req:CREQ,names:{you:'People'},
- steps:steps([{lane:'you',icon:'person',t:'Patient\nconsents',kind:'check'},{lane:'tools',icon:'mic',t:'Listen'},{lane:'tools',icon:'file',t:'Transcribe'},
-  {lane:'agent',icon:'pen',t:'Draft\nthe note'},{lane:'you',icon:'approve',t:'Doctor edits,\nsigns',kind:'check'},{lane:'tools',icon:'database',t:'File in\nthe record'}],2),
- check:'The doctor reads, corrects and signs every note.',
- evidence:{big:`About ${big(CL.hours)} hours`,text:`of note-writing saved for ${big(CL.physicians)} doctors in about ${CL.months} months.`},
- lines:['The patient agrees first. Then it listens, transcribes, and drafts the note.',
-  'Editing a draft is quicker than writing one, even when the doctor signs every note.'],
- ask:['Would you let it file the note straight into the record?','What would you measure to know whether it helps?'],
- expected:['No. The note goes into a medical record, and its errors reach patients.',
-  `Time spent on notes, and the errors found when the doctor reviews. Across ${CL.encounters_m} million visits, Kaiser Permanente counted about ${big(CL.hours)} hours saved, with the review kept.`],
- point:`The scribe saves writing time and the doctor keeps every decision: Kaiser Permanente’s doctors saved about ${big(CL.hours)} hours in about ${CL.months} months.`,
+ steps:[['you','person','The patient agrees to be recorded'],['tools','mic','It listens, and transcribes the visit'],
+  ['agent','pen','It drafts the note'],['you','approve','The doctor corrects and signs','a person checks']],
+ fact:{pre:'about',big:big(CL.hours),text:`hours of note-writing saved for ${big(CL.physicians)} doctors, in about ${CL.months} months.`},
+ lines:['An AI scribe listens to the visit and drafts the note. The doctor corrects it and signs.',
+  'Correcting a draft is quicker than writing a note. The doctor still reads every one.'],
+ ask:['Would you let it file the note straight into the record?','What would you measure, to know whether it helps?'],
+ expected:['No. The note goes into a medical record, and an error in it can reach the patient.',
+  `Time spent on notes, and what the doctor corrects. Across ${CL.encounters_m} million visits (${CL.from} to ${CL.to}), The Permanente Medical Group counted about ${big(CL.hours)} hours saved, with the doctor’s review kept.`],
+ point:'The scribe saves writing time, and the doctor keeps every decision.',
  misconception:'That the scribe makes the diagnosis. It writes down what was said; the doctor decides.',
- transition:'Each job so far got a different amount of freedom. Can one picture show why?',
- source:`The Permanente Medical Group (Kaiser Permanente), NEJM Catalyst 2025, ${CL.from} to ${CL.to}; about ${big(CL.hours)} hours as reported by the AMA. The trace is our design.`});
+ transition:'Four jobs. Who checked the work in each?',
+ source:`The Permanente Medical Group (Kaiser Permanente), NEJM Catalyst 2025, ${CL.from} to ${CL.to}; the hours as reported by the AMA. The steps are a sketch.`});
+
+// ---------------------------------------------------------------------------------------- who checked?
+chap('3.4','How much freedom?');
+{
+ const WHO=[['coding','app-coding.jpg',COL.green,'The tests',`then ${kY('a person')}`],['support','app-support.jpg',COL.loss,'Nobody','before it is sent'],
+  ['evolve','app-evolve.jpg',COL.green,'A program','every attempt'],['clinic','app-clinic.jpg',COL.amber,'The doctor','every note']];
+ S_('who-checks','work','Who checked the work?',{builds:2,
+  body:`<div class="p3b-who">${WHO.map(([id,img,c,who,when])=>`<div>${illo(img,`Illustration: ${APP(id).name}`)}<h3>${esc(APP(id).name)}</h3><p data-at="2" style="--c:${c}"><b>${who}</b>${when}</p></div>`).join('')}</div>`,
+  lines:['Four jobs, and the same loop in each. Take a guess for each one.','Each job got a different amount of freedom. Two questions explain why.'],
+  ask:['Before the answers appear: who checked each one?','Why not have a person read everything, as in the clinic?'],
+  expected:['Coding: the tests, then a person. Support: nobody, before the reply went out. AlphaEvolve: a program. The clinic: the doctor, every time.',
+   'It would cost what the agent saves. A person’s check is worth paying for when a mistake is costly, as in a medical record.'],
+  point:'The loop was the same in all four jobs. What differed was who checked the result, and how often.',
+  transition:'The two questions, as a map.',source:'Illustrations: generated.'});
+}
 
 // ---------------------------------------------------------------------------------------- the stakes map (live)
-chap();
-// One plain marker for every job; the zone colours keep their roles: green (checked, let it run), amber (a person
-// approves), purple (the agent drafts), red (risk: a person leads).
-const INK='#2F3742',ZA=.075;
-const ZCOL=z=>z.easy?(z.costly?COL.amber:COL.green):(z.costly?COL.loss:COL.guess);
+// Our own three jobs are purple, the four real jobs of this part dark, the appendix's and two more grey. The zone
+// colours keep their roles: green (checked, let it run), amber (a person approves), purple (the agent drafts), red
+// (risk: a person leads).
+const ZA=.075,ZCOL=z=>z.easy?(z.costly?COL.amber:COL.green):(z.costly?COL.loss:COL.guess);
 const ZONE=Object.fromEntries(APPS.zones.map(z=>[z.name,z]));
-const MW=1152,MH=392,PL=104,PR=1138,QT=36,QB=350,XM=(PL+PR)/2,YM=(QT+QB)/2,BAND=34;
+const MW=1152,MH=424,PL=104,PR=1138,QT=36,QB=382,XM=(PL+PR)/2,YM=(QT+QB)/2,BAND=34;
 const MX=v=>PL+24+v*(PR-PL-48),MY=v=>QB-BAND-v*(QB-QT-2*BAND);
-// Label offsets [dx, dy, anchor]; the default sits to the right of the marker. Short names where the full one would
-// reach a neighbour (the line under the map gives the full name).
-const PLACE={farmer:[-18,7,'end'],air:[-18,7,'end'],browser:[-18,7,'end'],building:[-18,7,'end'],evolve:[-18,7,'end']},SHORT={support:'Support'};
-const n=APPS.apps.length,inZone=(easy,costly)=>APPS.apps.filter(a=>ZONE[a.zone].easy===easy&&ZONE[a.zone].costly===costly).length;
-const nApprove=inZone(true,true),nRun=inZone(true,false);
-const ALT=`The ${word(n)} applications of Part 3 on two axes, how easy the result is to check and what a mistake costs, in four zones`;
+// How each group is drawn: [marker radius, marker colour, label size, label weight, label colour, the click it appears on].
+const LOOK={ours:[10,COL.guess,22,700,COL.guess,2],main:[9,'#2F3742',21,650,COL.ink,3],more:[7,'#8D97A8',19,500,'#5B6472',3]};
+// Label offsets [dx, dy, anchor]; the default sits to the right of the marker.
+const LEFT=[-19,7,'end'],PLACE={browser:LEFT,farmer:LEFT,evolve:LEFT,lab:LEFT};
+const inZone=(easy,costly)=>APPS.apps.filter(a=>ZONE[a.zone].easy===easy&&ZONE[a.zone].costly===costly).length;
+const nJobs=APPS.apps.length,nApprove=inZone(true,true);
+const ALT=`${nJobs} jobs on two axes, how easy the result is to check and what a mistake costs, in four zones`;
 function mapSVG(){
  let g='';
- // click 3: the four zones, their names and the lines between them
- g+=gat(3,APPS.zones.map(z=>{const x0=z.easy?XM:PL,x1=z.easy?PR:XM,y0=z.costly?QT:YM,y1=z.costly?YM:QB,c=ZCOL(z);
+ // click 4: the four zones, their names and the lines between them
+ g+=gat(4,APPS.zones.map(z=>{const x0=z.easy?XM:PL,x1=z.easy?PR:XM,y0=z.costly?QT:YM,y1=z.costly?YM:QB,c=ZCOL(z);
   return `<rect x="${x0}" y="${y0}" width="${x1-x0}" height="${y1-y0}" fill="${c}" fill-opacity="${ZA}"/>`+
    label(z.easy?PR-14:PL+14,z.costly?QT+28:QB-14,esc(z.name),{size:22,fill:c,weight:700,anchor:z.easy?'end':'start'});}).join('')+
   line(XM,QT,XM,QB,{stroke:'#AAB3BC',w:1.5,dash:'6 6'})+line(PL,YM,PR,YM,{stroke:'#AAB3BC',w:1.5,dash:'6 6'}));
  g+=`<rect x="${PL}" y="${QT}" width="${PR-PL}" height="${QB-QT}" fill="none" stroke="#C9D0D7" stroke-width="1.5"/>`;
- // the axes: two questions at clicks 1 and 2, the rule they give at click 3
+ // the axes: two questions at clicks 1 to 3, the rule they give at click 4
  g+=label(PL-10,MY(.95)+7,'a lot',{size:20,anchor:'end'})+label(PL-10,MY(.05)+7,'little',{size:20,anchor:'end'})+
   label(PL,QB+32,'hard',{size:20})+label(PR,QB+32,'easy',{size:20,anchor:'end'});
- g+=gonly('1-2',label(PL,QT-12,'What does a mistake cost?',{size:23,fill:'#374151',weight:650})+
-  label(XM,QB+32,'How easy is it to check the result?',{size:23,fill:'#374151',weight:650,anchor:'middle'}));
- g+=gonly('3',arrow(PL,QB,PL,QT+4,{stroke:COL.amber,w:4,head:15})+arrow(PL,QB,PR-2,QB,{stroke:COL.guess,w:4,head:15})+
-  label(PL+10,QT-12,'↑ costlier mistakes: a person stays closer',{size:22,fill:COL.amber,weight:700})+
-  label(XM,QB+32,'easier to check: more autonomy →',{size:22,fill:COL.guess,weight:700,anchor:'middle'}));
- // click 1 only: what each question means, in the empty plot
- const ex=(y,ic,c,head,text)=>icon(ic,XM-370,y-8,30,c)+label(XM-342,y,`<tspan font-weight="700" fill="${COL.ink}">${head}</tspan> ${text}`,{size:24,fill:'#374151'});
- g+=gonly('1',ex(YM-30,'check',COL.green,'Checking.','Easy: a test passes or fails. Hard: only a lab can tell.')+
-  ex(YM+34,'alert',COL.loss,'A mistake.','Cheap: a draft you throw away. Costly: money moved.'));
- // click 2: the points, labelled; each one a button
- g+=gat(2,APPS.apps.map(a=>{const x=MX(a.x),y=MY(a.y),[dx,dy,an]=PLACE[a.id]||[18,7,'start'];
-  return `<g class="p3b-pt" data-id="${a.id}" tabindex="0" role="button" aria-label="${esc(a.name)}: ${esc(a.why)}">`+
+ g+=gonly('1-3',label(PL,QT-12,'What does a mistake cost?',{size:23,fill:'#374151',weight:650})+
+  label(XM,QB+32,'How easy is the result to check?',{size:23,fill:'#374151',weight:650,anchor:'middle'}));
+ g+=gonly('4',arrow(PL,QB,PL,QT+4,{stroke:COL.amber,w:4,head:15})+arrow(PL,QB,PR-2,QB,{stroke:COL.guess,w:4,head:15})+
+  label(PL+10,QT-12,'↑ a costlier mistake: a person stays closer',{size:22,fill:COL.amber,weight:700})+
+  label(XM,QB+32,'easier to check: more freedom →',{size:22,fill:COL.guess,weight:700,anchor:'middle'}));
+ // click 1 only: one example at each end of each axis
+ const ex=(x,y,t,anchor='start')=>label(x,y,t,{size:21,fill:'#374151',anchor});
+ g+=gonly('1',ex(PL+16,MY(.95)+7,'money has moved')+ex(PL+16,MY(.05)+7,'a draft you can delete')+
+  ex(PL+56,QB+32,'only a lab can tell')+ex(PR-56,QB+32,'a test passes or fails','end'));
+ // clicks 2 and 3: the points, labelled; each one a button
+ g+=APPS.apps.map(a=>{const x=MX(a.x),y=MY(a.y),[dx,dy,an]=PLACE[a.id]||[19,7,'start'],[r,c,fs,fw,tc,click]=LOOK[a.group];
+  return gat(click,`<g class="p3b-pt" data-id="${a.id}" tabindex="0" role="button" aria-label="${esc(a.name)}: ${esc(a.why)}">`+
    `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="20" fill="#fff" fill-opacity="0"/>`+
-   `<circle class="p3b-ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="16" fill="none" stroke="${COL.ink}" stroke-width="2.5"/>`+
-   `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="9" fill="${INK}" stroke="#fff" stroke-width="2"/>`+
-   `<text x="${(x+dx).toFixed(1)}" y="${(y+dy).toFixed(1)}" fill="${COL.ink}" font-size="21" font-weight="600" text-anchor="${an}">${esc(SHORT[a.id]||a.name)}</text></g>`;}).join(''));
+   `<circle class="p3b-ring" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r+5}" fill="none" stroke="${COL.ink}" stroke-width="2.5"/>`+
+   `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r}" fill="${c}" stroke="#fff" stroke-width="2"/>`+
+   `<text x="${(x+dx).toFixed(1)}" y="${(y+dy).toFixed(1)}" fill="${tc}" font-size="${fs}" font-weight="${fw}" text-anchor="${an}" style="paint-order:stroke;stroke:#FAFAFB;stroke-width:5px;stroke-linejoin:round">${esc(a.name)}</text></g>`);}).join('');
  return g;}
-const why=a=>{const z=ZONE[a.zone];return `<b>${esc(a.name)}.</b> ${esc(a.why)} <span class="p3b-z" style="color:${ZCOL(z)}"><b>${esc(z.name)}.</b></span>`;};
+const why=a=>`<b>${esc(a.name)}.</b> ${esc(a.why)}`;
 register('p3b-map',(el,ctx)=>{
- const a0=APP('farmer');
- el.innerHTML=`<div class="p3b-map"><div class="w-fig">${fig(MW,MH,mapSVG(),ALT)}</div>${at(2,`<p class="p3b-why" style="border-left-color:${ZCOL(ZONE[a0.zone])}">${why(a0)}</p>`)}</div>`;
+ el.innerHTML=`<div class="p3b-map"><div class="w-fig">${fig(MW,MH,mapSVG(),ALT)}</div><p class="p3b-why" aria-live="polite"></p></div>`;
  if(ctx.printing)return;
  const card=el.querySelector('.p3b-why'),pts=[...el.querySelectorAll('.p3b-pt')];
- let sel=a0.id;
- const show=()=>{const a=APP(sel);pts.forEach(p=>p.classList.toggle('on',p.dataset.id===sel));
-  card.style.borderLeftColor=ZCOL(ZONE[a.zone]);card.innerHTML=why(a);};
- const pick=p=>{sel=p.dataset.id;p.blur();show();};
+ let sel=null;
+ const show=()=>{pts.forEach(p=>p.classList.toggle('on',p.dataset.id===sel));card.classList.toggle('on',!!sel);if(!sel)return;
+  const a=APP(sel);card.style.borderLeftColor=ZCOL(ZONE[a.zone]);card.innerHTML=why(a);};
+ const pick=p=>{sel=sel===p.dataset.id?null:p.dataset.id;p.blur();show();};
  pts.forEach(p=>{p.addEventListener('click',()=>pick(p));p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(p);}});});
- show();
 });
-S_('stakes-map','work','How much freedom should each job get?',{builds:3,
+S_('stakes-map','work','How much freedom should each job get?',{builds:4,
  body:widget('p3b-map',ALT),
- lines:['Two questions place each job: how easily can the result be checked, and what does a mistake cost?',
-  'Every job from this part, and a few from the appendix. Which one would you move?',
+ lines:['Two questions place a job: how easy is its result to check, and what does a mistake cost?',
+  'Our own three jobs first. All are easy to check. A mistake on the invoices costs the most.',
+  'Now the real jobs. The grey ones are further examples. Which point would you move?',
   'Each corner suggests how much freedom to give. Where would your team’s most repeated task sit?'],
- ask:['Before the points appear: where would you put a coding agent? A clinic scribe?','Which point would you move, and why?','Where does your team’s most repeated task sit?'],
- expected:['Coding: tests make it easy to check, and a merged change can break production, so the right-hand side, just above the middle. The scribe: the doctor can read it, but errors reach patients, so near the top.',
-  'Common moves: support higher, because promises bind the company; research further right, because key claims can be spot-checked. Moving a point moves its advice with it.',
-  `Most operational work lands top right: ${word(nApprove)} of the ${word(n)} jobs are there. Let the agent do the work, with approval before the step that cannot be undone. Part 5 starts there.`],
- point:'Two questions set the autonomy: how cheaply can the result be checked, and what does a mistake cost?',
- misconception:'That a more capable model moves a job to the bottom right. Capability changes how often mistakes happen; what a mistake costs, and how hard it is to check, stay where they were.',
- demo:'Click a point to read why it sits there. The positions are the speaker’s judgement, not measurements: invite the room to move them.',
+ ask:['Before the points appear: where would you put fixing a test? Paying an invoice?','Why do the invoices sit higher than the folder?',
+  'Which point would you move, and why?','Where does your team’s most repeated task sit?'],
+ expected:['Fixing a test: bottom right. The tests check it in seconds, and one line is easy to change back. Paying an invoice: the match is easy to check, but money leaves, so top right.',
+  'A file in the wrong folder can be moved back. A payment to the wrong supplier is hard to get back. So the agent may write the report, and a person approves the payment.',
+  `Common moves: customer support higher, because a wrong promise binds the company; deep research further right, because its key claims can be spot-checked. Coding agents sit above our own test fix: the check is the same, but a merge reaches real users. The grey points are the appendix’s jobs and two more. One of those, farm advisory, is already large: the government’s Kisan e-Mitra chatbot has answered more than ${K.answered_lakh} lakh farmer questions in ${K.languages} languages (PIB, ${K.date}).`,
+  `Most operational work lands top right: ${word(nApprove)} of the ${word(nJobs)} jobs here. Let the agent do the work, with approval before the step that cannot be undone. Part 5 starts there.`],
+ point:'Two questions set how much freedom a job gets: how cheaply can its result be checked, and what does a mistake cost?',
+ misconception:'That a more capable model moves a job to the bottom right. A better model makes fewer mistakes. What a mistake costs, and how hard the result is to check, stay the same.',
+ demo:'Click a point to read why it sits there; click it again to hide the line. The positions are the speaker’s judgement, not measurements: invite the room to move them.',
  transition:'Part 3 in one slide.',
  source:'Positions: the speaker’s judgement, for discussion (data/apps.json). The zones split each axis at its middle.'});
 
-recap(3,[`A ${kG('program')} that checks the result lets the agent work with little supervision.`,
-  `A costly mistake means ${kY('a person')} approves the step that cannot be undone.`,
-  `On the map: ${word(nApprove)} of ${word(n)} jobs need ${kY('approval')}, ${word(nRun)} can ${kG('run on their own')}.`],
- 'how agents fail, and the guardrails that catch them.',
- {card:{stop:'The check passes',guard:'Approval before an irreversible step',human:'Leads where mistakes cost most'},
-  hi:['guard','human'],title:'On the card',
-  ask:'Pick one task from your week. Which zone of the map does it fall in?',
+recap(3,[`${kA('One agent')} did three jobs.`,
+  `Real products run the ${kA('same loop')} with ${kT('other tools')}.`,
+  `Easy checks allow ${kG('more freedom')}. Costly mistakes need ${kY('a person')}.`],
+ 'how agents fail.',
+ {card:{goal:'Changes with the job',model:esc(MODEL),tools:`${chip('eye','read')} ${chip('pen','write, edit')} ${chip('terminal','bash')}`,
+   memory:'The conversation, and notes',stop:'An answer, or a round limit',guard:'Approval before risky steps',human:'Closer when mistakes cost more'},
+  hi:['goal','guard','human'],title:'Our agent',
+  ask:'Pick one task from your week. Which corner of the map does it fall in?',
   expected:'Most land top right: the agent can do the work if a person approves the step that cannot be undone. That is where Part 5 begins.',
-  point:'Two things set how much an agent may do alone: how cheaply its result can be checked, and what a mistake costs.',
-  transition:'Even in the right zone, agents fail. Part 4 shows how.'});
+  point:'How much an agent may do alone depends on two things: how cheaply its result can be checked, and what a mistake costs.',
+  transition:'Even in the right corner, agents fail. Part 4 shows how.'});

@@ -3,25 +3,27 @@
 // AUTHORING.md explains how to use it.
 import {at,esc,m,highlight,code} from './shared/author.js';
 import {iconHTML,chip,lanes,agentCard,ROLE} from './figures.js';
+import {editor} from './stage.js';
 export * from './shared/author.js';
 export * from './widgets.js';
 export * from './figures.js';
+export * from './stage.js';
 
 export const meta={
  id:'ai-agents',kicker:'IITGN-X',title:'AI agents',series:'IITGN-X Residency Program',
- subtitle:'Language models that use tools in a loop',date:'3 December 2026',minutes:85,
+ subtitle:'Language models that use tools in a loop',date:'3 December 2026',minutes:80,
  sections:[
   {id:'open',title:'Opening',minutes:4},
-  {id:'what',title:'Part 1 · What an agent is',minutes:17},
-  {id:'engine',title:'Part 2 · One run, step by step',minutes:14},
-  {id:'work',title:'Part 3 · Agents at work',minutes:25},
-  {id:'risk',title:'Part 4 · How agents fail',minutes:15},
-  {id:'adopt',title:'Part 5 · Agents in your organisation',minutes:7},
+  {id:'what',title:'Part 1 · From a model to an agent',minutes:22},
+  {id:'engine',title:'Part 2 · Inside one run',minutes:10},
+  {id:'work',title:'Part 3 · The same agent, other jobs',minutes:16},
+  {id:'risk',title:'Part 4 · How agents fail',minutes:17},
+  {id:'adopt',title:'Part 5 · Agents in your organisation',minutes:8},
   {id:'wrap',title:'Wrap-up',minutes:3},
   {id:'optional',title:'Appendix · More depth',minutes:0},
  ]};
 /** The five parts: [section id, short name for the route strip]. */
-export const PARTS=[['what','What an agent is'],['engine','One run, step by step'],['work','Agents at work'],['risk','How agents fail'],['adopt','In your organisation']];
+export const PARTS=[['what','From a model to an agent'],['engine','Inside one run'],['work','Other jobs'],['risk','How agents fail'],['adopt','In your organisation']];
 export const REPO='https://github.com/nipunbatra/ai-agents';
 export const SITE='https://nipunbatra.github.io/ai-agents/';
 export const COLAB='https://colab.research.google.com/github/nipunbatra/ai-agents/blob/main/notebook/agents.ipynb';
@@ -38,7 +40,7 @@ export function nbRun(id,section,num,title,o){
  if(!Array.isArray(o.look)||!o.look.length||o.look.length>2)throw new Error(`${id}: look needs one or two entries`);
  S_(id,section,'In the notebook',{builds:1,nb:nb('nb-'+num.replace('.','-'),`▶ Open ${num} in Colab`),
   body:`<div class="nbrun"><div class="nb-head">${iconHTML('code','#fff',30)}<span class="nb-num">${num}</span><span class="nb-title">${title}</span></div>
-   <div class="nb-rows">${o.run?`<div class="nb-row"><small>We run</small>${code(o.run)}</div>`:''}
+   <div class="nb-rows">${o.run?`<div class="nb-row"><small>We run</small>${editor('',o.run,{bare:true,size:o.run.split('\n').length>3?'s':''})}</div>`:''}
    <div class="nb-row"><small>Look for</small><ul>${o.look.map(x=>`<li>${x}</li>`).join('')}</ul></div></div></div>`,
   lines:[o.line],ask:[o.ask],expected:[o.expected],point:o.point||'',transition:o.transition||'',
   demo:o.demo||`Notebook ${num}: run the cells under “${title}”. If the run is slow or fails, move on: the next slide shows our recorded run.`,

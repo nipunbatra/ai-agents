@@ -128,3 +128,86 @@ pre.json{font:18px/1.42 "SFMono-Regular",Menlo,Consolas,monospace;margin:0;white
 .loopmap svg{max-height:420px}
 @media(max-width:760px){.reading .nbrun .nb-num{font-size:30px}.reading .nbrun .nb-title{font-size:23px}.reading .nbrun ul{font-size:19px}.reading .nbrun .code{font-size:16px}}
 .part-break .lead+.steps{margin-top:16px}
+/* ------------------------------------------------------------------ the screens: editor, terminal, diff (stage.js) */
+.win{--bg:#0D1220;border-radius:14px;background:var(--bg);color:#E3E8F2;box-shadow:0 22px 44px -18px #0D122066,0 3px 10px #0D12201F;overflow:hidden;min-width:0;width:100%;font-family:"SFMono-Regular",Menlo,Consolas,monospace}
+.win-bar{display:flex;align-items:center;gap:7px;padding:9px 16px;background:#161C2D;border-bottom:1px solid #232B40}
+.win-bar i{width:11px;height:11px;border-radius:50%;background:#39425A}.win-bar i:first-child{background:#FF6B6B99}.win-bar i:nth-child(2){background:#FFCB6B99}.win-bar i:nth-child(3){background:#5EE0A099}
+.win-bar .tab{display:inline-flex;align-items:center;gap:7px;margin-left:12px;font:600 16px/1 var(--font);color:#B8C2D6;letter-spacing:.2px}
+.win-body{margin:0;padding:14px 22px 16px;font-family:inherit;font-size:21px;line-height:1.55;white-space:pre;overflow:hidden;tab-size:4}.win-body code{font:inherit;display:block}
+.win.s .win-body{font-size:18px;padding:12px 18px 13px}.win.l .win-body{font-size:24px}.win.xs .win-body{font-size:16px;line-height:1.5;padding:10px 16px}
+.win.bare{box-shadow:none;border-radius:12px}.win.bare .win-body{padding:14px 22px}
+.t-k{color:#C792EA}.t-s{color:#C3E88D}.t-c{color:#6C778C;font-style:italic}.t-f{color:#82AAFF}.t-n{color:#F78C6C}.t-d{color:#FFCB6B}.t-b{color:#89DDFF}.t-j{color:#7FDBCA}
+.ed .ln{display:block;position:relative;padding-left:46px}
+.ed .ln::before{content:attr(data-n);position:absolute;left:0;width:28px;text-align:right;color:#46506A;font-size:.82em;line-height:1.9}
+.ed .veil{position:absolute;inset:0 -22px;background:var(--bg);opacity:.6;pointer-events:none}
+.ed .mark{position:absolute;left:-22px;right:-22px;top:0;bottom:0;background:#8B2CDE22;border-left:4px solid #B983F5;pointer-events:none}
+.ed .note{position:absolute;right:0;top:50%;transform:translateY(-50%);z-index:2;font:650 16px/1 var(--font);color:#fff;background:var(--c);border-radius:999px;padding:4px 11px;white-space:nowrap;box-shadow:0 2px 8px #0006}
+.term .tl{display:block;min-height:1.55em}
+.term .cmd::before{content:"$ ";color:#5EEAD4;font-weight:700}
+.term .out{color:#AEB9CD;white-space:pre-wrap;overflow-wrap:anywhere}.term .out.ok{color:#7EE2A8;font-weight:650}.term .out.bad{color:#FF8FA3}.term .out.dim{color:#8D98AE}.term .out.hot{color:#FFCB6B}
+.dif .dl{display:block;margin:0 -22px;padding:0 22px 0 22px;position:relative}.dif .dl b{display:inline-block;width:1.4em;font-weight:700;color:#5C6781}
+.dif .dl.minus{background:#FF5C7A26;color:#FFC2CC}.dif .dl.minus b{color:#FF8FA3}.dif .dl.minus .t-k,.dif .dl.minus .t-f,.dif .dl.minus .t-n{color:inherit}
+.dif .dl.plus{background:#3DDC9726;color:#C9F7DF}.dif .dl.plus b{color:#7EE2A8}
+/* the project folder */
+.tree{border:2px solid var(--line);border-radius:14px;background:#fff;padding:10px 8px 12px;font:20px/1.3 "SFMono-Regular",Menlo,Consolas,monospace;min-width:0}
+.tree-h{display:flex;align-items:center;gap:8px;font:650 17px/1 var(--font);color:var(--muted);padding:4px 10px 8px;letter-spacing:.3px}
+.tree .tr{display:flex;align-items:center;gap:8px;position:relative;padding:4px 10px 4px calc(10px + var(--depth)*24px);border-radius:8px;white-space:nowrap}
+.tree .tr>svg{flex:none}.tree .tr.dir{color:#374151;font-weight:650}.tree .tr>span:first-of-type{overflow:hidden;text-overflow:ellipsis;z-index:1}
+.tree .tm{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font:650 16px/1 var(--font);color:#fff;background:var(--c);border-radius:999px;padding:4px 10px;z-index:1}
+.tree .glow{position:absolute;inset:0;border-radius:8px;background:var(--c);opacity:.13}
+.tree .tr.bad>span:first-of-type{color:var(--loss)}.tree .tr.good>span:first-of-type{color:var(--d)}.tree .tr.gone>span:first-of-type{text-decoration:line-through;color:var(--muted)}
+.tree.s{font-size:17px}.tree.s .tr{padding-top:2px;padding-bottom:2px}
+/* what the model asks, what comes back, what it says */
+.tc,.tb,.sa{border-radius:14px;padding:10px 16px 12px;min-width:0;display:flex;flex-direction:column;gap:6px}
+.tc{border:2px solid #8B2CDE66;background:#8B2CDE0D}.tb{border:2px solid #0F766E66;background:#0F766E0D}.sa{border:2px solid #8B2CDE66;background:#fff}
+.tc-who,.tb-who,.sa-who{display:inline-flex;align-items:center;gap:7px;font:700 16px/1 var(--font);letter-spacing:.7px;text-transform:uppercase}
+.tc-who,.sa-who{color:var(--q)}.tb-who{color:var(--p)}
+.tc code,.tb code{font:22px/1.4 "SFMono-Regular",Menlo,Consolas,monospace;white-space:pre-wrap;overflow-wrap:anywhere;color:#1F2430}
+.tc code .t-f{color:#6D28D9;font-weight:650}.tc code .t-s{color:#0F766E}.tc code .t-n{color:#B45309}.tc small{font-size:17px;color:var(--muted)}
+.tb.bad code{color:var(--loss)}.tb.ok code{color:var(--d)}
+.sa p{font-size:24px;line-height:1.4}
+.statement{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;text-align:center;min-height:330px}
+.statement p{font-size:60px;line-height:1.15;font-weight:650;letter-spacing:-1.6px;max-width:1040px;text-wrap:balance}
+.statement small{font-size:27px;line-height:1.4;color:var(--muted);max-width:900px;text-wrap:balance}
+.lstrip{position:relative;min-width:0}.lstrip svg{display:block;width:100%;height:auto;overflow:visible;font-family:var(--font)}
+.lstrip .ls-round{display:block;font:700 15px/1 var(--font);letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+/* a slide with something on the left and a screen on the right */
+.duo{display:grid;grid-template-columns:var(--l,1fr) var(--r,1.5fr);gap:34px;align-items:center;width:100%;min-width:0}
+.duo>*{min-width:0;display:flex;flex-direction:column;gap:16px}
+.duo.top{align-items:start}
+/* ------------------------------------------------------------------ motion: plays when something appears */
+.content [data-at]:not(svg *),.content [data-only]:not(svg *){transition:opacity .38s ease,transform .38s cubic-bezier(.2,.7,.2,1)}
+.content .reveal-hidden:not(svg *):not(.veil):not(.mark):not(.glow){transform:translateY(10px)}
+.content svg [data-at],.content svg [data-only]{transition:opacity .38s ease}
+.ed .veil,.ed .mark,.tree .glow{transition:opacity .3s ease}
+@keyframes typing{from{width:0}to{width:calc(var(--n)*1ch)}}
+@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes popin{0%{opacity:0;transform:scale(.6)}70%{transform:scale(1.08)}100%{opacity:1;transform:none}}
+@keyframes halo{0%,100%{transform:scale(1);opacity:.18}50%{transform:scale(1.25);opacity:.05}}
+@keyframes drawline{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes slidein{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:none}}
+.term .type{display:inline-block;overflow:hidden;white-space:pre;vertical-align:bottom;width:calc(var(--n)*1ch);max-width:100%;animation:typing calc(var(--n)*24ms) steps(var(--n)) both}
+.term .out{animation:fadeup .28s ease both;animation-delay:var(--d,0ms)}
+.dif .dl.plus{animation:slidein .4s ease both;animation-delay:.25s}
+.tree .tm{animation:popin .35s ease both}
+.lstrip .ls-halo{transform-origin:center;transform-box:fill-box;animation:halo 1.8s ease-in-out infinite}
+.draw{stroke-dasharray:1;animation:drawline .7s ease both}
+.reveal-hidden .type,.reveal-hidden.tl .type,.reveal-hidden .out,.reveal-hidden.out,.reveal-hidden .dl.plus,.reveal-hidden.dl,.reveal-hidden .tm,.reveal-hidden.tm,.reveal-hidden .draw,.reveal-hidden.draw,.reveal-hidden .pop,.reveal-hidden.pop{animation:none!important}
+.pop{animation:popin .4s ease both}
+.print *,.reading *{animation:none!important;transition:none!important}
+.print .win,.reading .win{box-shadow:none}
+@media(prefers-reduced-motion:reduce){.content *{animation:none!important;transition:none!important}}
+@media(max-width:760px){.reading .duo{grid-template-columns:minmax(0,1fr)}.reading .win-body{font-size:13px;padding:10px 12px;white-space:pre-wrap;overflow-wrap:anywhere}.reading .ed .ln{padding-left:30px}.reading .statement p{font-size:34px}.reading .statement small{font-size:19px}.reading .tc code,.reading .tb code{font-size:15px}.reading .sa p{font-size:18px}.reading .tree{font-size:14px}}
+.nbrun .win.bare .win-body{font-size:22px}.nbrun .win.bare.s .win-body{font-size:19px}
+.win{--px:22px}.win.s{--px:18px}.win.xs{--px:16px}
+.win-body,.win.s .win-body,.win.xs .win-body,.win.bare .win-body{padding-left:var(--px);padding-right:var(--px)}
+.ed .veil{inset:0 calc(-1*var(--px))}.ed .mark{left:calc(-1*var(--px));right:calc(-1*var(--px))}
+.dif .dl{margin:0;padding:0 2px;border-radius:5px}
+@keyframes blink{50%{opacity:0}}
+.term .caret{display:inline-block;width:.6em;height:1.1em;background:#5EEAD4;vertical-align:text-bottom;animation:blink 1.1s steps(1) infinite}
+.prompt{text-wrap:pretty}
+.term .win-body code{position:relative}.term .idle{position:absolute;top:0;left:0}
+.lstrip .ls-round{font-size:16px}
+.term .cmd.long{white-space:pre-wrap;overflow-wrap:anywhere}.term .cmd.long .out{color:inherit;display:inline}
+@media(max-width:760px){.reading .scene{overflow-x:clip}.reading .term .type{display:inline;width:auto;white-space:pre-wrap;overflow-wrap:anywhere}.reading .win-bar .tab{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}.reading .win-bar{min-width:0}}
+.term .out.dim{opacity:1}

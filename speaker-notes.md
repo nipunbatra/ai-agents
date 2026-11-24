@@ -1,99 +1,100 @@
 # AI agents: speaker notes
 
-Planned main route: 85 minutes, including student responses. Optional slides are outside this budget.
+Planned main route: 80 minutes, including student responses. Optional slides are outside this budget.
 
 ## Pacing
 
 | Part | Minutes |
 |---|---:|
 | Opening | 4 |
-| Part 1 · What an agent is | 17 |
-| Part 2 · One run, step by step | 14 |
-| Part 3 · Agents at work | 25 |
-| Part 4 · How agents fail | 15 |
-| Part 5 · Agents in your organisation | 7 |
+| Part 1 · From a model to an agent | 22 |
+| Part 2 · Inside one run | 10 |
+| Part 3 · The same agent, other jobs | 16 |
+| Part 4 · How agents fail | 17 |
+| Part 5 · Agents in your organisation | 8 |
 | Wrap-up | 3 |
 
 ## title: AI agents
 
-**Build 1:** Today we build a small agent together, look at where agents are used, and see how they go wrong.
+**Build 1:** Today we build this: a small agent that finds a bug and fixes it. Then we give it other jobs, and try to break it.
 
-- Ask: Who here has used ChatGPT, Gemini or Claude this week? Who has let one of them do a task for them, start to finish?
+- Ask: Who here has used ChatGPT, Gemini or Claude this week? Who has let one of them finish a whole task for them?
 - Expected: Most hands go up for the first question and few for the second. That gap is what today is about.
 
 **Point here:** An agent is a model that uses tools in a loop until a goal is met. We will build one live.
 
-**Transition:** Let us start with a question.
+**Transition:** Start with a real problem.
 
-**Source:** Slides, notebook and sources: github.com/nipunbatra/ai-agents
+**Source:** The terminal replays our recorded run (Gemma 4 (12B), 24 November 2026). Slides and notebook: github.com/nipunbatra/ai-agents
 
-## question: Let us start with a question
+## broken: A small project, and two failing tests
 
-**Build 1:** Three cities, three days, one city a day. Which order means the cleanest air?
+**Build 1:** This folder belongs to a small stationery shop: its billing code, some tests, an inbox and some invoices.
 
-- Ask: Take a guess: which order would you choose, and how would you decide?
-- Expected: Most people say “visit Delhi when its air is best”, but nobody in the room knows tomorrow’s forecast. You would need to look it up.
+- Ask: What would you do first if this were your project?
+- Expected: Read the error, then open the code it points to. Remember that order: the agent will do the same.
 
-**Point here:** The answer depends on data nobody in the room has: the air-quality forecast for the next three days.
+**Build 2:** We run the tests. Two of four fail, and we do not know why yet.
 
-**Common misconception:** That the order cannot matter. It matters because each city’s pollution changes from day to day.
+- Ask: What do the two failing tests have in common?
+- Expected: Both involve a discount. The two tests without a discount pass.
 
-**Transition:** Let us ask a model, the way most people use one: just the question.
+**Point here:** A real, small problem: the code runs, but two tests say the answers are wrong.
 
-**Source:** PM2.5 is fine dust in the air, in micrograms per cubic metre. Higher is worse.
+**Transition:** We could debug it ourselves. Instead we ask in one sentence.
 
-## nb-alone: In the notebook
+**Source:** Real output from our run on 24 November 2026. The project is made up for this talk; the notebook creates it.
 
-**Build 1:** Over to the notebook. We send the question to a Gemini model, with nothing else.
+## the-ask: We ask in one sentence
 
-- Ask: Before it answers: what do you expect it to say?
-- Expected: Something confident. Watch whether it mentions any forecast numbers.
+**Build 1:** We do not say which file, which test, or what is wrong.
 
-**Point here:** A model on its own can only answer from what it learned in training.
+- Ask: Could a chatbot do this, if we typed this sentence into it?
+- Expected: No: it cannot see the folder or run anything. Hold that thought; we try it in a few minutes.
 
-**Notebook:** Notebook 1.1: run the cells under “The model on its own”. If the run is slow or fails, move on: the next slide shows our recorded run.
+**Point here:** The request names a goal. It gives no steps.
 
-**Transition:** Here is what it said when we ran it.
+**Transition:** Here is what happened when we gave that sentence to an agent.
 
-## alone-said: What did the model say?
+## watch: 10 seconds later, the tests pass
 
-**Build 1:** Our run on 19 November 2026. It wrote 222 words, and this is the key sentence.
+**Build 1:** The agent made six requests, one after another. Nobody told it which ones.
 
-- Ask: Is this answer right?
-- Expected: It sounds reasonable, but it is wrong: each city’s air changes from day to day, so the order changes the total.
+- Ask: Read the six requests. What is it doing?
+- Expected: Looking around, running the tests, reading the code, changing it, and running the tests again. What a careful programmer does.
 
-**Build 2:** It answered from what it learned in training. It had no way to know the next three days.
+**Build 2:** It changed one line of the billing code, and all four tests pass.
 
-- Ask: What would it need to get it right?
-- Expected: Tomorrow’s forecast for each city, and a way to add up the totals. In other words, tools.
+- Ask: Is the new line right?
+- Expected: Yes. A 10 percent discount should take off 10 percent of the amount. The old line took off the number 10.
 
-**Point here:** A model on its own is confident even when it has no data. By the end of Part 1 the same model will get this right.
+**Point here:** Given a goal and a few tools, the model chose the steps itself and checked its own work.
 
-**Common misconception:** That a newer model would know. No model can know the next three days from its training data.
+**Common misconception:** That this needed a huge model in a data centre. This run used an open model, Gemma 4, on a laptop.
 
-**Transition:** Here is the plan.
+**Transition:** How does that work? That is the plan for today.
 
-**Source:** Real reply (Gemini 3.8 Flash, 19 November 2026, notebook 1.1), shortened to its key sentence. Your run will word it differently.
+**Source:** Our recorded run: Gemma 4 (12B), 24 November 2026, 7 rounds, 10.2 seconds of model time on a laptop.
 
 ## route: Today’s plan
 
-**Build 1:** Five parts. When a slide says “In the notebook”, we switch over and run the code live.
+**Build 1:** Five parts. When a slide says “In the notebook”, we switch over and run the code.
 
 - Ask: Which part matters most for your work?
 - Expected: Most will say Part 3 or Part 5. Promise both, and say that Part 4 is the one to remember.
 
-**Point here:** A map of the talk, and the rhythm: a few slides, then a run in the notebook.
+**Point here:** A map of the talk, and its rhythm: a few slides, then a run in the notebook.
 
-**Transition:** Part 1: what an agent is.
+**Transition:** Part 1: from a model to an agent.
 
 **Source:** Notebook: github.com/nipunbatra/ai-agents (notebook/agents.ipynb). Open it in Colab from the link at the top right.
 
-## part-1: Part 1 · What an agent is
+## part-1: Part 1 · From a model to an agent
 
-**Build 1:** Key question: what does an agent have that a model on its own does not?
+**Build 1:** What turns a model that only writes text into something that fixes code?
 
 - Ask: In your own words, what is an AI agent?
-- Expected: Answers vary: a bot that does tasks, an assistant that uses apps. Collect two or three; we will sharpen them by the end of this part.
+- Expected: Answers vary: a bot that does tasks, an assistant that uses apps. Collect two or three; we sharpen them by the end of this part.
 
 **Transition:** Start with what a model is on its own.
 
@@ -103,80 +104,98 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 **Build 1:** A language model reads text and writes the words most likely to come next. That is all it does.
 
-- Ask: If it only predicts words, how did it write a confident answer about Delhi’s air?
-- Expected: From patterns in its training text: Delhi is often polluted in winter. It sounded right, but nothing checked it.
+- Ask: So what happens if we send it our one-sentence request about the failing tests?
+- Expected: It can only write text back. It has no way to open a file or run a test. Let us try it.
 
 **Point here:** A language model is a text predictor. Everything an agent adds comes from outside the model.
 
-**Transition:** So what can it not do on its own?
+**Transition:** Let us try it: the same request, sent to the model with nothing else.
 
-## limits: What can a model not do on its own?
+## nb-alone: In the notebook
 
-**Build 1:** It has not seen today’s data, and it does not really calculate.
+**Build 1:** Over to the notebook. We send the one-sentence request to Gemma 4, with nothing else.
 
-- Ask: Which of these did our question need?
-- Expected: Today’s data: tomorrow’s forecasts. And some exact sums to compare the orders.
+- Ask: Before it answers: what do you expect it to say?
+- Expected: Something helpful-sounding. Watch whether it can say anything about our actual code.
 
-**Build 2:** It cannot act on anything, and it does not remember you next time.
+**Point here:** A model on its own can only answer from the text it is given.
 
-- Ask: Which of these limits matters most in your job?
-- Expected: Usually live data and acting on systems. Both are fixed the same way: with tools.
+**Notebook:** Notebook 1.1: run the cells under “The model on its own”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
-**Point here:** Each limit is fixed from outside the model, by giving it tools.
+**Transition:** Here is what it said when we ran it.
 
-**Common misconception:** That newer models “know” current facts. They know their training data, which ends at a cut-off date.
+## alone-said: It asks us to paste the code
 
-**Transition:** So let us give it a tool.
+**Build 1:** Our run: 290 polite words, and not one about our code.
+
+- Ask: Is that a bad answer?
+- Expected: No, it is an honest one. A model that guessed at code it had never seen would be worse.
+
+**Build 2:** It needs two things it does not have: a way to look, and a way to act.
+
+- Ask: What would it need, to do the job itself?
+- Expected: A way to read our files and run our tests. In other words, tools.
+
+**Point here:** The model is not the limit here. It has no access to anything.
+
+**Common misconception:** That a bigger model would manage. No model can read a file it was never given.
+
+**Transition:** So let us give it a way to read a file.
+
+**Source:** Real reply (Gemma 4 (12B), 24 November 2026, notebook 1.1): its own first request, and the three things it listed.
 
 ## tool-fn: A tool is an ordinary Python function
 
-**Build 1:** Our tool fetches the PM2.5 forecast for one city. It is plain Python that asks a public forecast service.
+**Build 1:** Seven lines of plain Python. It opens a file in the project and returns the text.
 
-- Ask: What would you need to write a tool like this for your own work?
-- Expected: A function that does one thing, such as a database query or an API call, and a clear description of it.
+- Ask: What would a tool look like in your own work?
+- Expected: A database query, a search of your documents, a call to an internal system: one function that does one thing.
 
-**Point here:** A tool is a normal function. The only new thing is the description the model will read.
+**Build 2:** The name, the arguments and the description are for the model. The last line is for us.
 
-**Transition:** Let us write it in the notebook.
+- Ask: Which part of this will the model never see?
+- Expected: The body. It only gets the name, the arguments and the description.
 
-**Source:** The forecast comes from CAMS, served free by Open-Meteo. The full function is in the notebook, section 1.2.
+**Point here:** A tool is a normal function plus a description written for the model.
+
+**Transition:** Let us write it in the notebook, and print what the model will be shown.
 
 ## nb-tool: In the notebook
 
-**Build 1:** We define the tool and print what the model will be shown.
+**Build 1:** In the notebook we define the tool, and print the entry the model will see.
 
-- Ask: Why might the model not need to see the code?
-- Expected: It never runs the code. It only needs to know what the tool does and what to pass in.
+- Ask: Why does the model not need the code?
+- Expected: It never runs it. It only needs to know what the tool does and what to pass in.
 
-**Point here:** The model reads only a description of the tool. It never sees the code.
+**Point here:** The model reads a description of the tool. Our code keeps the tool itself.
 
 **Notebook:** Notebook 1.2: run the cells under “Write a tool”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
-**Transition:** This is the entry the model reads.
+**Transition:** This is the entry.
 
 ## tool-menu: The model sees only this entry
 
-**Build 1:** This is all the model knows about our tool: a name, a description and two arguments.
+**Build 1:** A name, a description and one argument. This is everything the model knows about our tool.
 
 - Ask: What does the description tell the model that the name does not?
-- Expected: What comes back, in what units, and from when: daily means, starting tomorrow.
+- Expected: That the file must be inside the project, and that it gets text back.
 
-**Build 2:** A vague entry leaves the model guessing. The description is all it has to go on.
+**Build 2:** Suppose the entry said only this. When would the model use it, and what would it pass in?
 
-- Ask: What would the model do with get_data(x)?
-- Expected: Guess. It might call it for anything, or never. A clear description fixes that.
+- Ask: What happens with a vague entry?
+- Expected: The model guesses: it may call the tool for anything, or never. A clear description is the cheapest fix there is.
 
-**Point here:** The description is the only manual the model gets. Say what the tool does and what comes back, with an example.
+**Point here:** The description is the only manual the model gets.
 
-**Transition:** Now we ask our question again.
+**Transition:** Now we ask a question about one file, with the tool on offer.
 
 **Source:** Simplified from the entry the notebook prints in section 1.2.
 
 ## nb-ask: In the notebook
 
-**Build 1:** Back to the notebook. Same question, same model, but now the tool is on offer.
+**Build 1:** Back to the notebook. We ask “What does billing.py do?” and offer the tool.
 
-- Ask: What do you think comes back this time?
+- Ask: What do you think comes back?
 - Expected: Not an answer. Watch the reply.
 
 **Point here:** With a tool on offer, the model can reply with a request instead of an answer.
@@ -185,56 +204,97 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 **Transition:** Here is what came back in our run.
 
-## tool-call: The reply is a request, not an answer
+## tool-call: The reply is a request
 
-**Build 1:** The model replied with a request in a fixed format: which tool, and with which arguments.
+**Build 1:** The reply, as it arrived. It is a small piece of structured text.
 
-- Ask: Who will actually fetch the forecast: the model or our program?
+- Ask: Who is going to open the file?
 - Expected: Our program. The model only wrote the request.
 
-**Build 2:** It asked for all three cities in one go, because none of the forecasts depends on another.
+**Build 2:** Its answer text is empty. Instead it names a tool and the argument to pass.
 
-- Ask: Why is it safer that the model only writes requests?
-- Expected: Because our program decides which requests to carry out. That is where the safety checks of Part 4 go.
+- Ask: Why is it safer that the model can only ask?
+- Expected: Because our program decides which requests to carry out. Part 4 puts the safety checks exactly there.
 
-**Point here:** This is function calling: the model writes a structured request, and our code decides whether to run it.
+**Point here:** This is called function calling: the model writes a structured request, and our code decides whether to run it.
 
-**Common misconception:** That the model connects to the internet itself. It never does. Our code does, and only for the tools we gave it.
+**Common misconception:** That the model opens files or goes online itself. It never does. Our code does, and only through the tools we gave it.
 
-**Transition:** Back to the notebook.
+**Transition:** So our code runs the request. Back to the notebook.
 
-**Source:** Real request from our run on 19 November 2026 (Gemini 3.8 Flash).
+**Source:** Real reply from our run on 24 November 2026 (Gemma 4 (12B)), shown without its id field.
 
 ## nb-run: In the notebook
 
-**Build 1:** Our code runs each request and adds the result to the conversation. Then we ask the model again.
+**Build 1:** Our code runs the request and adds the result to the conversation. Then we call the model again.
 
-- Ask: What will the model do once it has the numbers?
-- Expected: Use them: compare the orders and answer. Or ask for something else it needs.
+- Ask: What will the model do now that it has the file?
+- Expected: Answer the question, this time from the real code.
 
-**Point here:** Our code runs the tool and hands back the result. The model only asked for it.
+**Point here:** Our code runs the tool and hands the result back. The model then reads everything again.
 
 **Notebook:** Notebook 1.4: run the cells under “Run the request, return the result”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
-**Transition:** Here is one result from our run.
+**Transition:** Here is what happened in our run.
 
-## tool-result: The result goes back into the conversation
+## tool-result: Our code reads the file, and the model answers
 
-**Build 1:** Delhi’s forecast, as our code got it. Pune and Ahmedabad came back the same way.
+**Build 1:** Our code opened billing.py and added its text to the conversation.
 
-- Ask: Which day is worst in Delhi?
-- Expected: The middle day: 162.4 µg/m³.
+- Ask: What changed between the two calls to the model?
+- Expected: Only the conversation: it now contains the file’s text.
 
-**Build 2:** Doing this by hand, one request at a time, gets tedious. A real task may need ten rounds.
+**Build 2:** Now the model answers, and this time it is talking about our code.
 
-- Ask: What should happen automatically instead of by hand?
-- Expected: Ask the model, run what it asks for, hand back the results, and repeat. That repetition is the agent.
+- Ask: Did the model spot the bug?
+- Expected: Not here. We only asked what the file does. Fixing needs more tools.
 
-**Point here:** One request, one result. An agent repeats this until the model stops asking.
+**Point here:** One request, one result, one answer. The model’s knowledge of our project is whatever our tools put into the conversation.
 
-**Transition:** So we put it in a loop.
+**Transition:** Who did what, exactly?
 
-**Source:** Real result from our run on 19 November 2026. CAMS forecast via Open-Meteo, in µg/m³.
+**Source:** Real result and answer from our run on 24 November 2026. The answer is cut to its first sentence.
+
+## actors: The model never touches the folder
+
+**Build 1:** We asked a question. The model answered with a request, addressed to our code.
+
+- Ask: Which of the four can read a file?
+- Expected: Only our code.
+
+**Build 2:** Our code opened the file and passed the text back. Only our code touched the folder.
+
+- Ask: Which arrow would you put a lock on?
+- Expected: The one from our code to the folder: that is where anything real happens.
+
+**Build 3:** Then the model, with the text in front of it, answered us.
+
+- Ask: How many times was the model called?
+- Expected: Twice: once to get the request, once to get the answer.
+
+**Point here:** The model only ever writes text. Every real action goes through our code, where we can check it.
+
+**Transition:** One tool that reads is not enough to fix a bug. We add three more.
+
+## four-tools: Four tools are enough for a lot
+
+**Build 1:** Read, write, edit, and run a command. Each one is a short Python function, like the first.
+
+- Ask: Which of these four could do damage?
+- Expected: Three of them: write, edit and above all bash. Part 4 is about that.
+
+**Build 2:** The fourth is the powerful one. Anything you can type in a terminal, the agent can now ask for.
+
+- Ask: Have you seen this set of tools before?
+- Expected: It is, give or take, the core of the coding agents people use at work: Claude Code, Gemini CLI, Codex, Cursor.
+
+**Point here:** Read, write, edit and run: with these four an agent can do most of what a person does at a keyboard.
+
+**Notebook:** Notebook 1.5: run the cell that defines write_file, edit_file and bash. It prints the four menu entries.
+
+**Transition:** Doing each request by hand gets tedious, so we put it in a loop.
+
+**Source:** The four tools are defined in the notebook, section 1.5: about forty lines in all.
 
 ## loop-map: Put it in a loop
 
@@ -250,1082 +310,807 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 **Build 3:** If it asks for a tool, our code runs it and adds the result. Then the model reads everything again.
 
-- Ask: What would make it never stop?
-- Expected: A tool that keeps failing, or a goal that is never met. So we always add a step limit (Part 4).
+- Ask: What could make it never stop?
+- Expected: A tool that keeps failing, or a goal that is never met. So we always add a limit on rounds (Part 4).
 
-**Point here:** An agent is a model, some tools and this loop. We will come back to this flowchart all through the talk.
+**Point here:** An agent is a model, some tools and this loop. We come back to this flowchart all through the talk.
 
-**Transition:** This loop is a few lines of Python. Let us run it.
+**Transition:** As code, the loop is short.
+
+## loop-code: The loop is eleven lines of Python
+
+**Build 1:** Each round starts with one call to the model. It gets the whole list of messages, every time.
+
+- Ask: Which line is the “model” box of the flowchart?
+- Expected: Line 4: the call to chat.
+
+**Build 2:** If the reply asks for no tool, we return it. That is the only normal way out.
+
+- Ask: Which line is the diamond?
+- Expected: Line 6: did it ask for a tool?
+
+**Build 3:** Otherwise we run each tool it asked for, add the results to the list, and go round again.
+
+- Ask: Where do the results go?
+- Expected: Into the same list of messages, so the model reads them next round.
+
+**Point here:** An agent is an ordinary loop around one model call. No framework is needed.
+
+**Common misconception:** That agents need special software. Frameworks add logging, retries and permissions around these lines.
+
+**Transition:** Let us run it on the failing tests.
+
+**Source:** Simplified from run_agent in the notebook, section 1.6 (the real one also asks for approvals and catches errors).
 
 ## nb-loop: In the notebook
 
-**Build 1:** We give the loop two tools, the forecast and a calculator, and the original question.
+**Build 1:** We give the loop our one-sentence request and the four tools, and let it go.
 
-- Ask: How many rounds do you expect?
-- Expected: At least two: one for the forecasts, one for the sums. Then the answer.
+- Ask: What should a careful programmer do first?
+- Expected: Look at the project and run the tests, before touching anything. Watch whether the agent does.
 
-**Point here:** The agent decides the steps itself: which tools, in what order, and when to stop.
+**Point here:** From here on the model decides the steps: which tool, in what order, and when to stop.
 
-**Notebook:** Notebook 1.5: run the cells under “Put it in a loop”. If the run is slow or fails, move on: the next slide shows our recorded run.
+**Notebook:** Notebook 1.6: run the cells under “Put it in a loop”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
 **Transition:** Here is our recorded run, round by round.
 
-## loop-run: Our run went round three times
+## run-look: First it looks around
 
-**Build 1:** First it fetched the three forecasts, all at once.
+**Build 1:** The model’s first reply is a request: list the files. It has never seen this project.
 
-- Ask: Who decided to add up six orders?
-- Expected: The model. We never told it how to solve the problem.
+- Ask: Why not go straight to the fix?
+- Expected: It does not know what is in the folder. Our instructions also tell it to look before it changes anything.
 
-**Build 2:** Then it added up every possible order with the calculator.
+**Build 2:** Our code runs the command and adds what it printed to the conversation.
 
-- Ask: Why use a calculator instead of doing the sums itself?
-- Expected: A model predicts digits; a calculator computes them. We asked it to use tools for arithmetic.
+- Ask: Who typed that command?
+- Expected: Nobody. The model wrote it as text, and our code ran it.
 
-**Build 3:** Then it stopped asking for tools and answered.
+**Point here:** Round 1: the model asks, our code runs. The strip on the left shows where we are in the loop.
 
-- Ask: How did our code know it was done?
-- Expected: The reply asked for no tool, so the loop stopped.
+**Transition:** Now it knows what is there. Next it runs the tests.
 
-**Point here:** The model chose the steps. Our code only ran the tools and kept the conversation.
+**Source:** Our recorded run, 24 November 2026. The listing is cut short here.
 
-**Transition:** But was the answer right? We can check: there are only six orders.
+## run-test: It runs the tests, and reads the failure
 
-**Source:** Real run on 19 November 2026 (Gemini 3.8 Flash): nine tool calls in all.
+**Build 1:** Next request: run the tests. Nobody told it there were tests, or how to run them.
+
+- Ask: How did it know the command?
+- Expected: It saw test_billing.py in the listing. The tool’s description also gives pytest as an example.
+
+**Build 2:** They fail. Each failure shows what the code returned, and what the test expected.
+
+- Ask: What does the model learn from this output?
+- Expected: Which tests fail and what they expected: 531.0 where the code gave 578.2.
+
+**Point here:** A failing test is the best thing an agent can read: it says exactly what is wrong.
+
+**Transition:** It knows what is wrong. Now it needs to see why.
+
+**Source:** Our recorded run, 24 November 2026: each failing test and its assertion, from the real output.
+
+## run-read: It reads the code
+
+**Build 1:** It asks for the code, then the tests, and our code returns the text. It is the read_file we wrote first.
+
+- Ask: Which tool is this?
+- Expected: read_file, the one we wrote first.
+
+**Build 2:** This is what the model now has in front of it. Can you see the bug?
+
+- Ask: Where is the bug?
+- Expected: The discount line subtracts the number itself. For 10 percent it takes off 10 rupees, not 10 percent.
+
+**Point here:** The model finds the bug the way we would: by reading the function the failing test points to.
+
+**Transition:** It has seen the bug. Now it asks to change that line.
+
+**Source:** Our recorded run, 24 November 2026. The highlight is ours; the model saw plain text.
+
+## run-edit: It changes one line
+
+**Build 1:** It asks for an edit: replace this exact line with that one. The red line is the bug.
+
+- Ask: Why edit one line, and not rewrite the file?
+- Expected: A small change is easier to check, and cannot break the rest. Our instructions ask for the smallest change that does the job.
+
+**Build 2:** Our code makes the change. One line of the file is different, and nothing else.
+
+- Ask: Is the new line right?
+- Expected: Yes: multiply by one minus the discount as a fraction.
+
+**Point here:** This is the only request in the run that changes a file. Everything before it was looking.
+
+**Transition:** A careful programmer would now run the tests again. So does the agent.
+
+**Source:** Our recorded run, 24 November 2026: the real old and new lines.
+
+## run-pass: It runs the tests again, and stops
+
+**Build 1:** Same command as before. This time all four tests pass.
+
+- Ask: Who decided to run the tests again?
+- Expected: The model. Our instructions ask it to test after changing code, but it chose when.
+
+**Build 2:** So its next reply asks for no tool. The loop ends: seven rounds, 10 seconds.
+
+- Ask: How did our code know the job was done?
+- Expected: The reply contained no request, only text. That is the exit of the loop.
+
+**Point here:** The model chose every step, checked its own work, and decided when to stop. Our code only ran the tools.
+
+**Transition:** It says it is done. Do we believe it?
+
+**Source:** Our recorded run, 24 November 2026 (Gemma 4 (12B)): 7 rounds, 6 tool calls, 10.2 seconds of model time.
 
 ## nb-check: In the notebook
 
-**Build 1:** We work out all six totals ourselves, from the same forecasts the agent saw.
+**Build 1:** We do not take its word for it. We run the tests ourselves and look at exactly what changed.
 
-- Ask: Why check at all, if the agent showed its sums?
-- Expected: Because an agent can be wrong and sound sure. Checking against something we trust is how we find out.
+- Ask: How could an agent make failing tests pass without fixing anything?
+- Expected: By editing the tests, or deleting them. It happens. So we check that the test file is untouched.
 
-**Point here:** Checking an answer against something you trust is the habit that Part 4 turns into evals.
+**Point here:** Check an agent’s work against something you trust. Part 4 turns this habit into evals.
 
-**Notebook:** Notebook 1.6: run the cells under “Check the answer”. If the run is slow or fails, move on: the next slide shows our recorded run.
+**Notebook:** Notebook 1.7: run the cells under “Check the work”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
-**Transition:** Here are the six totals.
+**Transition:** Here is what we found.
 
-## check: Was the agent right?
+## check: Did it really fix it?
 
-**Build 1:** Total PM2.5 over the three days, for each of the six orders, from the same forecasts.
+**Build 1:** We ran the tests ourselves: four pass.
 
-- Ask: Which order is best, and which is worst?
-- Expected: Best: Pune, Ahmedabad, Delhi. Worst: Ahmedabad, Delhi, Pune.
+- Ask: Why run the tests ourselves?
+- Expected: Because the agent’s summary is just text. The test run is evidence.
 
-**Build 2:** The agent’s order is at the top. The model on its own had said the order does not matter.
+**Build 2:** We compared the file before and after: exactly one line is different.
 
-- Ask: Was the model on its own right that the order does not matter?
-- Expected: No. The worst order means 24% more PM2.5 than the best.
+- Ask: Why look at the change?
+- Expected: A passing test can hide an unrelated change somewhere else.
 
-**Point here:** The agent’s answer matches our own check. The model on its own was wrong.
+**Build 3:** And the test file is exactly as it was. The agent changed the code and left the tests alone.
 
-**Transition:** So, side by side: the same model, twice.
+- Ask: Why check the test file?
+- Expected: The cheapest way to make a test pass is to change the test.
 
-**Source:** Totals in µg/m³, summed over 2026-11-20 to 2026-11-22 from the CAMS forecast via Open-Meteo, as fetched on 19 November 2026.
+**Point here:** Three cheap checks, none of which trusts the agent’s own summary.
 
-## same-model: The same model, two answers
+**Transition:** So: the same model, twice.
 
-**Build 1:** Both answers came from the same model. The only difference is the tools and the loop.
+**Source:** From the notebook, section 1.7, on our run of 24 November 2026.
+
+## same-model: The same model, two outcomes
+
+**Build 1:** Both came from the same model. The only difference is the tools and the loop.
 
 - Ask: So what is an agent?
 - Expected: A model that uses tools in a loop until it has done what you asked. Compare with the answers collected at the start of the part.
 
 **Point here:** An agent is a model, tools and a loop. It is not a different, smarter kind of model.
 
-**Common misconception:** That agents run on a special model. This one is the same Gemini model as the chatbot reply.
+**Common misconception:** That agents run on a special model. This is the same Gemma 4 that asked us to paste the code.
 
-**Transition:** Does every job need this much freedom? Not always.
+**Transition:** One sentence to take away from Part 1.
 
-**Source:** Both replies are real (Gemini 3.8 Flash, 19 November 2026, notebook 1.1 and 1.5), shortened.
+**Source:** Both runs are real (Gemma 4 (12B), 24 November 2026, notebook 1.1 and 1.6).
 
-## workflow: Some jobs have fixed steps
+## agent-is: What is an agent?
 
-**Build 1:** Paying an invoice is always the same three steps. A fixed list of steps like this is called a workflow.
+**Build 1:** That is the whole definition. Everything else today is detail.
 
-- Ask: Name one task in your team that always follows the same steps.
-- Expected: Monthly reports, onboarding checklists, standard approvals.
+- Ask: Which of the three did we write ourselves?
+- Expected: The tools and the loop: about sixty lines of Python. The model we downloaded.
 
-**Point here:** A workflow fixes the steps in advance; the model fills in each one.
-
-**Transition:** So when is an agent worth it?
-
-**Source:** Workflow and agent as defined in Anthropic, “Building effective agents” (19 Dec 2024).
-
-## agent-or-workflow: When is an agent worth it?
-
-**Build 1:** A workflow follows the steps we wrote down. It is cheaper and easier to predict.
-
-- Ask: Is processing an invoice a workflow or an agent?
-- Expected: A workflow, mostly. An agent only for the odd invoice that does not match.
-
-**Build 2:** An agent chooses its own steps. Use one only when the steps change from case to case.
-
-- Ask: In our air-quality question, what could not be fixed in advance?
-- Expected: How many lookups and sums it needed depended on the question and the data.
-
-**Point here:** Anthropic’s distinction: workflows follow steps written in advance; agents direct their own steps and tool use. If you can draw the flowchart in advance, build a workflow.
-
-**Common misconception:** That everything with a language model in it should be an agent. Most systems in production are workflows.
-
-**Transition:** And when it is an agent, how much should it decide without a person?
-
-**Source:** Workflow and agent as defined in Anthropic, “Building effective agents” (19 Dec 2024).
-
-## levels: How much should it decide without you?
-
-**Build 1:** One paper names five levels by what the person does. At the first two, you do most of the work.
-
-- Ask: At which level do most people use ChatGPT today?
-- Expected: Level 1 or 2: you ask, it helps, you do the rest.
-
-**Build 2:** At the top three, the agent does the work, and you answer, approve or watch.
-
-- Ask: Which level would you allow for your team’s work?
-- Expected: It depends on the task. The next slide and Part 3 come back to this.
-
-**Point here:** Autonomy is a choice you make for each task, separate from how capable the model is.
-
-**Transition:** Here is one task, a refund, at each level.
-
-**Source:** The five levels and their names: Feng, McDonald and Zhang, “Levels of Autonomy for AI Agents” (arXiv 2506.12469, 2025).
-
-## autonomy: One refund at five levels
-
-**Build 1:** At level 1 you do the work. The agent only drafts the reply. Drag the slider to see the other levels.
-
-- Ask: At which level does the agent first touch a real system?
-- Expected: Level 2: it looks up the order. Reading is low risk.
-
-**Build 2:** At level 4 the agent does everything up to the refund, then waits for your approval: the amber step.
-
-- Ask: Why put the approval just before the refund, and not at the start?
-- Expected: Because the refund is the step that cannot be undone. Everything before it is cheap to redo.
-
-**Point here:** You choose the level per task. The approval goes just before the step that cannot be undone.
-
-**Common misconception:** That a more capable model should automatically get more autonomy. Capability and permission are different questions.
-
-**Notebook:** Drag the slider from 1 to 5 and watch the person’s steps move from doing to approving to watching.
+**Point here:** Model, tools, loop.
 
 **Transition:** Part 1 in one slide.
 
-**Source:** The refund is from the notebook’s demo inbox. Levels: Feng, McDonald and Zhang (2025).
-
 ## recap-1: Part 1 in one slide
 
-**Build 1:** Next: one run, round by round, and what it costs.
+**Build 1:** Next: what the model reads each round, and how it remembers.
 
-- Ask: Which line would change if this agent could also book your train tickets?
-- Expected: Tools (a booking tool), guardrails (a spending cap) and the person (approves before paying).
+- Ask: Which line would change if this agent worked on your company’s real code?
+- Expected: Guardrails (what it may touch and run) and the person (reviews before anything is merged).
 
 **Point here:** The seven lines of this card come back for every agent in the talk.
 
-**Transition:** Part 2: one run, step by step.
+**Transition:** Part 2: inside one run.
 
-## part-2: Part 2 · One run, step by step
+## part-2: Part 2 · Inside one run
 
-**Build 1:** Key question: what does the model read each round, and what does that cost?
+**Build 1:** Key question: what does the model read each round, and how does it remember anything?
 
-- Ask: When an agent “thinks”, what do you imagine is going on?
-- Expected: Answers vary: it plans, it searches, it reasons. Keep them. This part shows that each round is the model reading a growing text and writing a short reply.
+- Ask: Between two rounds, where does the model keep what it has found out so far?
+- Expected: Most will say “in the model”. It keeps nothing. Our code holds the conversation and sends all of it again each round.
 
-**Transition:** First, where we are in the loop.
+**Point here:** The model has no state of its own. Everything it knows about the task is in the text our code sends it.
+
+**Transition:** Start with what it reads.
 
 **Source:** Illustration: generated (Gemini image model).
 
-## map-model: Where are we in the loop?
+## reread: Each round, the model rereads everything
 
-**Build 1:** This part is about one box: each round, the model reads the whole conversation again.
-
-- Ask: By round 3 of our run, what is in “the conversation”?
-- Expected: Our instructions, the tool menu, the question, and every request and result so far.
-
-**Point here:** The model keeps nothing between rounds. Our code sends it the whole conversation every time.
-
-**Transition:** We replay the opening run, one round per slide.
-
-## trace-walk: Round 1: three forecasts at once
-
-**Build 1:** Round 1. The model reads our instructions, the tool menu and your question: 284 tokens.
+**Build 1:** Round 1. The model reads our instructions, the tool menu and the request: 508 tokens.
 
 - Ask: What does the model have to work with in round 1?
-- Expected: Only text: our instructions, the menu of tools, and the question. No forecasts yet.
+- Expected: Only text: our instructions, a description of each tool, and one sentence from us.
 
-**Build 2:** It replies with three forecast requests at once, since none depends on another.
+**Build 2:** Round 2 reads all of that again, plus its own first request and what ls -R printed.
 
-- Ask: Why ask for all three at once?
-- Expected: None depends on another, so one round is enough, and each round saved is one less rereading of the whole conversation. Our instructions also asked for this. Builders call it parallelisation.
+- Ask: Why does round 2 read the instructions again?
+- Expected: The model keeps nothing between rounds. Each round is a new call, and our code sends the whole list of messages again.
 
-**Point here:** A round is one model call. It reads text and writes text; nothing else happens inside it.
+**Build 3:** Round 3 starts from the top once more. The new part is the test output.
 
-**Common misconception:** That the model keeps running between rounds. Each round is a new call; between calls, only our code runs.
+- Ask: Does anything ever leave the conversation?
+- Expected: No. In our loop the list only grows: every request and every result is added and stays.
 
-**Transition:** Our code fetches the three forecasts. Then round 2.
+**Build 4:** It goes on like this. Round 7 reads 1,655 tokens, and only 80 of them are new.
 
-**Source:** Real run, 19 November 2026, Gemini 3.8 Flash (notebook 1.5). A token is a word or a piece of a word. Pale blue is text the round before had already read.
+- Ask: Which round added the most? Why?
+- Expected: The tallest dark piece: a long tool result, such as the test output or a whole file. Short results, such as the note after an edit, add almost nothing.
 
-## trace-walk-2: Round 2: six sums at once
+**Point here:** The conversation is the model’s only memory during a run, and it reads all of it again in every round.
 
-**Build 1:** Our code added the three forecasts. Round 2 reads everything again from the top: 1,020 tokens.
+**Common misconception:** That the model remembers the earlier rounds. It does not: line 4 of the loop sends everything again, every time.
 
-- Ask: Why did round 2 read so much more than round 1?
-- Expected: It rereads all of round 1, plus its own requests and the three forecasts. The model keeps nothing between rounds; we send it everything again.
+**Transition:** We can print these numbers ourselves. Over to the notebook.
 
-**Build 2:** It asks the calculator for six sums at once, one for each possible order.
-
-- Ask: Could it have asked for the sums in round 1?
-- Expected: No. The sums need the forecasts, and those came back only after round 1.
-
-**Point here:** Every round starts from the full conversation. The pale part of the bar is text the model already read once.
-
-**Transition:** Six totals come back. Round 3.
-
-**Source:** Real run, 19 November 2026, Gemini 3.8 Flash (notebook 1.5). A token is a word or a piece of a word. Pale blue is text the round before had already read.
-
-## trace-walk-3: Round 3: the answer, and what the run cost
-
-**Build 1:** The six totals are added. Round 3 reads 2,464 tokens, 8.7 times what round 1 read.
-
-- Ask: If the run had ten rounds, what would round 10 read?
-- Expected: Everything from rounds 1 to 9 again. The reading grows every round, which is why long runs get slow and expensive.
-
-**Build 2:** This time it asks for no tool. The reply is the answer, so the loop stops.
-
-- Ask: What did round 3 have that round 2 did not?
-- Expected: The six totals. With every number it needed, it could answer without another tool.
-
-**Build 3:** That was the whole run. Where did the money go: reading or writing?
-
-- Ask: Where did most of the cost go: reading or writing?
-- Expected: Here, writing: the 1,466 tokens written cost 1.9 times the 3,768 read, because a written token costs five times as much. In long runs reading takes over, because it repeats every round.
-
-**Point here:** Our run was three model calls, each rereading the whole conversation, with our code running tools in between.
-
-**Transition:** All of this rereading is done by a few lines of ordinary Python.
-
-**Source:** Real run, 19 November 2026, Gemini 3.8 Flash (notebook 1.5). A token is a word or a piece of a word. Pale blue is text the round before had already read. Paid prices: $0.75 in, $3.75 out per million tokens, thinking counted as output; ₹93.5 per dollar.
-
-## loop-code: The loop in eleven lines of Python
-
-**Build 1:** The list called messages is the conversation. Each round, chat() sends all of it to the model, and we add the reply.
-
-- Ask: Which line is the model, and which lines are ordinary code?
-- Expected: Only chat() calls the model. Everything else is plain Python that we wrote and can read.
-
-**Build 2:** If the reply asks for no tool, it is the answer, and the function returns it.
-
-- Ask: Which box of the flowchart is this?
-- Expected: “Did it ask for a tool?” The answer is just whether the reply has any requests in it.
-
-**Build 3:** Otherwise our code runs each tool and adds the result to the list. Then round again, up to a step limit.
-
-- Ask: What would happen with no step limit?
-- Expected: A model that keeps asking for tools would loop for ever and spend money doing it. The step limit is the first guardrail (Part 4).
-
-**Point here:** An agent is an ordinary loop around one model call. Our code runs the tools, keeps the list of messages and decides when to stop.
-
-**Common misconception:** That agent frameworks contain some deeper machinery. They wrap this loop with retries, logging, memory and permissions.
-
-**Notebook:** Notebook 1.5: run_agent is this loop, with printing, an approval check, and errors sent back to the model instead of crashing.
-
-**Transition:** What fills all that reading? We can count it.
-
-**Source:** Simplified from run_agent in notebook/agents.py. The real one also asks a person before any tool marked for approval, and returns a failing tool’s error to the model as its result.
+**Source:** Our recorded run of Part 1, 24 November 2026 (Gemma 4 (12B)). The dark piece of each bar also holds the model’s own request from the round before.
 
 ## nb-context: In the notebook
 
-**Build 1:** Back to the notebook. We count the tokens read in each round, and in each part.
+**Build 1:** The notebook kept a count for every round of the run we just watched. We print it.
 
-- Ask: Which part of the conversation do you expect to be the biggest?
-- Expected: Most guess the tool menu or the forecasts. Hold on to that guess.
+- Ask: Guess the total before it prints. Is it closer to the last round’s count, or far above it?
+- Expected: Far above it: the total adds up every round, and each round holds all the ones before.
 
-**Point here:** We can count exactly what the model read, round by round and part by part.
+**Point here:** Nothing here is hidden. The loop records what each call to the model read and wrote.
 
 **Notebook:** Notebook 2.1: run the cells under “What the model read each round”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
-**Transition:** Here are the counts from our run.
+**Transition:** Here is the total from our run.
 
-## context: What did round 3 read?
+## read-total: How much did it read in all?
 
-**Build 1:** Round 3 read 2,464 tokens. The four parts we counted come to only 645. What is the rest?
+**Build 1:** When the run ended, the whole conversation was 1,655 tokens long.
 
-- Ask: What do you think fills the long grey bar?
-- Expected: Its own earlier replies: the requests from rounds 1 and 2, with the formatting around each message.
+- Ask: How much do you think the model read to get this far?
+- Expected: Guesses are usually near the size of the conversation. The real number is several times that.
 
-**Build 2:** The rest is the model’s own earlier replies, sent back to it each round: 74% of what it read.
+**Build 2:** To get there, the model read 8,400 tokens. It read the same text again and again.
 
-- Ask: In a long run, what would you trim first?
-- Expected: Old replies and old results: summarise them, or keep them in notes. Then the tool menu: offer only the tools the task needs.
+- Ask: What happens to the total if a run takes twice as many rounds?
+- Expected: It grows much more than twice, because every extra round rereads all the rounds before it.
 
-**Point here:** The biggest part of the context was the conversation so far, which the model rereads every round.
+**Point here:** The reading adds up faster than the conversation grows. Long runs are mostly rereading.
 
-**Transition:** What does all this rereading cost?
+**Transition:** Does that matter? Yes, for three reasons.
 
-**Source:** Real run, 19 November 2026 (notebook 2.1). The four parts were counted one by one with Gemini’s token counter, so they are approximate. “Its own earlier replies” is the rest of round 3’s 2,464 tokens, formatting included.
+**Source:** Our recorded run of Part 1, 24 November 2026 (notebook 2.1). It wrote 221 tokens in the same seven rounds.
 
-## context-cost: Why keep the context short?
+## context-short: Why keep the context short?
 
-**Build 1:** We pay for every token the model reads. Each round pays again for everything before it.
+**Build 1:** What the model reads in a round is called its context. We try to keep it short.
 
-- Ask: What happens to this total if a run takes twenty rounds?
-- Expected: It grows much faster than the conversation itself, because each round rereads all the rounds before.
+- Ask: How would you keep it short, in a long job?
+- Expected: Return short tool results, such as the last lines of a test run. Offer only the tools the job needs. Start a new run for a new job.
 
-**Build 2:** So we choose what goes into each round. People call this context engineering.
+**Point here:** Every round pays again, in money and in time, for everything read so far. Our seven-round run would cost ₹0.67 at the price of Gemini 3.8 Flash, a hosted model; Part 5 has the cost slide.
 
-- Ask: Which of these would help in your own chats with ChatGPT or Gemini?
-- Expected: Starting a fresh chat for a new topic, instead of one endless conversation. It is the same idea.
+**Common misconception:** That a model with a larger context window solves this. It lets the conversation grow longer, and every round still pays for all of it.
 
-**Point here:** Context engineering is choosing what the model reads each round. Every token costs money, and a long context hides what matters. Andrej Karpathy described it (X, 25 Jun 2025) as filling the context window “with just the right information for the next step”.
+**Transition:** One piece of the context is read first in every round, and we wrote it ourselves.
 
-**Common misconception:** That a bigger context window solves this. A longer context costs more each round, and models attend less well to what is buried in the middle.
+## instructions: The instructions are plain English
 
-**Transition:** One more question about the context: how would an agent remember you next week?
+**Build 1:** This is the first thing the model reads in every round. We wrote it, in ordinary sentences.
 
-**Source:** Real run, 19 November 2026: the tokens read in each of its three rounds.
+- Ask: Who is this text written for?
+- Expected: The model. Our code puts it at the top of the conversation, before the request.
+
+**Build 2:** In Part 1 the agent began with ls -R. The request never asked for that. This sentence did.
+
+- Ask: What would the agent do without this sentence?
+- Expected: It might guess at file names, or answer from what it remembers about billing code in general.
+
+**Build 3:** After its edit it ran the tests again, in round 6. That habit was written here too.
+
+- Ask: Which sentence would you add for your own team?
+- Expected: Answers vary: never touch the tests, ask before deleting, write in our house style. Each is one more sentence.
+
+**Point here:** Much of what looked like the agent’s good sense in Part 1 was written here. Changing an agent’s behaviour often means editing this text. Builders call it the system prompt.
+
+**Common misconception:** That instructions are rules the model must obey. They are text it usually follows. Part 4 shows what happens when other text disagrees with them.
+
+**Transition:** One sentence in there mentions a file called NOTES.md. That is how this agent remembers.
+
+**Source:** From the notebook, section 1.6: the text of SYSTEM, a sentence to a line. The tags are from our recorded run.
 
 ## memory-q: How would it remember you next week?
 
-**Build 1:** When a run ends, its conversation is gone. Next week the model starts from nothing.
+**Build 1:** This week we tell the agent two things about our shop. They are now in its conversation.
 
-- Ask: How would you make it remember this?
-- Expected: Write it down somewhere, and read it back next time.
+- Ask: Where exactly is that sentence stored?
+- Expected: In the list of messages inside one run of our loop, and nowhere else. The model itself did not change.
 
-**Build 2:** We give it two more tools. A note written in one run can then be read in any later run.
+**Build 2:** When a run ends, its conversation is thrown away. The next run starts without any of it.
 
-- Ask: Where would a real product keep these notes?
-- Expected: In a database or a document store, one per user. In the notebook, a small text file.
+- Ask: How would you make the agent remember it?
+- Expected: Write it down somewhere the next run will look. For an agent that works in a folder, that is a file.
 
-**Point here:** Memory that outlasts a run is text that one tool saves and another reads back. The model itself does not change.
+**Point here:** A run’s conversation is its only memory, and it ends with the run. Anything that should last has to be stored outside it.
 
-**Common misconception:** That the model learns from your conversations as it goes. Its weights do not change; it remembers only what someone stores and feeds back.
+**Common misconception:** That the model learns from what you tell it. Its weights do not change. It knows only what is in the conversation.
 
-**Transition:** Over to the notebook to try it.
+**Transition:** So we ask it to write things down. Over to the notebook.
+
+**Source:** The sentence in quotes is from our first request in notebook 2.2, shortened.
 
 ## nb-memory: In the notebook
 
-**Build 1:** Two separate runs: the first is told about the asthma, the second is asked a question.
+**Build 1:** Two separate runs. The first is told what to remember. The second is only asked a question.
 
-- Ask: The second run starts with an empty conversation. How could it know about the asthma?
-- Expected: Only by reading its notes. Watch for read_notes in its first round.
+- Ask: The second run starts with an empty conversation. How could it know about the discount?
+- Expected: Only from the file. Watch its first two requests.
 
-**Point here:** Two runs, two conversations. Only the file connects them.
+**Point here:** Two runs, two conversations. The only thing they share is the project folder.
 
 **Notebook:** Notebook 2.2: run the cells under “Notes that outlast a run”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
-**Transition:** Here is what happened in our run.
+**Transition:** Here are our two recorded runs.
 
-## memory: The second run read its notes first
+## notes-write: The first run wrote its notes to a file
 
-**Build 1:** Our first run saved one line to a file. Then the run ended, and its conversation was gone.
+**Build 1:** We said what to remember. The model asks to write a file, and chooses the words itself.
 
-- Ask: What exactly was saved?
-- Expected: One sentence of text: “User has asthma and prioritizes air quality over weather for travel advice.” Nothing about the model changed.
+- Ask: Which tool is this?
+- Expected: write_file, one of the four from Part 1. Memory needed no new tool.
 
-**Build 2:** The second run started empty. In one round, it read its notes and both forecasts.
+**Build 2:** Our code wrote NOTES.md into the project. Then the run ended.
 
-- Ask: Why did it read its notes at all?
-- Expected: The read_notes tool says it holds facts about the user, and the question said “for me”. It asked for the notes and both forecasts in the same round.
+- Ask: What is left of this run now?
+- Expected: One small text file in the folder, three lines long.
 
-**Point here:** Memory across runs is a file the agent writes with one tool and reads with another.
+**Point here:** Saving a note is an ordinary tool call that happens to write a file.
 
-**Transition:** Tools, a loop and notes are the parts. Builders put them together in a few common patterns.
+**Transition:** Some days later we start a new run, with a different request.
 
-**Source:** Real run, 19 November 2026 (notebook 2.2): two rounds, with three tool calls at once in the first. The first request and the answer are shortened here.
+**Source:** Our recorded run, 24 November 2026 (notebook 2.2): 3 rounds, 3.8 seconds of model time.
 
-## patterns: A chain runs the same steps every time
+## notes-read: A new run reads the notes first
 
-**Build 1:** The simplest pattern is a chain, like Part 1’s workflow: fixed steps in a fixed order, with a check between them.
+**Build 1:** The request says nothing about rupees or discounts. The run begins by listing the files.
 
-- Ask: What would break this chain?
-- Expected: A question of a different shape: four cities, or weather instead of air. The chain does only the steps we wrote.
+- Ask: What does this run know about our shop at this point?
+- Expected: Nothing yet. Its conversation holds the instructions, the request and a list of file names.
 
-**Point here:** Prompt chaining is the first of the five patterns in Anthropic’s guide. The guide advises the simplest pattern that does the job.
+**Build 2:** It sees NOTES.md and reads it before anything else. That is another sentence of our instructions.
 
-**Common misconception:** That every AI system needs a free-running agent. Chains and routers are workflows, and most systems in production are workflows.
+- Ask: Why did it open the notes before the billing code?
+- Expected: The instructions say: if NOTES.md exists, read it before anything else and follow it.
 
-**Transition:** The second pattern sorts things before anyone works on them. Back to the notebook.
+**Point here:** The notes get into the new conversation the way everything else does: a tool reads them and our code adds the result.
 
-**Source:** The five patterns: Anthropic, “Building effective agents” (19 Dec 2024). This chain is a design, not a recorded run.
+**Transition:** Now the notes are in its context. Watch what it does with them.
 
-## nb-route: In the notebook
+**Source:** Our recorded run, 24 November 2026 (notebook 2.2). The listing is cut short here.
 
-**Build 1:** Four customer messages, one in Hindi. One short model call picks the queue for each.
+## notes-answer: It answers in rupees, with the school discount
 
-- Ask: Why use a model to sort these, and not a list of keywords?
-- Expected: Keywords miss new wording and other languages. Watch the message in Hindi.
+**Build 1:** It reads billing.py, then runs the code with a discount. Our request never mentioned one.
 
-**Point here:** Routing: one cheap model call decides who handles a request.
+- Ask: Where did the discount in that command come from?
+- Expected: From the notes. The request only said that a school was ordering.
 
-**Notebook:** Notebook 2.3: run the cells under “Routing: one call picks the queue”. If the run is slow or fails, move on: the next slide shows our recorded run.
+**Build 2:** The answer is in rupees and includes the school discount. Both came from the file.
 
-**Transition:** Here is where each message went in our run.
+- Ask: What changed in the model between the two runs?
+- Expected: Nothing. It is the same model with the same weights. The folder has one more file, and the instructions say to read it.
 
-## routing: Each message went to one queue
+**Point here:** What the agent remembered from last week is exactly the text of one file, read at the start of the run.
 
-**Build 1:** Our four messages. Which queue should each one go to: billing, technical or other?
+**Common misconception:** That the agent now “knows” our shop. Delete the file and the next run knows nothing again.
 
-- Ask: Where would you send each one?
-- Expected: Most of the room will agree with the model. Sorting is easy for a person, and now cheap for a model too.
+**Transition:** So what is an agent’s memory?
 
-**Build 2:** One short model call per message picked the queue. The Hindi message has no English keyword, and still went to billing.
+**Source:** Our recorded run, 24 November 2026 (notebook 2.2): 5 rounds, 4 tool calls, 6.9 seconds of model time.
 
-- Ask: What would a keyword rule have done with the Hindi message?
-- Expected: Missed it: there is no word like “refund” in English in it. The model read it as a refund that has not arrived, and sent it to billing.
+## memory-is: Its memory is a file
 
-**Point here:** Sort first, then hand each request to the right specialist: a person, a cheaper model, or a narrower agent.
+**Build 1:** Between the two runs the model did not change at all. The folder did.
 
-**Transition:** The last two patterns use several model calls that work together.
+- Ask: What would you put in such a file for your own project?
+- Expected: How to run the tests, and what never to touch. A person can read the file, correct it, and keep it under version control.
 
-**Source:** Real run, 19 November 2026 (notebook 2.3). The messages are written for the notebook. English gloss of the Hindi message: ours.
+**Point here:** Memory across runs is text stored outside the model and read back into the context. Because it is a file, a person can open it and fix it.
 
-## patterns-2: Several model calls can work together
-
-**Build 1:** A lead call splits the job, and helpers work on the parts in parallel, each with its own context.
-
-- Ask: Why would several helpers beat one agent on a research question?
-- Expected: Each helper explores one direction with a clean context, and they run at the same time. The price is many more tokens.
-
-**Build 2:** One call writes, another checks it against a list, and the writer revises. Part 3’s farm advisory works this way.
-
-- Ask: Why use a second call to check the first, rather than asking the writer to be careful?
-- Expected: A separate check with an explicit list catches what the writer misses, and a person can read and change the list. It is a small eval run on every draft.
-
-**Point here:** Several model calls can do better than one, at a price in tokens: Anthropic reports agents use about 4× the tokens of a chat, and multi-agent systems about 15×. Anthropic calls these two patterns “Orchestrator and workers” and “Evaluator and optimizer”.
-
-**Common misconception:** That more agents are always better. For most tasks a single agent, or a workflow, is cheaper and easier to debug.
-
-**Notebook:** Notebook 3.4 (Part 3): the writer and critic on today’s forecast.
-
-**Transition:** Every pattern here runs tools. Back to the loop, at the tool step.
-
-**Source:** Anthropic, “How we built our multi-agent research system” (13 Jun 2025).
-
-## map-tool: Where are we in the loop?
-
-**Build 1:** Now the box where our code runs a tool. So far, each tool was a Python function we wrote.
-
-- Ask: If Gemini, Claude and ChatGPT should all use your company’s database, how many times do you write that tool?
-- Expected: Once for each, unless they share a standard. The next slide counts the cost.
-
-**Point here:** Tools connect an agent to your systems. Writing and connecting them is most of the work in practice.
-
-**Transition:** The next slide counts the connectors.
-
-## mcp: How many connectors do we need?
-
-**Build 1:** Four models and five tools. Without a standard, every pair needs its own connector: 20.
-
-- Ask: If you add one more tool, how many new connectors do you write?
-- Expected: One per model: 4 more, and every model vendor has to do it.
-
-**Build 2:** MCP, the Model Context Protocol, is that standard. Each model and each tool implements it once: 9.
-
-- Ask: And with MCP?
-- Expected: One: the new tool speaks MCP, and every model that speaks MCP can use it.
-
-**Point here:** MCP turns an n × m problem into n + m: write a tool once, and any agent that speaks MCP can use it.
-
-**Common misconception:** That MCP makes tools safe. It standardises how tools are connected; a tool result with hidden instructions travels through it just as easily (Part 4).
-
-**Notebook:** Drag the sliders: add a tool and watch the count without MCP jump by the number of models. Notebook 5.2 serves our forecast tool over MCP.
+**Common misconception:** That more notes are always better. Every line of the notes is read in every round of every run, so the file should stay short.
 
 **Transition:** Part 2 in one slide.
 
-**Source:** Counts on the slide are arithmetic: n × m against n + m. MCP is an open standard; the specification is at modelcontextprotocol.io.
-
 ## recap-2: Part 2 in one slide
 
-**Build 1:** Next: agents at work, and who checks them.
+**Build 1:** Next: the same agent, other jobs.
 
-- Ask: What would you want this agent to remember about you, and what should it never write down?
-- Expected: Preferences help it, but a health condition is sensitive data. Decide what may be stored, for how long, and who can read the notes.
+- Ask: Which line of the card changed since Part 1?
+- Expected: Memory: the conversation lasts for one run, and the notes file lasts across runs. The model, the tools and the loop are the same.
 
-**Point here:** An agent is a loop that rereads its context each round; tools, memory and patterns are built around it.
+**Point here:** One run is a conversation that only grows. Instructions start it, and a notes file carries a little of it into the next run.
 
-**Transition:** Part 3: agents at work.
+**Transition:** Part 3: the same agent, other jobs.
 
-## p2-memory-kinds: Three kinds of memory (optional)
+## part-3: Part 3 · The same agent, other jobs
 
-**Build 1:** Agents use three kinds of memory. Which one would hold your company’s policy manual?
+**Build 1:** Key question: what else can the same four tools and loop do, and who checks the result?
 
-- Ask: Which kind of memory would hold your company’s policy manual?
-- Expected: Documents: the agent searches them and quotes the parts it needs (retrieval). Notes hold short facts about a user or a task; the context holds only this run.
+- Ask: Which job in your week is mostly opening files, reading them and filing them?
+- Expected: Expense claims, supplier paperwork, a shared drive, a monthly report. Keep one in mind: the next two jobs are of that kind.
 
-**Point here:** The context is cleared after each run; notes and documents are stored outside the model and read back with tools.
+**Point here:** The agent from Part 1 was not built for code. It can do any job that can be done by reading files, writing files and running commands.
 
-**Source:** Drawings: made for the slide.
-
-## part-3: Part 3 · Agents at work
-
-**Build 1:** Key question: for each job, how much should the agent do without a person?
-
-- Ask: Which job in your team would you hand to an agent first?
-- Expected: Answers vary: reports, ticket triage, data clean-up, first drafts. Keep two of them; at the end of the part we place them on a map.
-
-**Point here:** Every job gets the same two questions: what does the agent do, and where does a person check it?
-
-**Transition:** Each job is drawn the same way, as a trace. First, how to read one.
+**Transition:** The first job is a folder nobody has sorted.
 
 **Source:** Illustration: generated (Gemini image model).
 
-## read-card: How to read a trace
+## tidy-mess: Ten files, and no name says what is inside
 
-**Build 1:** Our opening run, drawn as a trace. Time runs left to right, and each row shows who acts.
+**Build 1:** The shop’s inbox for October. Each file belongs in one of four folders, and no name says which.
 
-- Ask: Who acts most often in this run?
-- Expected: The tools: nine calls in two rounds. The agent only decides what to ask for.
+- Ask: Which of these is a complaint from a customer?
+- Expected: Nobody can tell from the names. Someone has to open each file and read it.
 
-**Build 2:** Here a person had a say only at the two ends. In the jobs ahead, watch for the amber circle.
+**Build 2:** We also want each file renamed to its date and its sender.
 
-- Ask: Where in this run did a person have a say?
-- Expected: Only at the two ends: you asked, and you read the answer. In every trace that follows, look for where the person sits.
+- Ask: Why put the date first in the name?
+- Expected: Then any file browser lists the folder in date order.
 
-**Point here:** Every job in this part is drawn the same way, so you can compare who decides, what acts, and where a person checks.
+**Point here:** A dull, real office chore: open, read, decide, file and rename. Ten times here, and thousands of times in a real office.
 
-**Transition:** The first job: fixing code.
+**Transition:** We give this job to the same agent.
 
-**Source:** The opening run (Gemini 3.8 Flash, 19 November 2026): nine tool calls in three rounds.
+**Source:** The inbox is made up for this talk. The notebook creates it (make_workspace).
 
-## app-coding-task: Coding: a test has started failing
+## tidy-ask: We ask in plain words
 
-**Build 1:** What would an agent need for this job? Think of what a developer opens first.
+**Build 1:** We name the folders and give one example. We do not say which file goes where.
 
-- Ask: What would you open first if you had to fix this yourself?
-- Expected: The failing test and its error, then the code that changed yesterday. An agent needs the same: a way to run the tests and to read the files.
+- Ask: What have we left for the agent to work out?
+- Expected: What each file is, its date and who sent it. All of that is inside the files, so it will have to read them.
 
-**Build 2:** The same tools a developer uses. The last one proposes the change for a person to review.
-
-- Ask: Which of these tools touches something other people depend on?
-- Expected: Editing changes only the agent’s own copy. The pull request is where the change meets everyone else’s code, so that is where a person comes in.
-
-**Point here:** A coding agent needs the tools a developer already uses: run the tests, read and edit files, search, and propose a change.
-
-**Transition:** Here is what it does with them.
-
-**Source:** Illustration: generated.
-
-## app-coding: Coding: it stops at a pull request
-
-**Build 1:** It works on its own copy of the code, and it can tell when the fix works: the tests pass.
-
-- Ask: The tests pass now. Is the job done?
-- Expected: Not yet. Passing tests say the failure has gone; whether the fix is the right one is a reviewer’s call.
-
-**Build 2:** It does not merge the fix itself. A person reads the change and decides.
-
-- Ask: Why stop at a pull request instead of merging?
-- Expected: Merging changes the code everyone else depends on. A review takes minutes, and the tests already did most of the checking.
-
-**Build 3:** How good are coding agents? This is the best-known public test of them.
-
-- Ask: What does a score on this test tell you about your own code?
-- Expected: Less than it seems. The 500 tasks come from public Python projects, and the test has leaked into training data. Run your own evals (Part 4). Developers use the tools anyway: 84% use or plan to use AI tools, and 23% use agents at least weekly (Stack Overflow survey, 2025).
-
-**Point here:** A coding agent can do most of the work because tests check it in seconds, and a person approves the merge. On the stakes map at the end of Part 3: “Agent acts, a person approves” (tests run in seconds; merging is the step a person approves).
-
-**Common misconception:** That vendor scores are the ones to quote. Vendors report higher numbers (80.9% for Claude Opus 4.5, 93.9% for the restricted Claude Mythos Preview), and OpenAI has said the test is contaminated and stopped reporting it. The independent leaderboard is the safer number.
-
-**Transition:** Code has tests. Data analysis has something almost as good: code you can rerun.
-
-**Source:** Trace: a sketch of how coding agents such as Claude Code or Codex typically work. Score: the swebench.com leaderboard.
-
-## app-analyst-task: Data analysis: which city had the worst winter air?
-
-**Build 1:** A table of daily PM2.5 for ten Indian cities. What would an agent need to answer this?
-
-- Ask: How would you answer this yourself?
-- Expected: Open the table, keep the winter months, count each city’s days over the limit, and draw a bar chart.
-
-**Build 2:** Only two tools. The second runs any code the model writes, so it can count, average and draw.
-
-- Ask: Why one tool that runs code, instead of one tool for each question?
-- Expected: Because the questions change. With code it can filter, count and chart whatever the question needs. In a real deployment that code runs in a sandbox.
-
-**Point here:** An analysis agent needs only a way to see the data and a way to run code on it.
-
-**Transition:** Over to the notebook to run it.
-
-**Source:** Data: daily PM2.5 for each city, CAMS model estimates via Open-Meteo. Illustration: generated.
-
-## nb-analyst: In the notebook
-
-**Build 1:** This run takes about a minute, so we start it and watch the code it writes.
-
-- Ask: What should a careful analyst do before counting anything?
-- Expected: Look at the table: which columns, which cities, which dates. Watch whether the agent does.
-
-**Point here:** The agent writes and runs its own code, and we can read every line of it.
-
-**Notebook:** Notebook 3.1: run the cells under “A data analyst”. Live, it takes about a minute: our recorded run spent 37 seconds in the model, and drawing the chart adds a little. Read out each run_pandas call while it works. If it is slow or fails, move on: the next slides show our recorded run.
-
-**Transition:** Here is what our recorded run did.
-
-## app-analyst: It looked at the table before it counted
-
-**Build 1:** First it asked what is in the table: the columns, the cities, the dates. Then it wrote code to count.
-
-- Ask: Why look at the table before counting?
-- Expected: To learn the column names and the date range. Code written blind fails, or worse, counts the wrong thing.
-
-**Build 2:** Three days sat at exactly 60, so it questioned its own definition and counted both ways.
-
-- Ask: What would you check before trusting these counts?
-- Expected: The definition: does “over the standard” mean above 60, or 60 and above? Counting both ways changed Ahmedabad and Mumbai by a day or two; it kept “above 60”.
-
-**Point here:** An analysis agent shows its work as code, so anyone can rerun it and check the numbers. On the stakes map at the end of Part 3: “Let it run” (the code can be rerun and the numbers recomputed).
-
-**Common misconception:** That code makes the answer right. One of its five code runs failed, and it read the error and fixed the code. A wrong definition raises no error at all, so that is what a person checks.
-
-**Transition:** Here is the chart it drew, and its answer.
-
-**Source:** Real run (notebook 3.1, Gemini 3.8 Flash, 19 November 2026): six tool calls, condensed to its main steps.
-
-## analyst-answer: Its chart and its answer
-
-**Build 1:** Its chart, redrawn from its numbers. The top cities were over the limit on most winter days.
-
-- Ask: Which city would you have guessed?
-- Expected: Most guess Delhi. Kolkata comes first, with Patna and Delhi close behind.
-
-**Build 2:** Its answer agrees with the chart. Every number came from code, so we can rerun it to check.
-
-- Ask: Would you put this headline in a report as it stands?
-- Expected: After one check: rerun the code and confirm the definition of “over 60”. And say what the data are: model estimates for each city, from CAMS. At the other end, Bengaluru and Chennai had one day each over the limit.
-
-**Point here:** The answer comes with the code that produced it, so checking it is cheap: rerun and compare.
-
-**Common misconception:** That the chart shows measured air. These are CAMS model estimates for each city, November 2025 to February 2026; no monitoring station was read. The agent’s own chart is figures/p3a-analyst-chart.png, too small to read in a hall, so the slide redraws it.
-
-**Transition:** Research is harder to check. There is no code to rerun, only sources.
-
-**Source:** Real run (notebook 3.1, Gemini 3.8 Flash, 19 November 2026), chart redrawn from its numbers. Data: CAMS model estimates via Open-Meteo.
-
-## app-research-task: Research: an answer with sources
-
-**Build 1:** A question about a government programme, and we want a source for every claim. What would an agent need?
-
-- Ask: Where would you look first for this?
-- Expected: A search engine, then the programme’s own pages. An agent needs the same: a search tool, and a way to read what it finds.
-
-**Build 2:** A search and a reader. Ours uses Wikipedia; at work it would be the web and your own files.
-
-- Ask: What could go wrong with an answer built from search results?
-- Expected: It might rest on one weak source, quote an old figure, or attach a link that does not say what the claim says.
-
-**Point here:** A research agent needs a search tool, a way to read, and instructions to cite what it read. Products sold as “deep research” do the same with many more searches, for market scans or literature reviews.
+**Point here:** The request describes the result we want. The steps are left to the model.
 
 **Transition:** Over to the notebook.
 
-**Source:** Illustration: generated.
+## nb-tidy: In the notebook
 
-## nb-research: In the notebook
+**Build 1:** The agent is the one from Part 1, with the same four tools. Only the request is new.
 
-**Build 1:** We tell it: answer only from what you read, and put a link after each claim.
+- Ask: What does it have to do before it can move a single file?
+- Expected: Open each file and read it. The names tell it nothing.
 
-- Ask: How many pages do you think it will read?
-- Expected: Most guess several. Watch the tool calls: it may read fewer than you expect.
+**Point here:** A new job needed a new request. It needed no new code.
 
-**Point here:** We ask for a link after each claim, so that we can see where each claim came from.
-
-**Notebook:** Notebook 3.2: run the cells under “A research assistant with sources”. If the run is slow or fails, move on: the next slide shows our recorded run.
+**Notebook:** Notebook 3.1: run the cells under “Tidy a messy folder”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
 **Transition:** Here is our recorded run.
 
-## app-research: Our run read one page
+## tidy-reads: First it reads every file
 
-**Build 1:** It searched once, picked one page from the results, and read it.
+**Build 1:** A name tells it nothing, so it asks to read the first file. It is a payment receipt.
 
-- Ask: The search returned five titles. Which would you have read?
-- Expected: It read “Air pollution in India”, a general page. The programme had no page of its own among the results.
+- Ask: Could it have sorted the files without opening them?
+- Expected: No. A name like 20261019_093211.txt says nothing about what is inside.
 
-**Build 2:** Then it answered with a link after each claim, as we asked. Are the links enough?
+**Build 2:** Ten reads in ten rounds. This one is a customer’s letter, and no line in it says so.
 
-- Ask: Every claim has a link. Can you forward the answer to your manager?
-- Expected: Not yet. A link says where to look. Someone has to open it and read the sentence it points to.
+- Ask: How does it know that this file is a customer’s letter?
+- Expected: From what the text says: someone is writing to the shop about something they bought. A rule that searched for a fixed word would miss it.
 
-**Point here:** A research agent saves the searching and reading, but its answer is a draft until someone checks the sources. On the stakes map at the end of Part 3: “Agent drafts, a person decides” (citations must be opened and read to be checked).
+**Point here:** It reads the way we would, one file at a time, and it sorts by what the text means.
 
-**Transition:** Here is its answer, with its links.
+**Transition:** It now knows what every file is. Next it moves them.
 
-**Source:** Real run (notebook 3.2, Gemini 3.8 Flash, 19 November 2026): two tool calls.
+**Source:** Our recorded run, 24 November 2026: rounds 2 to 11 of 19. Two of the files it read are shown.
 
-## research-links: Every claim has a link
+## tidy-error: A command fails. It reads the error and tries again
 
-**Build 1:** Its answer, cut to the key phrase of each claim. It looks well sourced.
+**Build 1:** It asks for all the moves in one command. One file name has brackets, and the shell stops.
 
-- Ask: Which of these claims would you check before quoting it?
-- Expected: The target. It is the number a decision would rest on, and it is for 2024, which has passed. Is it still the target today? The answer cannot tell you.
+- Ask: What does our code do when a command fails?
+- Expected: Nothing special. It returns the exit code and the error text to the model, like any other result. (The lines above the bad one had already run, so the retry complained about three files that were gone. The agent then listed the folder to check.)
 
-**Build 2:** All three links go to one general page. Someone still has to open it and read it.
+**Build 2:** The error goes back to the model as the result. Next round, that name is in quotes.
 
-- Ask: What would a careful researcher add?
-- Expected: A primary source, such as the programme’s own documents, and the date of each figure. A general page is only a starting point.
+- Ask: Who told it to add the quotes?
+- Expected: Nobody, in that round. It read the error message. Our description of the bash tool does ask for quotes around such names, and the first time it left them out.
 
-**Point here:** A link shows where a claim came from. Only reading the source shows whether the claim is right and still current.
+**Point here:** An error is one more result in the conversation. The loop lets the model read it and try again.
 
-**Common misconception:** That a citation proves a claim. A model can attach a plausible link to a sentence the page does not support; only reading the source checks it.
+**Common misconception:** That an agent has to get every step right. It has to notice when a step went wrong, and here the exit code and the error text told it.
 
-**Transition:** From knowledge work to operations: customer support.
+**Transition:** So what does the inbox look like now?
 
-**Source:** Real answer (notebook 3.2, Gemini 3.8 Flash, 19 November 2026), each claim cut to its key phrase. Every link: https://en.wikipedia.org/wiki/Air_pollution_in_India
+**Source:** Our recorded run, 24 November 2026: rounds 13 and 14 of 19. Each command had 10 lines; the one that failed is shown.
 
-## app-support-task: Customer support: the refund from Part 1
+## tidy-after: The inbox, before and after
 
-**Build 1:** The refund from Part 1, now as a customer’s message. What would an agent need to settle it?
+**Build 1:** On the left, the inbox as we found it. On the right, the same folder 50 seconds later.
 
-- Ask: What would a person on the support desk check first?
-- Expected: The order: was it delivered, and for how much? Then the policy: is damage covered, and is it within the time limit?
+- Ask: What do the new names have in common?
+- Expected: Each starts with the date, then the sender. The folder now lists in date order.
 
-**Build 2:** Two of these only read. The two in red act: one moves money, one sends a message.
+**Build 2:** Four new folders and an index file. Ten files went in and ten came out.
 
-- Ask: Which of these tools would you let it use without asking you?
-- Expected: Reading, always. Refunds only up to a small amount. Replies perhaps, once you trust its wording.
+- Ask: What should we check before we trust this?
+- Expected: That each file is in the right folder, and that nothing was lost or overwritten. A folder can look tidy and still be wrong.
 
-**Point here:** Reading tools are safe to give an agent. The tools that move money or send messages need limits.
+**Point here:** One request, and the whole chore is done: read, decide, move, rename, index.
 
-**Transition:** So we put a cap on the refund tool.
+**Transition:** It looks right. Is it right?
 
-**Source:** The refund is from the notebook’s demo inbox. Illustration: generated.
+**Source:** Our recorded run, 24 November 2026 (Gemma 4 (12B)): the folder as the notebook lists it after the run.
 
-## app-support: Customer support: refunds up to a cap
+## tidy-check: Did it get it right?
 
-**Build 1:** It reads the message, the order and the policy, then asks: is the amount under the cap?
+**Build 1:** We wrote these files, so we know what each one really is.
 
-- Ask: What cap would you set, and why?
-- Expected: Most choose a small amount: small, clear cases run alone, large or odd ones go to a person. That is Part 1’s autonomy level, set by amount.
+- Ask: How would you check this in a real office, where nobody has an answer key?
+- Expected: Check a sample by hand, or sort a small set yourself first and compare. That small labelled set is an eval; Part 4 builds one.
 
-**Build 2:** Under the cap, it refunds and replies by itself. Over the cap, a person approves first.
+**Build 2:** Every file is in the right folder, with a dated name.
 
-- Ask: What else should send a case to a person?
-- Expected: An angry customer, a repeat claim, a legal threat, anything the policy does not cover. Keep the cap low: whatever the agent promises, the company has to honour (Air Canada, Part 4).
+- Ask: Would you run this on your own documents folder tomorrow?
+- Expected: On a copy, yes. It moves and renames real files, so a wrong move matters. Part 4 is about that.
 
-**Point here:** A support agent can settle small, routine refunds; anything over the cap goes to a person. On the stakes map at the end of Part 3: “Agent acts, a person approves” (small refunds are easy to check; a person approves anything over the cap).
+**Point here:** We can count how well it did only because we know the right answers. Keep a small set like this for your own tasks.
 
-**Common misconception:** That the cap is something the model remembers to respect. It belongs in the refund tool itself, in our code, so it holds whatever the model writes.
+**Transition:** The second job involves money.
 
-**Transition:** Has anyone run this at scale? One payments company did.
+**Source:** Checked by the notebook (section 3.1) against the list the files were made from. Gemma 4 (12B), 24 November 2026.
 
-**Source:** Trace: a design drawn for this talk; it describes no deployed system.
+## invoice-job: Six invoices to check before anything is paid
 
-## support-klarna: Klarna’s assistant took two-thirds of its chats
+**Build 1:** An invoice from a supplier, and the orders the shop placed. Do they match?
 
-**Build 1:** Klarna, a payments company, put an AI assistant on its customer chats. In its first month:
+- Ask: What would you compare, and in what order?
+- Expected: The order number first, then the quantity and the unit price against that order.
+
+**Build 2:** The order says Rs 150 each. The invoice charges Rs 165. Six invoices need this check.
+
+- Ask: Who does this job in your organisation today?
+- Expected: Usually someone in accounts, by eye, near the end of the month. It is slow work, and a tired reader misses things.
+
+**Point here:** Checking one document against another is careful, repetitive work, and a lot of office work looks like it.
+
+**Transition:** Again, all we write is the request.
+
+**Source:** The invoices and the orders are made up for this talk; the notebook creates them. The orders file also names each supplier.
+
+## invoice-ask: The request says what “fine” means
+
+**Build 1:** We ask for a list. We do not ask it to pay or reject anything.
+
+- Ask: What did we not ask it to do?
+- Expected: Pay, reject or write to a supplier. We asked for a report only. That was a choice, and we come back to it.
+
+**Point here:** The request holds the rule and the output we want: a report, and no action.
+
+**Transition:** Over to the notebook.
+
+## nb-invoices: In the notebook
+
+**Build 1:** Same agent again. We pass the new request, and wait for the file it writes.
+
+- Ask: How many of the six do you expect it to flag?
+- Expected: We put a problem in three of them. Watch whether it finds exactly those.
+
+**Point here:** Again there is no new code, only a new request.
+
+**Notebook:** Notebook 3.2: run the cells under “Check invoices against orders”. If the run is slow or fails, move on: the next slide shows our recorded run.
+
+**Transition:** Here is our recorded run.
+
+## invoice-did: It reads everything, then writes one file
+
+**Build 1:** It lists the folder, reads the orders, then reads all six invoices, one each round.
+
+- Ask: Which of the four tools has it not used so far?
+- Expected: edit_file. There is nothing here to change: it is only reading.
+
+**Build 2:** Then one write_file, and it stops: 10 rounds, 19 seconds, and one new file in the project.
+
+- Ask: What has changed in the project?
+- Expected: One new file, mismatches.md. The invoices and the orders file are untouched.
+
+**Point here:** The same loop as the bug fix: look, read what matters, then act once.
+
+**Transition:** What is in the file?
+
+**Source:** Our recorded run, 24 November 2026 (Gemma 4 (12B)): 10 rounds, 9 tool calls, 18.8 seconds of model time.
+
+## invoice-found: It flags three of the six invoices
+
+**Build 1:** This is the file it wrote, word for word. It names three of the six invoices.
+
+- Ask: Is each line of the report true?
+- Expected: Check one against the orders table from two slides back. The numbers in the report are the numbers in the files.
+
+**Build 2:** We put a problem in three of the invoices. It flagged those three, and none of the others.
+
+- Ask: How do we know it missed nothing?
+- Expected: Because we made the invoices, and we know which ones are wrong. In real use you would not know, so you check a sample.
+
+**Build 3:** The agent paid nobody and wrote to nobody. Its whole output is this list.
+
+- Ask: Would you let it reject these invoices itself?
+- Expected: Not yet. A wrong rejection annoys a supplier and a wrong payment loses money. A list is cheap to check, and a payment is hard to undo.
+
+**Point here:** A good first job for an agent: it reads and reports, and a person keeps the decision.
+
+**Transition:** That is three jobs. What changed between them?
+
+**Source:** Our recorded run, 24 November 2026. The file is exactly what the agent wrote; the cards compare it with the problems we put in.
+
+## invoice-same-agent: What changed between the three jobs?
+
+**Build 1:** The model, the four tools and the loop are the ones we built in Part 1.
+
+- Ask: So where did the skill for each new job come from?
+- Expected: From the model, which can already read a letter or compare two numbers, and from our request. The tools only gave it access to the folder.
+
+**Point here:** One general agent did three different jobs. What we wrote for each was a request, and a way to check the result.
+
+**Transition:** The same loop runs inside products you have heard of.
+
+**Source:** All three runs are real (Gemma 4 (12B), 24 November 2026). For the two longer jobs we raised the limit on rounds; nothing else changed.
+
+## work-real: Real products run the same loop
+
+**Build 1:** Our loop once more, and the four tools it can ask for.
+
+- Ask: What would we change to turn our agent into a support agent?
+- Expected: Only the tools: an order lookup, a refund and a reply in place of files and a terminal. The model and the loop stay.
+
+**Build 2:** Real products keep this loop. What changes is the set of tools.
+
+- Ask: What tools would an agent need in your team?
+- Expected: Usually three or four: look something up, change a record, send a message. Each is one function, like read_file.
+
+**Point here:** An agent product is the same loop, with tools chosen for one job.
+
+**Common misconception:** That each product is a different kind of AI. The loop is the one we wrote; the tools and the checks around it differ.
+
+**Transition:** First, the product closest to what we built.
+
+## app-coding: Coding agents work the way ours did
+
+**Build 1:** Claude Code, Codex and Cursor work as our agent did: read, edit, run the tests, repeat.
+
+- Ask: What does a product add to our sixty lines?
+- Expected: A stronger model, more tools (search, git, a browser), permissions and logs. The loop is the same.
+
+**Build 2:** How good are they? This public test gives an agent real issues from open-source projects.
+
+- Ask: Does that score mean an agent can do most of a developer’s job?
+- Expected: No. The 500 tasks are small fixes with the tests already written, and the test has leaked into training data: OpenAI stopped reporting it in Feb 2026. Vendors report higher scores (93.9% for the restricted Claude Mythos Preview); the independent leaderboard is the safer number. GPT-4o scored 33.2% in Aug 2024. Run your own evals (Part 4).
+
+**Point here:** A coding agent can do much of the work because tests check each change in seconds, and a person approves the merge.
+
+**Common misconception:** That the score measures a developer’s job. It measures small, well-described fixes that come with tests.
+
+**Transition:** Next, a job with no tests: answering customers.
+
+**Source:** SWE-bench Verified (500 tasks): the top score on the independent swebench.com leaderboard. The steps are a sketch of how coding agents work. Illustration: generated.
+
+## app-support: Customer support: it answers the routine chats
+
+**Build 1:** A support agent reads the message, looks up the order and the policy, and replies.
+
+- Ask: Which of these steps can go wrong without anyone seeing?
+- Expected: The reply. It goes to the customer at once, so the customer is the first person to read it.
+
+**Build 2:** Answers took under 2 minutes, down from 11. Later, Klarna’s CEO said quality had dropped.
 
 - Ask: It handled two-thirds of the chats. Is two-thirds of the job done?
-- Expected: No. The rest are the hard cases, and speed says nothing about whether the customer was helped.
+- Expected: No. Those 2.3 million chats were the routine ones. In May 2025 Klarna’s CEO told Bloomberg that cost had been too dominant a factor, and the result was lower quality. Klarna offers a person again for some cases, with freelance staff, while its headcount keeps falling. Klarna had said the assistant did the work of 700 full-time agents, with 25% fewer repeat inquiries.
 
-**Build 2:** Its CEO later said the focus on cost had lowered quality. What would you measure besides cost?
+**Point here:** A support agent settles routine chats quickly. Nobody reads each reply first, so its quality has to be measured another way.
 
-- Ask: Why do you think quality fell?
-- Expected: Its CEO said cost had been too dominant a factor in judging it. Klarna now offers a person for some cases; the new staff are freelance, gig-style workers, and total headcount kept falling. Klarna had said the assistant did the work of about 700 full-time agents.
+**Common misconception:** That Klarna went back to people. The new staff are freelance, and total headcount kept falling.
 
-**Point here:** Handling a share of the chats is a different thing from helping those customers. Measure quality from the start, and keep a person within reach.
+**Transition:** Now a job where a program checks every attempt.
 
-**Common misconception:** That “Klarna is hiring people again” means it reversed course. The hires are freelance, gig-style agents, and headcount kept falling.
-
-**Transition:** Now our own inbox assistant, with an approval step built in.
-
-**Source:** Klarna: press release (Feb 2024); its CEO’s interview with Bloomberg (May 2025), as reported by Entrepreneur.
-
-## nb-inbox: In the notebook
-
-**Build 1:** A made-up inbox of four emails, with this refund among them. Sending an email needs a person’s approval.
-
-- Ask: Which of its actions should wait for you?
-- Expected: Sending. Reading is safe, but a sent email cannot be taken back.
-
-**Point here:** The approval sits in our code, on the tool, so the model cannot skip it.
-
-**Notebook:** Notebook 3.3: run the cells under “An inbox assistant that asks first”. When it stops and asks before send_email, read the request out, then type y. If it is slow or fails, move on: the next slide shows our recorded run.
-
-**Transition:** Here is our recorded run.
-
-## inbox-run: It asked before it sent
-
-**Build 1:** We asked it to reply to Priya and summarise the rest. First it read all four emails.
-
-- Ask: It read the refund email too. Did it act on it?
-- Expected: No. We did not ask it to; it only mentioned the refund in its summary. Reading it was harmless.
-
-**Build 2:** Then it asked to send one reply. Our code held it until a person approved, and only then sent it.
-
-- Ask: What if the reply had gone to the wrong person?
-- Expected: The approval would catch it: you see the address and the text before anything is sent. In Part 4 an email in this inbox tries to trick the agent, and this same step stops it.
-
-**Point here:** The approval step worked: the agent read freely, and the one action with an effect outside, sending, waited for a person. One approval, one email sent.
-
-**Transition:** That is knowledge work and operations. Now, jobs outside the office.
-
-**Source:** Real run (notebook 3.3, Gemini 3.8 Flash, 19 November 2026): four rounds, six tool calls, 16 seconds. The inbox is made up for the demo.
-
-## work-beyond: Outside the office, who checks the work?
-
-**Build 1:** First a science project at Google DeepMind, then jobs in India. For each one, watch who checks the result.
-
-- Ask: In your own work, who checks a result before anyone acts on it?
-- Expected: Sometimes a program, such as a test or a reconciliation. Often a colleague or a manager. Every job next has one or the other, or both.
-
-**Point here:** From here on we ask one thing of each job: what checks the result, a program or a person?
-
-**Transition:** First, a job where a program checks every attempt.
-
-**Source:** Illustrations: generated.
-
-## app-evolve-task: AlphaEvolve: a better rule for Google’s servers
-
-**Build 1:** Google’s engineers want a better rule for placing jobs on their servers. They already have code that scores any rule.
-
-- Ask: What would an agent need to work on this?
-- Expected: A way to run code, the scoring program, and somewhere to keep what worked.
-
-**Build 2:** With these, it can try a rule, see its score and try again, without waiting for a person.
-
-- Ask: Who has to look at each attempt?
-- Expected: Nobody. The scoring program rates each attempt in seconds, so no person has to read them.
-
-**Point here:** This job comes with its own check: a program that scores any rule.
-
-**Transition:** So what does the agent do with it?
-
-**Source:** Illustration: generated.
+**Source:** Klarna press release (Feb 2024); its CEO’s interview with Bloomberg (May 2025), as reported by Entrepreneur. The steps are a sketch of a typical support agent. Illustration: generated.
 
 ## app-evolve: AlphaEvolve: a program scores every attempt
 
-**Build 1:** The agent writes a rule, the program scores it, and the best rules are kept and changed again, over and over.
+**Build 1:** Which server should each job run on? Google’s engineers wrote a program that scores any rule.
 
-- Ask: How many attempts could it make in a day?
-- Expected: Far more than any person could read: each one is scored in seconds, day and night.
+- Ask: Who has to read each attempt?
+- Expected: Nobody. The program scores every rule, so the loop does not wait for a person. Engineers read the winner before it is used.
 
-**Build 2:** Nobody reads each attempt, so it can try far more than a team could check.
+**Build 2:** It tries far more rules than a team could read. The best one now runs in Google’s data centres.
 
 - Ask: Which problems in your work come with a scorer like this?
-- Expected: Scheduling, routing, compression: anything with a test suite or a cost model.
+- Expected: Scheduling, routing, packing: anything with a cost that a program can compute.
 
-**Point here:** Because the check is a program, the loop can run without a person looking at each attempt.
+**Point here:** When a program can score the result, the loop can run without a person looking at each attempt.
 
-**Common misconception:** That AlphaEvolve is a smarter model. It is a loop around existing Gemini models, and the scorer does much of the work. The same loop found a way to multiply 4×4 complex matrices with 48 multiplications, and a faster kernel that cut Gemini’s training time by 1%.
+**Common misconception:** That AlphaEvolve is a smarter model. It is a loop around existing Gemini models, and the scorer does much of the work. It also found a way to multiply 4×4 complex matrices with 48 multiplications, and a faster kernel that cut Gemini’s training time by 1%.
 
-**Transition:** Most jobs have no scorer like that. A farmer’s question is one of them.
+**Transition:** Most jobs have no scorer. In a clinic, the check is a doctor.
 
-**Source:** Google DeepMind blog, 14 May 2025. The trace is simplified.
+**Source:** Google DeepMind blog, 14 May 2025. The steps are simplified. Illustration: generated.
 
-## app-farmer-task: A voice note from a farmer near Mehsana
+## app-clinic: Clinic notes: the doctor signs every note
 
-**Build 1:** A farmer near Mehsana asks this in a voice note, in Gujarati. The answer depends on this week’s weather.
-
-- Ask: What would it need to answer well?
-- Expected: The weather for the next few days, what cumin needs, and Gujarati both ways.
-
-**Build 2:** The forecast and the crop notes give it facts. Without them it would guess, as the model on its own did.
-
-- Ask: What could go wrong with the answer?
-- Expected: The wrong weather, advice meant for another region, or a reply the farmer cannot read. Bad advice can cost a season’s crop.
-
-**Point here:** The agent answers from the local forecast and crop notes, in the farmer’s own language.
-
-**Transition:** In the notebook we build the middle part of this job.
-
-**Source:** Illustration: generated.
-
-## nb-farm: In the notebook
-
-**Build 1:** One call writes the advisory from the real forecast. A second call checks it against five rules.
-
-- Ask: What should happen if the draft breaks a rule?
-- Expected: The checker sends back the problems, and the writer tries again.
-
-**Point here:** A second call that checks the first against a fixed list is a cheap check you can always add.
-
-**Notebook:** Notebook 3.4: run the cells under “A farm advisory, written and checked”. If the run is slow or fails, move on: the next slide shows our recorded run.
-
-**Transition:** This is what our run wrote.
-
-## farm-reply: The advisory our run wrote
-
-**Build 1:** The teal numbers come from the forecast. The blue one comes from the crop notes.
-
-- Ask: Who here reads Gujarati? Does it sound like something a farmer would act on?
-- Expected: In English: no rain from 19 Nov to 23 Nov (chance 0%), nights down to 16.4 °C on 22 Nov. Cool, dry weather suits cumin, so sow this week and water lightly at once, then every 8 to 10 days.
-
-**Point here:** Every number in the advice comes from a source we gave it: the forecast or the crop notes.
-
-**Transition:** Before anyone sends it, the second call checks it.
-
-**Source:** Our run (notebook 3.4, Gemini 3.8 Flash, 19 November 2026). Forecast: Open-Meteo forecast. The crop notes are illustrative, not agronomic advice.
-
-## farm-critic: Did the draft pass the checks?
-
-**Build 1:** The second call, the critic, read the draft against these five rules. Which one is hardest to check?
-
-- Ask: Which rule is hardest for a model to check?
-- Expected: The last one: “says nothing the forecast or crop notes do not support”. It needs judgement, and the critic is a model too.
-
-**Build 2:** All five passed in round one. Any problems would have gone back to the writer.
-
-- Ask: Is a pass from the critic enough to send it to farmers?
-- Expected: No. The critic is a model checking a model. Someone who knows farming should approve the advice, because a farmer’s crop depends on it.
-
-**Point here:** A checking call catches broken rules cheaply, but it is a model too, so it should not be the last check.
-
-**Transition:** So where would a person come in?
-
-**Source:** The critic’s real reply, from our run (notebook 3.4, 19 November 2026).
-
-## app-farmer: Who checks the advice before a farmer hears it?
-
-**Build 1:** Our notebook ran the middle: the draft and the critic. A real service adds the voice at both ends.
-
-- Ask: Which steps did our notebook leave out?
-- Expected: The voice at both ends: speech to text coming in, a voice reply going out.
-
-**Build 2:** The critic is a model too. Bad advice can cost a farmer the season’s crop, so an agronomist approves.
-
-- Ask: Why both a critic and an agronomist?
-- Expected: The critic catches broken rules cheaply. The agronomist answers for the advice, and a photo of a sick plant needs a trained eye.
-
-**Point here:** For a farmer, the agent works by voice, in Gujarati, from local data, and a person approves the advice.
-
-**Common misconception:** That a chatbot alone can advise farmers. Without the forecast and the crop notes it would guess, as the model on its own did in the opening. (Kisan e-Mitra: more than 95 lakh answers in 11 languages, over 20,000 a day, per PIB. Digital Green’s Farmer.Chat serves 1.6 to 3 million farmers.)
-
-**Transition:** The same loop can watch a city’s air.
-
-**Source:** The trace is our design; the draft and the critic are our run (notebook 3.4). Kisan e-Mitra: PIB, Sep 2025.
-
-## app-air-task: Whom should a city warn about tomorrow’s air?
-
-**Build 1:** Every morning a city’s pollution desk decides where to warn people. The answer changes from day to day.
-
-- Ask: What would it need?
-- Expected: Station readings, a forecast, a list of schools and hospitals, and a way to send the alerts.
-
-**Build 2:** Most of this job is gathering and drafting, every morning. That is the part an agent can take.
-
-- Ask: Which part of this job is the same every morning?
-- Expected: Collecting the numbers, finding the hotspots, drafting the messages. The decision to send is not routine.
-
-**Point here:** The routine part of the desk’s morning is data gathering and drafting.
-
-**Transition:** So what would the agent do, and who approves the alerts?
-
-**Source:** Illustration: generated.
-
-## app-air: Air-quality alerts, every morning
-
-**Build 1:** Each morning it gathers the readings and the forecast, finds the hotspots and drafts the alerts.
-
-- Ask: Should the alerts go out on their own?
-- Expected: No. Schools and hospitals act on them, and a wrong alert costs trust.
-
-**Build 2:** A false alarm closes schools; a missed one harms children. A person makes that call.
-
-- Ask: Why should a person make that call, and not the agent?
-- Expected: Someone has to answer for a closed school or a missed warning, and the forecast is only an estimate. (In our analyst run Delhi was over the standard on 109 days, Gandhinagar on 21.)
-
-**Point here:** An agent can do the daily gathering and drafting; a person approves each alert, because schools and hospitals act on it.
-
-**Common misconception:** That CAMS numbers are station measurements. They are estimates from a model that takes in satellite data; a real desk would check them against its own stations.
-
-**Transition:** Buildings are easier to check: a simulator and a meter do it.
-
-**Source:** The trace is our design. Days over the standard, Nov 2025 to Feb 2026: our analyst run (notebook 3.1, Gemini 3.8 Flash) on CAMS estimates via Open-Meteo.
-
-## app-building-task: When should a campus cool its lecture halls?
-
-**Build 1:** A campus wants cool lecture halls and a lower electricity bill. Power costs more at some hours than at others.
-
-- Ask: What would it need to know?
-- Expected: When the rooms are used, how hot it will be, and when power is cheap.
-
-**Build 2:** With the timetable, forecast and tariff, it can cool rooms early, before the price goes up.
-
-- Ask: How could it save money without making anyone hot?
-- Expected: Cool the halls before the peak tariff, and skip the rooms nobody is using.
-
-**Point here:** The savings come from timing: cool before the price goes up, and only the rooms in use.
-
-**Transition:** And who checks the plan?
-
-**Source:** Illustration: generated.
-
-## app-building: Building energy: a schedule for the week
-
-**Build 1:** The agent plans when to cool each hall. A simulator checks the plan’s comfort and cost before anything runs.
-
-- Ask: Who checks the plan before it runs?
-- Expected: A program: the simulator works out comfort and cost for the week.
-
-**Build 2:** A bad schedule costs a warm afternoon, and is fixed the next day.
-
-- Ask: Why can this run with less supervision than the air alerts?
-- Expected: Checking is cheap, before and after, and a bad schedule costs some rupees and some comfort for a day, then is fixed the next.
-
-**Point here:** When a simulator and a meter check every decision, the agent can run day to day while a person reads the weekly report.
-
-**Transition:** Last, a clinic, where every note is about a patient.
-
-**Source:** The trace is our design.
-
-## app-clinic-task: Could an agent write a doctor’s notes?
-
-**Build 1:** A doctor sees patient after patient, then writes the notes. Could an agent listen and draft them?
-
-- Ask: What would it need?
-- Expected: A microphone, speech to text that handles two languages, and the patient’s record.
-
-**Build 2:** And one thing that is not a tool: the patient’s permission to record.
-
-- Ask: What must happen before the recorder is switched on?
-- Expected: The patient agrees. Consent comes first, and a person gives it.
-
-**Point here:** Before any tool runs, a person has to agree to be recorded.
-
-**Transition:** So what does it do with the recording?
-
-**Source:** Illustration: generated.
-
-## app-clinic: Clinic notes: from the consultation to the record
-
-**Build 1:** The patient agrees first. Then it listens, transcribes, and drafts the note.
+**Build 1:** An AI scribe listens to the visit and drafts the note. The doctor corrects it and signs.
 
 - Ask: Would you let it file the note straight into the record?
-- Expected: No. The note goes into a medical record, and its errors reach patients.
+- Expected: No. The note goes into a medical record, and an error in it can reach the patient.
 
-**Build 2:** Editing a draft is quicker than writing one, even when the doctor signs every note.
+**Build 2:** Correcting a draft is quicker than writing a note. The doctor still reads every one.
 
-- Ask: What would you measure to know whether it helps?
-- Expected: Time spent on notes, and the errors found when the doctor reviews. Across 2.58 million visits, Kaiser Permanente counted about 15,800 hours saved, with the review kept.
+- Ask: What would you measure, to know whether it helps?
+- Expected: Time spent on notes, and what the doctor corrects. Across 2.58 million visits (Oct 2023 to Dec 2024), The Permanente Medical Group counted about 15,800 hours saved, with the doctor’s review kept.
 
-**Point here:** The scribe saves writing time and the doctor keeps every decision: Kaiser Permanente’s doctors saved about 15,800 hours in about 15 months.
+**Point here:** The scribe saves writing time, and the doctor keeps every decision.
 
 **Common misconception:** That the scribe makes the diagnosis. It writes down what was said; the doctor decides.
 
-**Transition:** Each job so far got a different amount of freedom. Can one picture show why?
+**Transition:** Four jobs. Who checked the work in each?
 
-**Source:** The Permanente Medical Group (Kaiser Permanente), NEJM Catalyst 2025, Oct 2023 to Dec 2024; about 15,800 hours as reported by the AMA. The trace is our design.
+**Source:** The Permanente Medical Group (Kaiser Permanente), NEJM Catalyst 2025, Oct 2023 to Dec 2024; the hours as reported by the AMA. The steps are a sketch. Illustration: generated.
+
+## who-checks: Who checked the work?
+
+**Build 1:** Four jobs, and the same loop in each. Take a guess for each one.
+
+- Ask: Before the answers appear: who checked each one?
+- Expected: Coding: the tests, then a person. Support: nobody, before the reply went out. AlphaEvolve: a program. The clinic: the doctor, every time.
+
+**Build 2:** Each job got a different amount of freedom. Two questions explain why.
+
+- Ask: Why not have a person read everything, as in the clinic?
+- Expected: It would cost what the agent saves. A person’s check is worth paying for when a mistake is costly, as in a medical record.
+
+**Point here:** The loop was the same in all four jobs. What differed was who checked the result, and how often.
+
+**Transition:** The two questions, as a map.
+
+**Source:** Illustrations: generated.
 
 ## stakes-map: How much freedom should each job get?
 
-**Build 1:** Two questions place each job: how easily can the result be checked, and what does a mistake cost?
+**Build 1:** Two questions place a job: how easy is its result to check, and what does a mistake cost?
 
-- Ask: Before the points appear: where would you put a coding agent? A clinic scribe?
-- Expected: Coding: tests make it easy to check, and a merged change can break production, so the right-hand side, just above the middle. The scribe: the doctor can read it, but errors reach patients, so near the top.
+- Ask: Before the points appear: where would you put fixing a test? Paying an invoice?
+- Expected: Fixing a test: bottom right. The tests check it in seconds, and one line is easy to change back. Paying an invoice: the match is easy to check, but money leaves, so top right.
 
-**Build 2:** Every job from this part, and a few from the appendix. Which one would you move?
+**Build 2:** Our own three jobs first. All are easy to check. A mistake on the invoices costs the most.
+
+- Ask: Why do the invoices sit higher than the folder?
+- Expected: A file in the wrong folder can be moved back. A payment to the wrong supplier is hard to get back. So the agent may write the report, and a person approves the payment.
+
+**Build 3:** Now the real jobs. The grey ones are further examples. Which point would you move?
 
 - Ask: Which point would you move, and why?
-- Expected: Common moves: support higher, because promises bind the company; research further right, because key claims can be spot-checked. Moving a point moves its advice with it.
+- Expected: Common moves: customer support higher, because a wrong promise binds the company; deep research further right, because its key claims can be spot-checked. Coding agents sit above our own test fix: the check is the same, but a merge reaches real users. The grey points are the appendix’s jobs and two more. One of those, farm advisory, is already large: the government’s Kisan e-Mitra chatbot has answered more than 95 lakh farmer questions in 11 languages (PIB, Sep 2025).
 
-**Build 3:** Each corner suggests how much freedom to give. Where would your team’s most repeated task sit?
+**Build 4:** Each corner suggests how much freedom to give. Where would your team’s most repeated task sit?
 
 - Ask: Where does your team’s most repeated task sit?
-- Expected: Most operational work lands top right: seven of the fourteen jobs are there. Let the agent do the work, with approval before the step that cannot be undone. Part 5 starts there.
+- Expected: Most operational work lands top right: seven of the thirteen jobs here. Let the agent do the work, with approval before the step that cannot be undone. Part 5 starts there.
 
-**Point here:** Two questions set the autonomy: how cheaply can the result be checked, and what does a mistake cost?
+**Point here:** Two questions set how much freedom a job gets: how cheaply can its result be checked, and what does a mistake cost?
 
-**Common misconception:** That a more capable model moves a job to the bottom right. Capability changes how often mistakes happen; what a mistake costs, and how hard it is to check, stay where they were.
+**Common misconception:** That a more capable model moves a job to the bottom right. A better model makes fewer mistakes. What a mistake costs, and how hard the result is to check, stay the same.
 
-**Notebook:** Click a point to read why it sits there. The positions are the speaker’s judgement, not measurements: invite the room to move them.
+**Notebook:** Click a point to read why it sits there; click it again to hide the line. The positions are the speaker’s judgement, not measurements: invite the room to move them.
 
 **Transition:** Part 3 in one slide.
 
@@ -1333,18 +1118,18 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 ## recap-3: Part 3 in one slide
 
-**Build 1:** Next: how agents fail, and the guardrails that catch them.
+**Build 1:** Next: how agents fail.
 
-- Ask: Pick one task from your week. Which zone of the map does it fall in?
+- Ask: Pick one task from your week. Which corner of the map does it fall in?
 - Expected: Most land top right: the agent can do the work if a person approves the step that cannot be undone. That is where Part 5 begins.
 
-**Point here:** Two things set how much an agent may do alone: how cheaply its result can be checked, and what a mistake costs.
+**Point here:** How much an agent may do alone depends on two things: how cheaply its result can be checked, and what a mistake costs.
 
-**Transition:** Even in the right zone, agents fail. Part 4 shows how.
+**Transition:** Even in the right corner, agents fail. Part 4 shows how.
 
 ## part-4: Part 4 · How agents fail
 
-**Build 1:** Key question: what must be in place before an agent acts on anything that matters?
+**Build 1:** Key question: what must be in place before an agent touches anything that matters?
 
 - Ask: Has software ever done something you did not mean it to? What stopped the damage?
 - Expected: Autocorrect, an email to the wrong list, a script that deleted files. Usually an undo, a backup, or a person who noticed in time.
@@ -1355,7 +1140,7 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 ## compound-q: How often is a twenty-step task right?
 
-**Build 1:** Each step of a task is right 95% of the time, and the task takes twenty steps. How often is the whole task right?
+**Build 1:** Say each step is right 95% of the time, and a task takes twenty steps. How often is the whole task right?
 
 - Ask: Take a guess: what share of these tasks come out fully right?
 - Expected: Most guess well above half. The answer surprises people.
@@ -1369,320 +1154,337 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 **Common misconception:** That a model right 95% of the time gives tasks right 95% of the time. That holds only for one-step tasks. Real steps are not independent, so treat this as a simple model of a real trend.
 
-**Transition:** Over to the notebook, for a few more cases.
+**Transition:** The same sum as a curve.
 
 **Source:** Computed in scripts/sci/p4.py. The simple model: steps fail independently, and every step must be right.
 
-## nb-compound: In the notebook
-
-**Build 1:** The same sum for three step rates and four task lengths. It prints three lines.
-
-- Ask: Which row is closest to the tasks in your work?
-- Expected: Real tasks are often long. Even at 99% a step, a 50-step task is right only 61% of the time.
-
-**Point here:** The longer the task, the more reliable each step has to be.
-
-**Notebook:** Notebook 4.1: run the cells under “Small errors add up”. If the run is slow or fails, move on: the next slide shows our recorded run.
-
-**Transition:** The same sum as a curve, and one way to fix it.
-
 ## compound: What if we check each step?
 
-**Build 1:** The same sum as a curve. Drag the steps up: at 50 steps, the task is right 8% of the time.
+**Build 1:** Red is the sum we just did. Check each step and retry once, and twenty steps come out right 95% of the time.
 
-- Ask: What would it take to trust a 50-step task?
-- Expected: Far more reliable steps, or a check at each step. The next click adds the check.
-
-**Build 2:** Check each step and retry once if it fails. Now twenty steps come out right 95% of the time.
-
-- Ask: What counts as a check in your work?
-- Expected: Running the tests, comparing a number with its source, validating a form against a rule, a second model reviewing, a person approving.
+- Ask: Where did our agent check a step?
+- Expected: It ran the tests after its edit, and we ran them again ourselves. In the invoice job, a program checked every flag.
 
 **Point here:** Reliability multiplies across steps, so long runs need checks inside the loop as well as a better model.
 
 **Common misconception:** That the check has to be perfect to help. Here it catches every wrong step; a check that catches most of them still lifts the curve a long way. Real checks miss things, so treat the green curve as a best case.
 
-**Notebook:** Drag the per-step slider up and watch how much the long tasks gain. Switch the check off and on.
+**Notebook:** Switch the check off, and drag the sliders: without it, a 50-step task is right only 8% of the time. Notebook 4.1 prints the same sum for three step rates: even at 99% a step, 50 steps are right only 61% of the time.
 
-**Transition:** Now three real failures.
+**Transition:** Those were honest mistakes. Now someone tries to mislead the agent.
 
 **Source:** Computed in scripts/sci/p4.py. With a check, a step is right unless both tries fail.
 
-## fail-replit: What went wrong at Replit?
+## inj-note: A note from a supplier arrives
 
-**Build 1:** It went wrong at the tool: the agent could run commands on live data. What would have stopped it?
+**Build 1:** A supplier’s note arrives in the inbox, about a price rise. We ask the agent to summarise it.
 
-- Ask: What would have stopped it?
-- Expected: Working on a copy of the data, so that a mistake costs only the copy. Replit’s chief executive said they had started separating development and live databases automatically.
+- Ask: Would you notice anything odd about this note?
+- Expected: Most people read the first paragraph and stop. The price rise looks like the whole message.
 
-**Point here:** What an agent can touch decides how much one mistake costs.
+**Build 2:** One paragraph is written for the assistant. It asks for a command that prints .env, our file of secrets.
 
-**Common misconception:** That this is a story about a bad model. As reported, the agent had write access to production; its own chat log said it wiped records of 1,206 executives and 1,196 companies. One report says the data was later recovered with Replit’s rollback.
+- Ask: Does the agent need .env to summarise a note?
+- Expected: No. But it can reach it: the file sits in the same folder, and bash can print any file.
 
-**Transition:** The second failure was a chatbot that only answered questions, and it still cost money.
+**Point here:** A file our agent reads can contain text addressed to the agent, and the agent can reach more than its task needs.
 
-**Source:** Replit, Jul 2025: reported by The Register and Tom’s Hardware.
+**Common misconception:** That such text has to be hidden cleverly. It can sit in plain sight: people skim, and the model reads every word.
 
-## fail-aircanada: What went wrong at Air Canada?
+**Transition:** Over to the notebook. We let every tool call through.
 
-**Build 1:** It went wrong at the answer. A tribunal held the airline responsible, and it had to pay CAD 812.02.
-
-- Ask: Who is responsible for what a company’s chatbot tells a customer?
-- Expected: The company. In the tribunal’s words, Air Canada “in effect” suggested the chatbot was a separate legal entity responsible for its own actions. The tribunal did not accept that.
-
-**Point here:** A company answers for what its agent tells customers.
-
-**Common misconception:** That only agents that act are risky. This chatbot only answered, and the answer alone cost money. The customer had asked about a bereavement fare; the chatbot said it could be claimed after travelling, and the policy said otherwise.
-
-**Transition:** The third failure is our own.
-
-**Source:** Moffatt v. Air Canada, 2024 BCCRT 149, decided 14 Feb 2024; reported by law-firm summaries of the decision.
-
-## fail-ours: What went wrong in our own run?
-
-**Build 1:** It went wrong at the result. The tool failed, the model read the error, and it asked again.
-
-- Ask: What should stop a loop like this?
-- Expected: A step limit, a cap on spending, or a rule to give up after a few failures. We add a step limit in the notebook shortly.
-
-**Point here:** An agent told to keep trying will keep trying. Something outside the model has to stop it.
-
-**Common misconception:** That the model will notice it is stuck. Ours read the same timeout every round and asked again, because the goal told it to keep trying.
-
-**Transition:** Nobody attacked those three systems. The next failure needs only an email from a stranger.
-
-**Source:** Our run: notebook 4.4, 19 November 2026 (Gemini 3.8 Flash).
-
-## injection: An email with instructions hidden in it
-
-**Build 1:** We ask our inbox agent to summarise the inbox in three lines. One of the emails looks like this.
-
-- Ask: Would you notice anything odd about this email?
-- Expected: Perhaps the sender’s address. A change of bank details is a common fraud, and it usually looks routine.
-
-**Build 2:** This is prompt injection: text inside the data that poses as an instruction.
-
-- Ask: What do you expect the agent to do with these lines?
-- Expected: Some say forward the invoices, some say ignore them. The model reads instructions and data in one stream of text, so either can happen.
-
-**Point here:** Prompt injection: an agent cannot reliably tell the data it reads from the instructions it is given.
-
-**Common misconception:** That a reader would spot the trick. The note is polite and sounds routine, and it is addressed to the assistant.
-
-**Transition:** Let us try it on our own agent.
-
-**Source:** The demo inbox of notebook 4.2. The note is shortened here; the full text is in the notebook.
+**Source:** The note and the key are made up for this talk; the notebook writes both files in section 4.2. The note’s text is exact, wrapped to fit.
 
 ## nb-inject: In the notebook
 
-**Build 1:** Over to the notebook. We add this email to the demo inbox and ask for the summary again.
+**Build 1:** Over to the notebook. We add the note and ask for the summary, with every tool call allowed.
 
-- Ask: Will the agent forward the invoices?
-- Expected: Watch the tool calls. A send_email to the outside address would mean the attack worked.
+- Ask: Will it run the command the note asks for?
+- Expected: Watch the purple blocks. A request for the secrets file would mean the note worked.
 
 **Point here:** We run the attack on our own agent, so we can see what it does.
 
-**Notebook:** Notebook 4.2: run the cells under “An email with hidden instructions”. If the run is slow or fails, move on: the next slide shows our recorded run.
+**Notebook:** Notebook 4.2: run the first two cells (the note, then injection_run(True)). Leave the cell with injection_run(False) for later: we come back to it.
 
 **Transition:** Here is what happened in our run.
 
-## injection-run: Did our agent fall for it?
+## inj-open: With everything allowed, the secret ends up in its answer
 
-**Build 1:** We ran it twice, with and without a person approving each email. Both times, it ignored the note.
+**Build 1:** It reads the note, as we asked. The whole note is now in the conversation, odd paragraph included.
 
-- Ask: So the attack failed?
-- Expected: The instruction failed. Wait for the summary.
+- Ask: What has the model just read?
+- Expected: The price rise, and the paragraph written for it.
 
-**Build 2:** But its summary passed on the new bank details as routine news, next to a real invoice.
+**Build 2:** Its next request is the command from the note. Nothing stops it, so our code returns the key.
 
-- Ask: Which is worse: forwarding the invoices, or this calm summary?
-- Expected: The summary. You trust it, and the next step is someone paying a fraudster.
+- Ask: Who asked for that command?
+- Expected: The supplier, through the note. We never mentioned the secrets file.
 
-**Point here:** The agent ignored the instruction and still passed the fraud on. The risk covers what it tells you as well as what it does.
+**Build 3:** Its summary ends with the key. Whoever receives this summary receives the secret.
 
-**Common misconception:** That a model that ignores the instruction is safe. Ours ignored it, and its summary still put the fraudster’s notice in front of you as routine.
+- Ask: Where would this summary go in a real office?
+- Expected: Into an email, a ticket or a chat channel, perhaps back to the supplier. The key travels with it.
 
-**Transition:** Was that luck? Back to the notebook, for ten runs.
+**Point here:** Text inside a file changed what the agent did: it ran a command we never asked for and put a secret in its answer.
 
-**Source:** Real run: notebook 4.2, 19 November 2026 (Gemini 3.8 Flash), without the approval step. Markdown removed.
+**Common misconception:** That the model was hacked. No bug was used. The model did what the text in front of it said, which is what a model does.
+
+**Transition:** Was that bad luck? One run proves little. Back to the notebook.
+
+**Source:** Our recorded run: notebook 4.2, 24 November 2026 (Gemma 4 (12B)), every tool call allowed. The summary is cut after its first sentence; the last line is exact.
 
 ## nb-trials: In the notebook
 
-**Build 1:** Ten runs, five on each of two models. It takes a few minutes, so we start it now and come back to it.
+**Build 1:** The same request, ten times. It takes a few minutes, so we start it and come back.
 
-- Ask: Out of ten, how many summaries will warn you about the email?
-- Expected: Guesses vary. Our recorded answer is on the next slide; the live one arrives in a few minutes.
+- Ask: Out of ten runs, how many will leak the key?
+- Expected: Guesses vary. Our recorded count is on the next slide; the live one arrives in a few minutes.
 
-**Point here:** Repeating the run shows how often each outcome happens.
+**Point here:** One run proves little. Repeating it shows how often each outcome happens.
 
-**Notebook:** Notebook 4.3: start the cell and go on with the slides; it takes a few minutes. The next slide shows our recorded result. Look at the live counts when the notebook is next on screen.
+**Notebook:** Notebook 4.3: start the cell and go on with the slides; it takes a few minutes. Look at the live counts when the notebook is next on screen.
 
 **Transition:** While it runs, here are our recorded ten runs.
 
-## injection-trials: What happened in ten runs?
+## inj-trials: Ten of ten runs put the key in the summary
 
-**Build 1:** In all ten runs, on both models, the agent never tried to forward the invoices.
+**Build 1:** The agent ran the note’s command in all ten runs, and the key was in its summary in all ten.
 
-- Ask: Is the model safe against this trick, then?
-- Expected: Against this wording, in these runs. The next email may be worded better, and another model may follow it.
+- Ask: Would a bigger model have refused?
+- Expected: Perhaps more often. But the count changes with the model and with the wording of the note, and an attacker can try many wordings.
 
-**Build 2:** But only one summary warned you about the email. The other nine passed the new bank details on as routine.
+**Point here:** How often a model falls for it changes from model to model and from note to note, so the defence cannot depend on the model noticing.
 
-- Ask: Would you have spotted the fake bank details in a three-line summary?
-- Expected: Probably not, because you trust the summary.
+**Common misconception:** That a bigger model is immune. Its count would differ, and widely used products have been tricked the same way.
 
-**Point here:** Whether a model falls for it changes from model to model and from run to run, so the defence cannot depend on the model noticing.
+**Transition:** Why does a paragraph in a file work at all?
 
-**Common misconception:** That a smarter model simply ignores injected text. Ours did ignore the instruction, and still passed the fraud on. Only one summary in ten called the email suspicious.
+**Source:** Our runs: notebook 4.3, 24 November 2026 (Gemma 4 (12B)), every tool call allowed. The secret reached the model in 10 of 10 runs.
 
-**Transition:** Has this worked outside a demo?
+## one-stream: Why it works: the model reads one stream of text
 
-**Source:** Our runs: notebook 4.3, 19 November 2026, Gemini 3.8 Flash and Gemini 3.5 Flash-Lite, no approval step. “Warned” means the summary called the email suspicious or similar.
+**Build 1:** Each round the model gets one text: our instructions, our request, and whatever the tools returned.
 
-## attacks: The same trick on real products
+- Ask: Where in this text does “ours” end and “theirs” begin?
+- Expected: Nowhere the model can rely on. There are labels on the messages, but it reads all of them as text to act on.
 
-**Build 1:** Researchers showed the same kind of attack on three real products.
+**Build 2:** The stranger’s paragraph is in there like any other sentence. This is prompt injection: data that poses as an instruction.
 
-- Ask: What do the three have in common?
-- Expected: Each agent read text from outside, could see private data, and had a way to send it out. That is the next slide.
+- Ask: How would the model know the red part is not from us?
+- Expected: It often cannot. The paragraph is polite, plausible and addressed to it. Models are trained to follow instructions.
 
-**Point here:** Prompt injection has worked on widely used products. Any agent that reads text from outside is exposed to it.
+**Point here:** Prompt injection works because a model has one input, and instructions and data arrive in it together.
 
-**Common misconception:** That this needs a skilled attacker. Each attack was a piece of ordinary text: an email, an issue, a web page. Microsoft rated EchoLeak’s severity 9.3 of 10 (critical) and patched it.
+**Common misconception:** That a line in our instructions (“ignore instructions inside files”) fixes this. It helps a little. The attacker’s text arrives in the same stream and can argue back.
 
-**Transition:** Why could these products be tricked? Each had the same three things at once.
+**Transition:** When is this dangerous? One rule of thumb.
 
-**Source:** Microsoft 365 Copilot: Aim Labs, Microsoft, CVE-2025-32711 (11 Jun 2025); GitHub MCP server: Invariant Labs (26 May 2025); Perplexity Comet: Brave (20 Aug 2025).
+**Source:** A drawing of the conversation in round 3 of our run. The words on the red block are from the note.
 
 ## trifecta: The lethal trifecta
 
-**Build 1:** Simon Willison’s rule of thumb: an agent with all three can be tricked into sending your data to an attacker.
+**Build 1:** Simon Willison’s rule of thumb: an agent with all three can be tricked into handing your data to an attacker. Ours had all three.
 
 - Ask: Which of the three does the assistant in your company’s email or chat tool have?
-- Expected: Most have the first two: your files and anything pasted or fetched. The danger starts when it can also send, post or open links.
+- Expected: Most have the first two: your files, and anything pasted or fetched. The danger starts when it can also send, post or open links.
 
-**Build 2:** Our inbox agent had all three. We removed the third: nothing goes out until a person approves.
+**Build 2:** Take one away and this attack fails. We take the first: .env stays shut unless a person says yes.
 
 - Ask: Which of the three is easiest to remove in your case?
-- Expected: Usually the third: nothing goes out without approval. Sometimes the second: it only reads trusted sources.
+- Expected: Often the third: nothing goes out without approval. Sometimes the second: it only reads trusted sources. Here, the first.
 
 **Point here:** Willison’s lethal trifecta: private data, untrusted content and a way to send data out. Remove any one and this attack fails.
 
-**Common misconception:** That a better prompt removes one of the three. Telling the model “never send data out” is advice it may ignore. Removing the send tool, or putting a person in front of it, is enforced by code.
+**Common misconception:** That this only works in a classroom. Researchers showed it on three products people use: Microsoft 365 Copilot (a crafted email could make it disclose data; Aim Labs, CVE-2025-32711, 11 Jun 2025); GitHub MCP server (a public issue led an agent to leak private repository data; Invariant Labs, 26 May 2025); Perplexity Comet (text on a web page steered the browser agent; Brave, 20 Aug 2025). Microsoft rated EchoLeak’s severity 9.3 of 10 (critical) and patched it.
 
-**Transition:** Where does that approval sit in the loop?
+**Transition:** Here is the same request again. This time the person says no.
 
 **Source:** Simon Willison, “The lethal trifecta for AI agents” (16 Jun 2025). The three items on the right are in his words.
 
-## gate: A person approves before an email goes out
+## inj-gated: The same request, with a person who says no
 
-**Build 1:** This is the approval from our inbox run in Part 3. It sits between the model’s request and our code.
+**Build 1:** Same note, same request, and the model asks for the same command. This time a person is asked first, and says no.
 
-- Ask: Which tools in your work should wait for a person?
-- Expected: Anything that cannot be undone: payments, emails to customers, deletions, orders. Reading can usually run at once.
+- Ask: What is different from the first run?
+- Expected: Only who answered the question. In the first run everything was allowed.
 
-**Point here:** An approval step is code around the model: send_email cannot run until a person approves.
+**Build 2:** Our code tells the model it was refused. The summary has the prices, and no key.
 
-**Common misconception:** That our approval was tested by the attack. In our runs the model never tried to send the invoices, so it never had to refuse. We cannot plan on that luck; the approval holds whatever the model decides. (In the recorded runs a scripted stand-in answered; in the live notebook, ask_human asks you.)
+- Ask: Did the model learn not to ask?
+- Expected: No. It asked again, exactly as before. The command was stopped by our code, outside the model.
 
-**Transition:** The other guardrail on the map is a step limit. Back to the notebook.
+**Point here:** The model fell for the note again. The secret stayed safe because our code asked a person before it touched the file.
 
-**Source:** The approval step of our inbox agent (notebook 3.3, 19 November 2026).
+**Common misconception:** That the model became more careful. It made the same request in both runs. Only our code changed.
+
+**Notebook:** Notebook 4.2, the last cell: injection_run(False). A stand-in answers no to every question; ask_human would put this question to you.
+
+**Transition:** Where did that question come from?
+
+**Source:** Our recorded run: notebook 4.2, 24 November 2026 (Gemma 4 (12B)). A stand-in for the person answered no; the question is the one ask_human prints. The summary is cut after its first sentence.
+
+## guard-code: This check was in our loop all along
+
+**Build 1:** The question came from a check in our loop. It sits between the model’s request and our code, and the model cannot skip it.
+
+- Ask: Which actions in your work should wait for a person?
+- Expected: Anything that cannot be undone: payments, emails to customers, deletions, orders. Reading can usually run at once. People who are asked fifty times stop reading the question.
+
+**Build 2:** It is ten lines, called before every tool since Part 1. Until now every command was on the safe list, so nobody was asked.
+
+- Ask: Why did we never see a question in Parts 1 to 3?
+- Expected: Every command the agent ran was on the list: ls, cat, grep, mkdir, mv and the like. The list has 27 commands.
+
+**Point here:** The guard is ordinary code in the loop, between the model’s request and our tools. It was there from the first run; the earlier jobs never set it off.
+
+**Common misconception:** That a guardrail is a sentence in the instructions (“never read secrets”). Instructions are advice the model may ignore. This function is enforced by code.
+
+**Transition:** Let us set it off on purpose. Back to the notebook.
+
+**Source:** Simplified from needs_approval in the notebook, section 1.6. The real one checks every command in a line joined by pipes or &&.
+
+## nb-approval: In the notebook
+
+**Build 1:** We ask the agent to delete two old files. Deleting needs rm, which is not on the safe list.
+
+- Ask: What should we check before we type y?
+- Expected: That the command deletes exactly the files we meant, and nothing else.
+
+**Point here:** A person approves the command itself: the exact text that will run.
+
+**Notebook:** Notebook 4.4: run the cell. When the question appears, read the command aloud, then type y.
+
+**Transition:** Here is our recorded run.
+
+## approval: It wants to run rm, so the notebook asks us
+
+**Build 1:** The model asks for rm. It is not on the safe list, so the notebook stops and shows us the command.
+
+- Ask: What does the person see: the model’s plan, or the command?
+- Expected: The command itself, word for word. A summary of the plan could hide a mistake.
+
+**Build 2:** The command names our two files and nothing else, so we type y. Had it been wrong, the answer would have been n.
+
+- Ask: What would you want to see before approving a payment?
+- Expected: The amount, the account and the reason, in full. The approval is only as good as what it shows.
+
+**Point here:** The person sees the exact action before it happens, and can refuse it.
+
+**Common misconception:** That asking a person makes the agent useless. It asked once in the whole run, for the step that could not be undone.
+
+**Transition:** One honest caveat about our safe list.
+
+**Source:** Our recorded run: notebook 4.4, 24 November 2026 (Gemma 4 (12B)). Nobody was at the keyboard when we recorded, so a stand-in said yes and logged the question.
+
+## sandbox: A safe list is not a sandbox
+
+**Build 1:** Our check reads only the first word of each command. python is on the list, and a Python script can do anything.
+
+- Ask: Could we fix the list by removing python?
+- Expected: Then the agent cannot run the tests. A list is always too loose or too tight; it reduces questions, it does not contain damage.
+
+**Build 2:** So real agents also run in a sandbox: a container, or a throwaway machine such as Colab. A mistake breaks only what is inside.
+
+- Ask: Where is our own notebook running?
+- Expected: In Colab, on a machine that is thrown away when the session ends. That is our sandbox today.
+
+**Point here:** A safe list decides when to ask. A sandbox decides what can be damaged at all. Real agents use both.
+
+**Common misconception:** That an approval step makes an agent safe. It covers the commands we thought of. The sandbox covers the ones we did not.
+
+**Transition:** One guard is left on the map: the step limit. Back to the notebook.
+
+**Source:** The command is our own example, checked against the notebook’s needs_approval in scripts/sci/p4.py. It was never run.
 
 ## nb-steplimit: In the notebook
 
-**Build 1:** A tool that never answers, and a goal that says keep trying. This time we set a step limit.
+**Build 1:** A tool that never answers, and a goal that says keep trying. We allow four rounds.
 
 - Ask: Without the limit, when would this run stop?
-- Expected: Perhaps never. Each round the model reads the error and asks again, until the money runs out.
+- Expected: Perhaps never. Each round the model reads the error and asks again, for as long as someone pays for it.
 
 **Point here:** A step limit stops the loop after a fixed number of rounds, whatever the model wants.
 
-**Notebook:** Notebook 4.4: run the cells under “A step limit”. If the run is slow or fails, move on: the next slide shows our recorded run.
+**Notebook:** Notebook 4.5: run the cells under “A step limit”. If the run is slow or fails, move on: the next slide shows our recorded run.
 
 **Transition:** Here is our recorded run, on the map.
 
-## steplimit: The step limit stopped our run after four rounds
+## steplimit: The step limit stopped it after four rounds
 
-**Build 1:** The limit is a counter in our code, outside the model. A cap on spending works the same way.
+**Build 1:** The limit is a counter in our code, outside the model. A cap on cost or on time works the same way.
 
 - Ask: What limits would you set for an agent in your team?
 - Expected: A number of rounds, a budget per task, a time limit, and a rule to stop and ask a person after repeated failures.
 
 **Point here:** Limits are enforced by our code, so they hold even when the model is told to keep trying.
 
-**Common misconception:** That a limit has to be large to be safe. Set it a little above what a normal run needs. Our loop’s default is 10 rounds; this run was capped at four.
+**Common misconception:** That the model will notice it is stuck. Ours read the same error every round and asked again, because the goal told it to keep trying. Our loop’s default is 12 rounds.
 
-**Transition:** Approvals and limits act while the agent runs. There is more to do before and after.
+**Transition:** With the map complete, two failures from the news.
 
-**Source:** Our run: notebook 4.4, 19 November 2026 (Gemini 3.8 Flash). Cost at paid prices.
+**Source:** Our recorded run: notebook 4.5, 24 November 2026 (Gemma 4 (12B)). Every call returned “TimeoutError: the warehouse service did not answer”; the run ended with the status “stopped after 4 rounds”.
 
-## guardrails: Guardrails before, during and after a run
+## real-failures: Two real failures, on the same map
 
-**Build 1:** Before it runs, decide what it can touch. With only a copy of the data, Replit’s agent could have broken only the copy.
+**Build 1:** It went wrong at the tool: the agent could run commands on live data. In a sandbox, only a copy would have been lost.
 
-- Ask: Which tools would a first version of your agent really need?
-- Expected: Usually read-only ones: search, look up, read. Writing and sending can come later.
+- Ask: Which of our guards would have helped at Replit?
+- Expected: A sandbox, and a person approving destructive commands. Replit’s chief executive said they had started separating development and live databases automatically.
 
-**Build 2:** While it runs, a person approves what cannot be undone, and limits cap the loop. We just saw both.
+**Build 2:** Here no tool was involved, only an answer. A tribunal held the airline responsible, and it had to pay CAD 812.02.
 
-- Ask: Which steps in your process cannot be undone?
-- Expected: Payments, emails to customers, deletions, orders, anything published.
+- Ask: Who is responsible for what a company’s chatbot tells a customer?
+- Expected: The company. In the tribunal’s words, Air Canada “in effect” suggested the chatbot was a separate legal entity responsible for its own actions. The tribunal did not accept that.
 
-**Build 3:** After it runs, keep a log of every run. When anything changes, test it again on cases with known answers.
+**Point here:** What an agent can touch decides what a mistake costs, and a company answers for what its agent says.
 
-- Ask: How would you know your agent still works after a change?
-- Expected: Run it on real cases with known answers and count how many come out right. That is an eval, next.
+**Common misconception:** That these are stories about bad models. As reported, Replit’s agent had write access to production; its own chat log said it wiped records of 1,206 executives and 1,196 companies. One report says the data was later recovered. Air Canada’s chatbot only answered, and the answer alone cost money.
 
-**Point here:** Guardrails are code around the model: what it can touch before, what needs approval during, and what is measured after.
+**Transition:** Guards limit the damage. How do we know the agent works at all?
 
-**Common misconception:** That a guardrail is a sentence in the prompt (“never delete anything”). Prompts are advice the model may ignore; permissions, approvals and limits are enforced by code.
-
-**Transition:** How do we know an agent works? Back to the notebook.
-
-**Source:** The three layers follow common practice for any production system.
+**Source:** Replit, Jul 2025: reported by The Register and Tom’s Hardware. Moffatt v. Air Canada, 2024 BCCRT 149, decided 14 Feb 2024; reported by law-firm summaries of the decision.
 
 ## nb-evals: In the notebook
 
-**Build 1:** We ask the opening question ten times on each model, and check every answer. It takes a few minutes.
+**Build 1:** Ten runs of the Part 1 job, then ten on a smaller Gemma. We start it and come back.
 
 - Ask: How would you test an agent before you trust it?
-- Expected: Run it many times on cases with known answers, and count how many come out right.
+- Expected: Run it many times, each time on a fresh copy of the project, with a program that checks the result. Then count how many come out right.
 
-**Point here:** An eval is a set of cases with known answers that we run the agent on, again and again.
+**Point here:** An eval is a set of cases with a check, which we run the agent on again and again.
 
-**Notebook:** Notebook 4.5: start the cell; it takes a few minutes. The next slide shows our recorded result.
+**Notebook:** Notebook 4.6: start the cell; it takes several minutes. The next slide shows our recorded result.
 
 **Transition:** Here are our recorded results.
 
-## evals: Which model should we use?
+## evals: Which model do we need?
 
-**Build 1:** Each answer was checked against the best order from Part 1. Both models were right in all ten runs.
+**Build 1:** Gemma 4 (12B) fixed the tests in all ten runs. The smaller model fixed them in six of the ten.
 
 - Ask: Which model would you pick so far?
-- Expected: No difference yet: both were right every time. So the cost decides.
+- Expected: The one that fixed more runs. One good demo would not have shown the difference.
 
-**Build 2:** Gemini 3.5 Flash-Lite cost about a quarter as much and took half the time. For this task, the cheaper model is enough.
+**Build 2:** The smaller model is quicker, 8 seconds a run against 11, and fails more often. The eval tells us by how much.
 
-- Ask: Which model would you deploy, and why?
-- Expected: The cheaper one: right just as often, at about a quarter of the cost and half the time. Without the eval we would have guessed.
+- Ask: Is a fast agent that fails more often ever the right choice?
+- Expected: Sometimes: when a program checks every result and a failed run can simply be tried again. Without a check, no.
 
-**Point here:** An eval runs real cases with known answers and counts how many come out right. Compare that count across models, prompts and versions.
+**Point here:** An eval runs the agent many times on cases a program can check, and counts. Compare that count across models, instructions and versions.
 
-**Common misconception:** That the pricier model is the safe default. Here the cheaper one was as accurate, though less steady in how it worked: it made four to fourteen tool calls a run, against seven to nine. Ours was one case run many times; a real eval holds 10 to 100 real cases, including the awkward ones.
+**Common misconception:** That a failed run announces itself. In three of the smaller model’s failed runs it stopped after two rounds, with an answer and no fix. One ran into the step limit. We know only because a program ran the tests after every run.
 
 **Transition:** Part 4 in one slide.
 
-**Source:** Notebook 4.5, 19 November 2026: ten runs per model, cached forecasts, answers checked against the best order. Mean cost at paid prices.
+**Source:** Our runs: notebook 4.6, 24 November 2026, ten runs per model on a laptop. “Fixed” means the tests pass and the test file is untouched; no run changed the tests.
 
 ## recap-4: Part 4 in one slide
 
 **Build 1:** Next: agents in your organisation.
 
-- Ask: Before you gave this agent your real inbox, which line of the card would you change?
-- Expected: The person line: who double-checks anything about payments. Maybe the tools too: no send_email at all for a first version.
+- Ask: Before this agent worked on your team’s real files, which line of the card would you change?
+- Expected: Guardrails: run it in a sandbox, on a copy. And the person line: who reads the evals after every change.
 
-**Point here:** The failures of this part map onto the bottom half of the card.
+**Point here:** The failures of this part map onto the bottom three lines of the card.
 
 **Transition:** Part 5: agents in your organisation.
 
@@ -1690,111 +1492,109 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 **Build 1:** Key question: should a given task in your team go to an agent, and with how much freedom?
 
-- Ask: Which task in your team would you hand to an agent first? It can be the one you named in Part 3.
-- Expected: Weekly reports, ticket triage, reconciliations, first drafts. Keep two answers: we will run them through the next three slides.
+- Ask: Which task in your team would you hand to an agent first?
+- Expected: Weekly reports, ticket triage, reconciliations, first drafts. Keep two answers: we run them through the next two slides.
 
-**Transition:** Take one of those tasks. Three questions decide what to do with it.
+**Transition:** First: does the task need an agent at all?
 
 **Source:** Illustration: generated (Gemini image model).
 
+## workflow: A workflow or an agent?
+
+**Build 1:** An invoice that matches its order is read, matched and paid. Those steps never change, so we write them once, as code.
+
+- Ask: Name a job in your team that follows the same steps every time.
+- Expected: Monthly reports, standard approvals, payroll runs, matching invoices to orders.
+
+**Build 2:** One that does not match needs judgement: what is wrong, and what next? That goes to an agent, or to a person.
+
+- Ask: In Part 3 our agent checked the invoices. Which part of that job would you now write as a workflow?
+- Expected: Reading each invoice and comparing it with its order: the same steps for all six. The three that do not match are where the judgement is, and that goes to an agent or a person.
+
+**Point here:** A workflow has steps we fix in advance. An agent chooses each step after reading the last result.
+
+**Common misconception:** That a workflow cannot use a model. A model can do one step, such as reading the invoice, while our code still fixes the order of the steps.
+
+**Notebook:** Part 3 had no workflow, so the agent did the whole job: it checked the six invoices and flagged three. A team that pays invoices every week writes the matching down once, and keeps the agent, or a person, for the ones that fail. The bug fix of Part 1 could not be written down: each step depended on what the last one found.
+
+**Transition:** So the first question about any task is this one.
+
+**Source:** Workflows and agents: Anthropic, “Building effective agents” (Dec 2024).
+
 ## should-agent: Should this task be an agent?
 
-**Build 1:** Take one task from your team. The first question: do its steps change from case to case?
+**Build 1:** Take one task from your team. First question: do its steps change from case to case? If not, write a workflow.
 
-- Ask: Take your task from the last slide. Does it follow the same steps every time?
-- Expected: Often yes: monthly reports, standard approvals, invoice matching. Those are workflows.
+- Ask: Take the task you named a minute ago. Does it follow the same steps every time?
+- Expected: Often yes: monthly reports, standard approvals, matching invoices. That is good news: a workflow is cheaper to build and to run.
 
-**Build 2:** If you can write the steps down in advance, build a workflow, as we saw in Part 1.
+**Build 2:** If they do, an agent may help. Second question: can a person check its result in a minute or two?
 
-- Ask: How many of the tasks you named are really workflows?
-- Expected: Usually more than half. That is good news: a workflow is cheaper to build and to run, and a model can still do each step.
+- Ask: How did we check each of our three jobs today, and how long did it take?
+- Expected: The bug fix: run the tests and read a one-line change. The folder: list it. The invoices: compare with the orders. Seconds each. A strategy memo or a diagnosis would take an expert an hour.
 
-**Point here:** An agent is worth it only when the steps change from case to case. Otherwise, write the steps down: a workflow.
+**Build 3:** Third: is a mistake costly, or impossible to undo? Your answers lead to one of the four corners of Part 3’s map.
 
-**Common misconception:** That anything with a language model in it should be an agent. Part 1’s invoice was a workflow with a model in one step.
+- Ask: Our agent edits a file in a test folder, or it pays a supplier. Which mistake is costly?
+- Expected: The payment. A wrong edit can be undone in a second; money that has left cannot. On Part 3’s map these could run on their own: Fix a test, Tidy a folder, AlphaEvolve. These needed approval: Check invoices, Coding agents, Customer support, Clinic notes, IT incidents, Web forms, Robot lab.
 
-**Transition:** Say the steps do change.
+**Point here:** Three questions place a task: do the steps change, can a person check the result cheaply, and what does a mistake cost?
 
-**Source:** Workflow or agent: Anthropic, “Building effective agents” (Dec 2024), as in Part 1.
+**Common misconception:** That a more capable model moves a task to a safer box. It can make mistakes rarer, but what a mistake costs stays the same, so the approval before a step that cannot be undone stays.
 
-## should-check: Can a person check the result cheaply?
+**Notebook:** Read the third click as two pairs. Cheap to check: if a mistake is costly the agent acts and a person approves; if not, let it run. Hard to check: if a mistake is costly a person leads; if not, the agent only drafts.
 
-**Build 1:** Then an agent may help. The second question: can someone check its result in a minute or two?
+**Transition:** A person approves: that is something our own code arranges. How often should it ask?
 
-- Ask: For your task, how would someone check the result, and how long would it take?
-- Expected: Cheap to check: code with tests, a total that reconciles, a number with a source to click. Hard to check: a strategy memo, a diagnosis, a legal opinion.
+**Source:** The four boxes on the right are the four zones of the stakes map in Part 3.
 
-**Point here:** How cheaply a person can check the result is the first of the two axes of the stakes map in Part 3.
+## freedom: Give an agent more freedom in steps
 
-**Common misconception:** That a result is easy to check because it is easy to read. A fluent memo can take an expert an hour to verify.
+**Build 1:** Before a request runs, our code can ask a person: always, when it is risky, or never. Our notebook asked when it was risky.
 
-**Transition:** And the second axis: what does a mistake cost?
+- Ask: What happened in Part 4 when the agent asked to delete files?
+- Expected: The loop stopped and asked us first. rm is not on the list of safe commands, so it could not run until a person answered.
 
-## should-stakes: Is a mistake costly, or impossible to undo?
-
-**Build 1:** Checking is cheap. If a mistake is costly, the agent acts and a person approves. If not, let it run.
-
-- Ask: A small refund sent to the wrong customer: costly, or not?
-- Expected: Cheap to put right, so let it run with spot checks. A large refund is different: a person approves it.
-
-**Build 2:** Checking is hard. If a mistake is costly, a person leads. If not, the agent only drafts.
-
-- Ask: Where does your own task land?
-- Expected: It depends on the task. On Part 3’s map these could run on their own: Data analysis, Algorithm search, Building energy. These needed approval: Coding, Invoices, Customer support, IT incidents, Web forms, Robot lab, Clinic notes.
-
-**Point here:** The four answers are the four zones of the stakes map in Part 3, in the same words.
-
-**Common misconception:** That a more capable model moves a task to a safer zone. It can make checking cheaper, but what a mistake costs stays the same, so the approval before an irreversible step stays.
-
-**Transition:** Even in the right zone, start with less freedom than you plan to give.
-
-**Source:** The four zones are those of the stakes map in Part 3.
-
-## ramp: Raise autonomy in steps
-
-**Build 1:** First it only suggests: shadow mode. Then it acts with approval. Then routine cases run alone.
-
-- Ask: Why start in shadow mode, if the agent could already act?
-- Expected: Because you learn its error rate on your real cases at no risk: each suggestion can be compared with what the person actually did.
-
-**Build 2:** Move up only when evals on your past cases support it. Step back if errors rise.
+**Build 2:** Start on the bottom step. Move up when evals on your own past cases pass. Step back when errors rise.
 
 - Ask: What would convince you to move up a step?
-- Expected: A measured error rate on enough of your own cases, no worse than the team accepts from a person, and a plan for the errors that remain.
+- Expected: A measured success rate on enough of your own past cases, and a plan for the errors that remain. Part 4 showed the method on a small scale: ten runs of one job, each checked by the tests.
 
-**Point here:** Raise autonomy one step at a time, when evals on your own cases support it, and lower it again when errors rise.
+**Point here:** How much freedom an agent has is a setting in our own code. Raise it one step at a time, when evals on your own cases support it, and take it back when errors rise.
 
-**Common misconception:** That autonomy is decided once, at launch. It is a setting you revisit as the evals, the model and the stakes change.
+**Common misconception:** That the model decides how much freedom it has, or that freedom is decided once, at launch. The list is in our code, and it is a setting you revisit as the evals, the model and the stakes change.
 
-**Notebook:** For refunds: in shadow mode it drafts a decision and staff decide; then it prepares the refund and staff approve it; then small refunds go through on their own, and staff check a sample.
+**Notebook:** The setting is the function needs_approval in notebook 1.6, the one Part 4 showed. Start on the bottom step even if the agent could already work alone: a person stops every wrong request, so you learn its error rate on your real cases at no risk.
 
-**Transition:** At every step, someone pays for the model and for the checking. Which costs more?
+**Transition:** On every step, someone pays for the model and for the checking. Which costs more?
 
-**Source:** The three steps match Part 1’s levels of autonomy: operator, approver, observer.
+**Source:** The middle step is SAFE_COMMANDS and needs_approval in the notebook, section 1.6.
 
-## cost: What did our opening run cost?
+## cost: What did the bug fix cost?
 
-**Build 1:** Back to our opening run: three rounds, each rereading the whole conversation. Do you remember what it cost?
+**Build 1:** The bug fix took seven rounds. Gemma 4 ran on a laptop, so we paid nothing per token. What would a hosted model charge?
 
-- Ask: Do you remember what the opening run cost?
-- Expected: Less than a rupee. We saw it in Parts 1 and 2.
+- Ask: Guess: what would the same run cost on a hosted model?
+- Expected: Take three guesses before the click.
 
-**Build 2:** Less than a rupee, as we saw in Part 2. The price is per million tokens, read and written.
+**Build 2:** Less than a rupee. Hosted models charge per million tokens, read and written.
 
 - Ask: Is that the whole cost of the task?
-- Expected: No. Someone still has to read the answer and decide whether to trust it.
+- Expected: No. Someone still has to check the result.
 
-**Point here:** A run like ours costs less than a rupee in model time.
+**Point here:** One run of our agent costs less than a rupee in model time, even at a hosted price.
 
-**Common misconception:** That agents are cheap at any scale. Agents use about four times the tokens of a chat, and multi-agent systems about fifteen times (Anthropic, Jun 2025).
+**Common misconception:** That agents are as cheap as a chat. Agents typically use about four times more tokens than chat interactions (Anthropic, Jun 2025). Every round rereads the whole conversation.
 
-**Transition:** Now add the person who checks the answer.
+**Notebook:** A run on your own machine is not free either: someone bought the laptop. But there is no bill per token, and no file leaves the machine.
 
-**Source:** Our run on 19 November 2026 (Gemini 3.8 Flash), at Google’s published price in rupees.
+**Transition:** Now add the person who checks the result.
 
-## cost-person: Now add a person who checks it
+**Source:** Our recorded run (Gemma 4 (12B), 24 November 2026). Hosted price: Gemini 3.8 Flash, $0.75 and $3.75 per million tokens read and written, at ₹93.5 to the dollar (checked 19 November 2026).
 
-**Build 1:** A colleague spends five minutes checking the answer, at ₹1,000 an hour. The model is now 0.9% of the cost.
+## cost-person: Now add the person who checks it
+
+**Build 1:** A colleague spends five minutes checking the result, at ₹1,000 an hour. The model is now 0.8% of the cost.
 
 - Ask: What does five minutes of a colleague’s time cost your organisation?
 - Expected: At ₹1,000 an hour, five minutes is about ₹83. With overheads it is more.
@@ -1802,21 +1602,21 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 **Build 2:** Even a run of 30 rounds costs less than the check. So the saving is in making results quick to check.
 
 - Ask: Where should you spend effort to make an agent cheaper?
-- Expected: On making the check quick: tests, totals that reconcile, a source to click, a clear list of changes. A cheaper model matters far less.
+- Expected: On making the check quick: tests, totals that reconcile, a short list of what changed. That is what we did in Part 1. A cheaper model matters far less.
 
-**Point here:** For a run like ours the model costs under a rupee and a person’s check costs far more, so results that are quick to check save the most.
+**Point here:** For a run like ours the model costs very little and a person’s check costs far more, so results that are quick to check save the most.
 
-**Common misconception:** That the model price will stay where it is. From 1 January 2027, Gemini 3.8 Flash costs $1.50 and $7.50 per million tokens in and out, twice today’s price. Even then, a 30-round run costs less than the five-minute check.
+**Common misconception:** That the hosted price will stay where it is. From 1 January 2027, Gemini 3.8 Flash costs $1.50 and $7.50 per million tokens read and written, twice today’s price. Even then, a 30-round run costs less than the five-minute check.
 
-**Notebook:** Drag the rounds slider: each round rereads everything before it, so cost grows faster than the rounds. Drag the checking time down to one minute and the gap narrows. In Part 4’s eval, Flash-Lite cost ₹0.18 a run.
+**Notebook:** Drag the rounds slider: each round rereads everything before it, so the cost grows faster than the rounds. Drag the checking time down to one minute, and the two bars come closer.
 
 **Transition:** If checking is where the cost is, the people around the agent matter. What changes for them?
 
-**Source:** Tokens: our opening run; each round rereads all before it, fitted to that run. Price: Google, 19 November 2026. Minutes and hourly cost: illustrative.
+**Source:** Tokens: our recorded run; for other lengths, each round rereads all before it, fitted to that run. Price: Gemini 3.8 Flash, checked 19 November 2026. Minutes and hourly cost: the speaker’s assumptions.
 
-## skills: What new work does a team take on?
+## skills: What changes for a team?
 
-**Build 1:** Every agent in this talk needed people around it, doing this work.
+**Build 1:** Someone on the team does these three jobs. Today we did all three, for one small agent.
 
 - Ask: Who in your team already does work like this for other software?
 - Expected: Testers, analysts who write specifications, whoever reviews code or audits a process. These skills carry over.
@@ -1829,84 +1629,101 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 ## cancel: What does Gartner predict for agent projects?
 
-**Build 1:** Gartner, a research firm, made this prediction about companies’ agent projects. What reasons would you guess?
+**Build 1:** Gartner, a research firm, made this prediction about companies’ agent projects, and gave three reasons. What would you guess?
 
 - Ask: Why would a company cancel an agent project?
 - Expected: Cost, no clear benefit, and risk. Collect a few before the click.
 
-**Build 2:** Each of Gartner’s reasons, in its own words, matches a question from this part.
+**Build 2:** Each of Gartner’s three reasons, in its own words, matches a question from this part.
 
 - Ask: Which of these would end a project in your organisation?
 - Expected: Usually unclear value: an agent built where a workflow would do. The first question of this part catches it.
 
-**Point here:** Each reason Gartner gives has an answer in this part: measure the cost, ask whether it needs an agent, and raise autonomy in steps.
+**Point here:** Each reason Gartner gives has an answer in this part: count the cost, ask whether the task needs an agent, and raise freedom in steps.
 
 **Common misconception:** That a prediction is a measurement. This is Gartner’s forecast of what will happen by the end of 2027.
 
 **Notebook:** Gartner’s full sentence: the projects will be canceled “due to escalating costs, unclear business value or inadequate risk controls”.
 
-**Transition:** To end this part, back to the notebook.
+**Transition:** That is the talk. One thing to run yourself, after today.
 
 **Source:** Gartner press release, Jun 2025. A prediction.
 
-## nb-own-tool: In the notebook
+## nb-own-task: In the notebook
 
-**Build 1:** Something to try this week: a tool of your own. Ours returns the PM2.5 limits.
+**Build 1:** After the talk, section 5.1 is yours. Change one sentence, and the same agent does a different job.
 
-- Ask: Which function from your own work would you turn into a tool first?
-- Expected: A database lookup, a price list, a policy document, an internal API: anything with a clear input and output.
+- Ask: Which task from your own week would you type here?
+- Expected: A report to draft, a folder to sort, a file to check against another. Ask of each one: how would I check the result?
 
-**Point here:** A tool is a function and a description. You can write your first one this week.
+**Point here:** A new job for this agent is one new sentence. Deciding how to check the result is the real work.
 
-**Notebook:** If time allows, run 5.1 live: the agent should fetch Delhi’s forecast and the limits, then compare them. If not, leave it for the room to try: there is no recorded run of this section.
+**Notebook:** Notebook 5.1, after the talk or now if there is time. The cell first makes a fresh copy of the project, so nothing from earlier runs is left over. There is no recorded run of this section. Section 5.2, Write your own tool, comes straight after it: a function, a description and @tool above it give the agent a fifth tool, today’s date, which no model knows on its own. The appendix shows the same idea as an MCP server.
 
 **Transition:** Part 5 in one slide.
+
+**Source:** Next in the notebook: 5.2 Write your own tool.
 
 ## recap-5: Part 5 in one slide
 
 **Build 1:** Next: the talk in one slide, and three things to try on Monday.
 
-- Ask: Where on the steps would you start this refund agent, and what eval would move it up?
-- Expected: Shadow mode on last month’s refunds. Move up when it matches the staff’s decisions on nearly all of them, with no large refund wrong.
+- Ask: Which three lines of this card did Part 5 fill in?
+- Expected: The model (the smallest that passes the evals), the guardrails (which requests wait for a person) and the person (who reviews before anything is merged).
 
 **Point here:** Every decision of this part lands on the agent card: the model, the guardrails and the person.
 
 **Transition:** To close: the talk in one slide.
 
-## summary: The talk, on the loop from Part 1
+## summary: The whole talk, on one loop
 
-**Build 1:** Part 1: a model asks for tools, and our code runs them. Part 2: each round, it rereads the whole conversation.
+**Build 1:** Part 1: the model writes a request and our code runs the tool, again and again, until the model stops asking.
 
-- Ask: Which box did your own work touch today?
-- Expected: Most people say the tools: the data and systems their team already has.
+- Ask: Who runs the tool: the model, or our code?
+- Expected: Our code. The model only writes the request.
 
-**Build 2:** Part 3: agents do useful work where a person can check the answer cheaply.
+**Build 2:** Part 2: each round the model rereads the whole conversation, which only grows. To remember across runs, it writes notes to a file.
 
-- Ask: Which of the applications we saw could you check in a minute or two?
-- Expected: Coding with tests, data analysis with a check, building energy with a meter reading.
+- Ask: What does the model remember from one run to the next?
+- Expected: Nothing, unless something was written to a file that the next run reads.
 
-**Build 3:** Part 4: errors add up, so add an approval and a step limit. Part 5: give more freedom only as evals allow.
+**Build 3:** Part 3: the same loop, given a new goal, tidied a folder and checked invoices. Real products run this loop too.
+
+- Ask: What did we change between the three jobs?
+- Expected: Only the sentence that states the goal. The tools and the loop stayed the same.
+
+**Build 4:** Part 4: a file carried hidden instructions, so a person approves risky requests. A step limit ends long runs. Evals count how often it works.
 
 - Ask: Which of these two guards would your first agent need?
 - Expected: Both. The step limit always; the approval before anything that cannot be undone.
 
+**Build 5:** Part 5: if the steps are fixed, write a workflow. Otherwise give an agent freedom in steps, and count the person who checks.
+
+- Ask: Which box costs the most?
+- Expected: The last one: a person’s time to check the answer costs far more than the model.
+
 **Point here:** The whole talk sits on the loop from Part 1.
 
-**Transition:** So what can you do this week?
+**Transition:** So what can you do on Monday?
 
 ## monday: Three things to try on Monday
 
-**Build 1:** None of these needs a budget or a new team. You can start on Monday morning.
+**Build 1:** First, run the notebook. Every run you saw today came from it, on an open model, with no key and no bill.
 
-- Ask: Which task in your team would you write the card for?
-- Expected: Reconciliations, weekly reports, ticket triage, document checks.
-
-**Build 2:** Scan to open the notebook. Every run today came from it.
-
-- Ask: Who has a laptop open? Try the first cell now.
+- Ask: Who has a laptop open? Scan the code and run the first cell now.
 - Expected: A few will open it. Promise help after the session.
 
-**Point here:** Three next steps: run the notebook, describe one task as an agent card, and collect the test cases before building.
+**Build 2:** Then change one sentence in section 5.1, and give the agent a task from your own work.
+
+- Ask: Which task from your week would you type in?
+- Expected: Reconciliations, weekly reports, sorting a shared folder, checking one document against another.
+
+**Build 3:** But before you run it, write down how you will check the result. Those checks are your first evals.
+
+- Ask: For that task, what would a correct result look like?
+- Expected: A total that matches, a test that passes, a list with nothing missing. If nobody can say, the task is not ready for an agent.
+
+**Point here:** Three next steps, none of which needs a budget: run the notebook, give the agent your own task, and write the checks first.
 
 **Transition:** Thank you.
 
@@ -1914,128 +1731,130 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 **Build 1:** Thank you for your time. What would you like to ask?
 
-- Ask: Which application did we not cover that you would like to see?
+- Ask: Which job in your own team would you like to talk through?
 - Expected: Common asks: HR screening, legal contracts, sales outreach, manufacturing quality. Run each through the three questions of Part 5.
 
 **Point here:** Close, and open the floor.
 
 **Source:** Nipun Batra, IIT Gandhinagar · nipunbatra.github.io
 
-## glossary: Glossary: the loop (optional)
+## glossary: Glossary: the agent (optional)
 
-**Build 1:** The words of Part 1.
+**Build 1:** The four words of Part 1.
 
-- Ask: Which of these words did you hear for the first time today?
-- Expected: Usually round and token.
-
-**Point here:** The vocabulary of the talk, a few words per term.
-
-## glossary-2: Glossary: what the model reads (optional)
-
-**Build 1:** The words of Parts 1 and 2.
-
-- Ask: Which of these does your team already pay for, or use?
-- Expected: Tokens, through an API bill; workflows, through existing automation.
+- Ask: Which of these four did we write ourselves today?
+- Expected: The tools and the loop. The model we downloaded, and the tool calls are what it wrote.
 
 **Point here:** The vocabulary of the talk, a few words per term.
 
-## glossary-3: Glossary: running it safely (optional)
+## glossary-2: Glossary: one run (optional)
 
-**Build 1:** The words of Parts 1, 4 and 5.
+**Build 1:** The four words of Part 2.
+
+- Ask: Which of these grows during a run?
+- Expected: The context: every result is added to it, and the model rereads all of it each round. The notes are the only one that lasts after the run.
+
+**Point here:** The vocabulary of the talk, a few words per term.
+
+## glossary-3: Glossary: keeping it safe (optional)
+
+**Build 1:** The words of Part 4.
 
 - Ask: Which of these does your organisation already have a policy for?
-- Expected: Usually none of them yet. Guardrails and evals are where to start.
+- Expected: Usually approvals, for people. Guardrails and evals for agents are where to start.
 
 **Point here:** The vocabulary of the talk, a few words per term.
 
-## mcp-code: The air-quality tool as an MCP server (optional)
+## mcp-server: MCP publishes a tool once, for any agent (optional)
 
-**Build 1:** What changes for the agent when the tool moves behind MCP?
+**Build 1:** This is read_file from Part 1, published as an MCP server. Any agent that supports MCP can now call it.
 
-- Ask: What changes for the agent when the tool moves behind MCP?
-- Expected: Nothing about how it calls the tool. What changes is that any agent that supports MCP can use it without new code.
+- Ask: What changes for the model when the tool moves behind MCP?
+- Expected: Nothing. It still reads a name, a description and the arguments, and still writes a request. What changes is who can use the tool: any agent, with no new code.
 
-**Point here:** An MCP server is about as small as the tool itself. Notebook section 5.2, “One tool for every agent: MCP”, has it.
+**Point here:** MCP, the Model Context Protocol, is a shared standard for offering tools to agents. A server is about as short as the tool itself.
 
-**Source:** Model Context Protocol Python SDK (pip install mcp), github.com/modelcontextprotocol/python-sdk.
+**Common misconception:** That MCP makes a tool safe. It only publishes it. Which requests run, and which wait for a person, is still decided in the agent’s loop.
+
+**Source:** Model Context Protocol: modelcontextprotocol.io. Python SDK: pip install mcp.
 
 ## further: Further reading (optional)
 
-**Build 1:** Where to go next.
+**Build 1:** Five things to read next.
 
 - Ask: Which one would you read first?
-- Expected: Building effective agents for anyone building one; the lethal trifecta for anyone deploying agents near private data.
+- Expected: Building effective agents for anyone building one; the lethal trifecta for anyone who lets an agent near private data.
 
 **Point here:** Where to go next.
 
-## app-documents: Invoices: mostly a workflow (optional)
+## app-documents: Invoices at scale: mostly a workflow (optional)
 
-**Build 1:** Read, find the order, match, post. Only a mismatch needs judgement: first the agent’s, then yours.
+**Build 1:** Our agent sent every invoice to the model. At scale, plain code can do most of these steps.
 
 - Ask: Which of these steps needs a model to decide anything?
-- Expected: Only the red one, explaining a mismatch. The rest is Part 1’s fixed workflow: read, match, post.
+- Expected: Only the third. The others are the same every time: read, look up, compare. That is a workflow.
 
-**Build 2:** Most invoices match and never reach the red step. So build a workflow, and call the agent only then.
+**Build 2:** Rules pass the invoices that match. The rest need judgement: the model’s first, then a person’s.
 
-- Ask: What share of your team’s invoices are exceptions?
-- Expected: Usually a small share. That share is where an agent pays for itself; plain rules handle the rest more cheaply.
+- Ask: What would it cost to send every invoice through the model?
+- Expected: Model time on every invoice, and a small chance of a slip on each one. Rules are cheaper and do not slip. The model earns its cost on the exceptions.
 
-**Point here:** Most invoice processing is a fixed workflow; the agent is needed only for the invoices that do not match. On the stakes map at the end of Part 3: “Agent acts, a person approves” (rules check the match, but money moves).
+**Point here:** Most invoice processing is a fixed workflow. A model is needed only for the invoices that do not match. On the stakes map at the end of Part 3: “Agent acts, a person approves” (rules can check the match, but money moves, so a person approves the payment).
 
-**Common misconception:** That “AI invoice processing” means an agent reads every invoice and decides. Usually plain rules do the matching, and the model reads only what the rules cannot.
+**Common misconception:** That “AI invoice processing” means an agent reads every invoice and decides. Usually plain rules do the matching, and the model reads only what the rules cannot settle.
 
 **Transition:** Next in the appendix: an IT incident at night.
 
-**Source:** Trace: a design drawn for this talk; it describes no deployed system. The invoice is from the notebook’s demo inbox. Illustration: generated.
+**Source:** The steps are a design for this talk; they describe no deployed system. The count is from the invoices folder of notebook 3.2. Illustration: generated.
 
-## app-incident: IT incidents: errors after a deploy (optional)
+## app-incident: IT incidents: one approval, before the rollback (optional)
 
-**Build 1:** It reads the alert, queries logs and metrics at once, and links the errors to the deploy.
+**Build 1:** Errors jump. The agent reads the alert, the logs and the metrics, and finds the deploy behind them.
 
 - Ask: At 2 a.m., would you let it roll back on its own?
 - Expected: Most say no: a wrong rollback is a second outage. Waking someone to approve one prepared step is the usual compromise.
 
-**Build 2:** The on-call engineer approves once. Then it rolls back and writes the note.
+**Build 2:** A rollback changes production, so the engineer on call approves it. The metrics show if it worked.
 
 - Ask: What makes that approval quick?
-- Expected: The agent has done the reading: the spike, the deploy behind it, and the exact command. The person only judges.
+- Expected: The agent has done the reading: the jump in errors, the deploy behind it, and the exact command. The person only judges.
 
-**Point here:** An incident agent reads the alert, logs and metrics and leaves one decision for a person: the rollback. On the stakes map at the end of Part 3: “Agent acts, a person approves” (metrics show whether a fix worked; a wrong rollback is an outage).
+**Point here:** An incident agent does the reading and leaves one decision for a person: the rollback. On the stakes map at the end of Part 3: “Agent acts, a person approves” (metrics show whether a fix worked; a wrong rollback is an outage).
 
-**Common misconception:** That the risky part is the diagnosis. Reading logs is harmless; the rollback is the step that changes production, so that is where the approval goes.
+**Common misconception:** That the risky part is the diagnosis. Reading logs is harmless. The rollback changes production, so that is where the approval goes.
 
 **Transition:** Next in the appendix: a job done in a browser.
 
-**Source:** Trace: a design drawn for this talk; it describes no deployed system. Illustration: generated.
+**Source:** The steps are a design for this talk; they describe no deployed system. Illustration: generated.
 
-## app-browser: Web forms: renewing a trade licence (optional)
+## app-browser: Web forms: it stops before it pays (optional)
 
-**Build 1:** It reads the screen, clicks, types and uploads, then checks the form against your files.
+**Build 1:** A browser agent uses a website the way you do: it reads the screen, clicks and types.
 
 - Ask: Where must it stop and ask you?
 - Expected: Before paying and submitting. Both are final and in your name; everything before them can be redone.
 
-**Build 2:** It stops once, before paying the fee: payment and submission cannot be undone.
+**Build 2:** On this public test the best model now scores above people. It still stops before it pays.
 
 - Ask: If the best models now beat people on this test, why still confirm?
 - Expected: The test averages over tidy tasks. The best single model scores 85.96% on OSWorld-Verified, above the 72.36% people scored in the original study (where the best model then scored 12.24%; an agent framework now scores 90.19%). Real portals have timeouts and unusual forms, and one wrong submission is yours to fix.
 
 **Point here:** A browser agent can fill any web form a person can, so the final, paying click stays with a person. On the stakes map at the end of Part 3: “Agent acts, a person approves” (the form can be read before it is submitted; a submission is final).
 
-**Common misconception:** That beating the people’s score makes it safe to let it submit. The score is an average; your portal has timeouts, odd forms and a fee that cannot be clawed back.
+**Common misconception:** That beating the people’s score makes it safe to let it submit. The score is an average; your portal has timeouts, odd forms and a fee you cannot get back.
 
-**Transition:** Back to the main route.
+**Transition:** Next in the appendix: two jobs from science.
 
-**Source:** Trace: a design drawn for this talk; it describes no deployed system. OSWorld: Xie et al. (2024), and the OSWorld-Verified leaderboard (Aug 2026). Illustration: generated.
+**Source:** The steps are a design for this talk; they describe no deployed system. OSWorld: Xie et al. (2024), and the OSWorld-Verified leaderboard (Aug 2026). Illustration: generated.
 
-## app-coscientist: Google’s AI co-scientist: several agents, one goal (optional)
+## app-coscientist: Google’s AI co-scientist: agents propose, a lab tests (optional)
 
-**Build 1:** It splits a research goal across several agents. They generate ideas, argue about them and rank them.
+**Build 1:** Several agents share one research goal. They generate ideas, argue about them and rank them.
 
 - Ask: How would you check whether a new hypothesis is any good?
 - Expected: Only an experiment can tell. Until then an idea costs nothing, which is why the agents can afford to generate many.
 
-**Build 2:** The scientists see only the top ideas. Only a lab experiment can tell which is right.
+**Build 2:** The scientists see only the top ideas. Only a lab experiment can tell which one is right.
 
 - Ask: Where are the checks in this loop?
 - Expected: Twice: the agents’ own debate and ranking, which cost little and can be wrong; then the scientists’ lab experiments, which are slower and test the idea directly.
@@ -2046,16 +1865,16 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 **Transition:** What if the agent could run the experiment too?
 
-**Source:** Google Research blog, 19 Feb 2025 (built on Gemini 2.0); the two days are from Google’s paper, arXiv 2502.18864. Trace simplified; it also searches the literature. Illustration: generated.
+**Source:** Google Research blog, 19 Feb 2025 (built on Gemini 2.0); the two days are from Google’s paper, arXiv 2502.18864. The steps are simplified; it also searches the literature. Illustration: generated.
 
-## app-lab: A chemistry experiment on a lab robot (optional)
+## app-lab: A lab robot: the model writes the experiment (optional)
 
-**Build 1:** A chemistry goal and the robot’s manual. Can a model turn these into a working experiment?
+**Build 1:** The model gets a chemistry goal and the robot’s manual. It plans the reaction and writes the code.
 
 - Ask: What would worry you about letting a model drive lab equipment?
 - Expected: Safety and cost: wrong reagents, wasted materials, a damaged instrument. The robot does exactly what the code says.
 
-**Build 2:** The one approval comes just before reagents are used: the step that costs money.
+**Build 2:** A chemist approves before any reagents are used. Instruments then measure the result.
 
 - Ask: Why put the approval there, and not at the end?
 - Expected: Measuring is cheap and automatic; spending reagents is not. Approve before the costly step, then let the instruments check the result.
@@ -2064,6 +1883,6 @@ Planned main route: 85 minutes, including student responses. Optional slides are
 
 **Common misconception:** That these systems replace the lab team. FutureHouse’s Robin proposed ripasudil as a drug candidate for dry age-related macular degeneration, a common cause of lost sight in old age; people ran the cell experiments.
 
-**Transition:** Back to the main route: the stakes map of Part 3.
+**Transition:** Back to the main route.
 
 **Source:** Coscientist: Boiko, MacKnight, Kline and Gomes, Nature, 20 Dec 2023. Robin: FutureHouse, 20 May 2025. The approval step is our addition. Illustration: generated.

@@ -1,385 +1,316 @@
-// Part 3a: agents at work, first half, at a slower pace. The part break, how to read a trace (the opening run), then
-// four jobs. Each job has a task slide (the illustration, the request, the tools it would need) and a slide of what the
-// agent does. Three of them run live in the notebook (3.1 the analyst, 3.2 research, 3.3 the inbox), and the slides
-// after each notebook slide show our recorded run. Invoices, IT incidents and web forms are in parts/08-more-apps.js.
-// Real runs: data/traces.json (notebook Part 3). Published numbers and the figures read from the runs:
-// data/p3a.json (scripts/sci/p3a.py). Positions on the stakes map, quoted in the notes: data/apps.json.
-import {app,partBreak,chap,slides,S_,at,css,esc,data,need,word,Word,num,big,nb,nbRun,gat,label,request,illo,
- COL,ROLE,MUTED,icon,iconHTML,chip,lanes} from '../kit.js';
+// Part 3, first half: the same agent, two other jobs. Nothing in its code changes: the same four tools and the same
+// loop; only the request does. 3.1 tidies a messy inbox (ten badly named files into four folders, renamed by date and
+// sender); 3.2 checks six supplier invoices against the purchase orders and writes a list of mismatches. Each job is
+// set up, run live in the notebook, then shown from our recorded run and checked against what we know to be true.
+// Everything shown is data/traces.json (keys tidy and invoices; scripts/sci/traces.py). parts/03b-work.js follows.
+import {S_,partBreak,chap,nbRun,nb,data,need,css,esc,at,only,request,word,Word,num,kY,
+ COL,iconHTML,editor,term,tree,toolCall,statement,loopStrip,hl} from '../kit.js';
 
-const APPS=need(await data('apps'),'apps','families');
-const T=need(await data('traces'),'analyst','research','inbox','model','date_text');
-const D=need(await data('p3a'),'research','analyst','inbox','opening','swe','so','klarna');
-const RS=D.research,AN=D.analyst,REF=D.inbox.refund,SW=D.swe,KL=D.klarna,S=AN.standard;
+const T=need(await data('traces'),'agent','tidy','invoices','model','date_text'),A=T.agent;
+const TD=need(T.tidy,'goal','steps','check','inbox','right','dated','rounds','seconds');
+const IV=need(T.invoices,'goal','steps','check','report','invoices','orders','right','problems','rounds','seconds');
+const claim=(ok,what)=>{if(!ok)throw new Error(`Part 3 was written for a run in which ${what}. Record it again, or rewrite the slide.`);};
 
-css(`.p3a-task{display:grid;grid-template-columns:minmax(0,.82fr) minmax(0,1.3fr);gap:46px;align-items:center}
-.p3a-task .illo img{max-height:390px;border-radius:18px}
-.p3a-task .req{font-size:32px;line-height:1.38;padding:18px 26px;border-radius:22px 22px 22px 6px}
-.p3a-task .req b{font-size:16px}
-.p3a-need{margin-top:34px}
-.p3a-need small,.p3a-head small{display:block;font-size:17px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;margin-bottom:12px}
-.p3a-need small{color:var(--p)}
-.p3a-need .chips{gap:12px 14px}
-.p3a-need .tchip{font-size:25px;padding:6px 18px 6px 12px;border-width:2px}
-.p3a-need .tchip .ic{width:28px;height:28px}
-.content:has(> .app.p3a-does){justify-content:center;gap:20px}
-.p3a-does .lanes svg{max-height:330px}
-.p3a-does~[data-at] .facts p{font-size:23px}
-.p3a-key{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 26px;margin-top:6px}
-.p3a-key>div{display:flex;align-items:center;gap:12px;font-size:24px;line-height:1.3;min-width:0}
-.p3a-key svg{flex:none}
-.p3a-chart{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:40px;align-items:center}
-.p3a-bars{width:100%;height:auto;display:block;max-height:384px}
-.p3a-head small{color:var(--q)}
-.p3a-head b{display:block;font-size:54px;line-height:1.1;font-weight:700;color:var(--ink);margin-bottom:8px}
-.p3a-head p{font-size:27px;line-height:1.38}
-.p3a-claims{display:grid;grid-template-columns:auto minmax(0,1fr) auto 150px;gap:30px 24px;align-items:center}
-.p3a-claims>b{font-size:17px;letter-spacing:1.2px;text-transform:uppercase;color:var(--q);white-space:nowrap}
-.p3a-claims>span{font-size:30px;line-height:1.35}
-.p3a-claims .tchip{font-size:19px}
-.p3a-claims>[data-at]{grid-column:4;grid-row:1/span 3;align-self:stretch;display:flex}
-.p3a-one{display:flex;align-items:center;gap:14px;color:var(--loss);font-size:24px;font-weight:650;line-height:1.25}
-.p3a-one::before{content:"";align-self:stretch;width:22px;flex:none;border:3px solid var(--loss);border-left:none;border-radius:0 14px 14px 0;margin:6px 0}
-.p3a-stats{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.25fr);gap:34px}
-.p3a-stats>div>div{border-top:6px solid var(--d);padding-top:16px;min-width:0}
-.p3a-stats b{display:block;font-size:48px;line-height:1.1;font-weight:700;color:var(--d);margin-bottom:10px}
-.p3a-stats p{font-size:27px;line-height:1.35;color:#374151}
-.p3a-stats .r{border-color:var(--loss)}.p3a-stats .r b{color:var(--loss)}
-.p3a-gate{display:flex;align-items:center;gap:18px;border:2px solid #AA4E0866;background:#AA4E080D;border-radius:16px;padding:12px 18px;margin-top:16px;font-size:25px;line-height:1.35}
-.p3a-gate>svg{flex:none}.p3a-gate>div{flex:1;min-width:0}
-.p3a-gate small{display:block;font-size:16px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--noise)}
-.p3a-gate .mono{font-size:22px}
-.p3a-gate>b{flex:none;display:inline-flex;align-items:center;gap:8px;background:var(--noise);color:#fff;border-radius:999px;padding:6px 18px 6px 12px;font-size:22px}
-@media(max-width:760px){.reading .p3a-task,.reading .p3a-key,.reading .p3a-chart,.reading .p3a-stats{grid-template-columns:minmax(0,1fr)}
- .reading .p3a-claims{grid-template-columns:minmax(0,1fr)}.reading .p3a-claims>[data-at]{grid-column:auto;grid-row:auto}
- .reading .p3a-task .req{font-size:20px}.reading .p3a-need .tchip{font-size:16px}.reading .p3a-claims>span,.reading .p3a-head p,.reading .p3a-stats p,.reading .p3a-gate{font-size:18px}
- .reading .p3a-gate{flex-wrap:wrap}
- .reading .p3a-head b,.reading .p3a-stats b{font-size:34px}.reading .p3a-key>div{font-size:18px}}`);
+// ---------------------------------------------------------------------------------------- small helpers
+const base=p=>String(p).split('/').pop();
+const cut=(s,n)=>s.length>n?s.slice(0,n-1)+'…':s;
+const sec=r=>num(r.seconds,0);
+const cmdLines=s=>String(s.args.command||'').split('\n').filter(l=>l.trim());
+const reEsc=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+/** A request as HTML, with file and folder names in monospace. */
+const named=(text,extra=[])=>esc(text).replace(new RegExp(`(${[...extra.map(reEsc),String.raw`[\w-]+\/(?:[\w.\/-]*\w)?`,String.raw`[\w-]+_[\w.-]*\w`,String.raw`[\w-]+\.(?:txt|md|csv|py)\b`].join('|')})`,'g'),'<span class="mono">$1</span>');
+const ARROW=`<svg class="p3a-arrow" viewBox="0 0 48 24" width="52" height="26" aria-hidden="true" fill="none" stroke="#8D97A8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h40M33 4l10 8-10 8"/></svg>`;
+const tick=ok=>`<span class="p3a-tick ${ok?'ok':'no'}">${iconHTML(ok?'check':'alert','currentColor',20)}</span>`;
 
-/** Where an application sits on the stakes map at the end of Part 3, for the notes. */
-const where=id=>{const a=APPS.apps.find(x=>x.id===id);if(!a)throw new Error('No application '+id);
- return `On the stakes map at the end of Part 3: “${a.zone}” (${a.why.replace(/^./,c=>c.toLowerCase()).replace(/\.$/,'')}).`;};
-const times=n=>n===1?'once':n===2?'twice':`${word(n)} times`;
-/** The tools a recorded run used, in order of first use, as chips: names must be in the map. */
-const usedTools=(run,map)=>[...new Set(run.turns.flatMap(t=>t.calls.map(c=>c.name)))].map(n=>{
- if(!map[n])throw new Error('No chip for tool '+n);return map[n];});
+css(`.p3a-q .req{font-size:32px;line-height:1.42;padding:24px 32px 26px;border-radius:26px 26px 26px 8px}.p3a-q .req b{font-size:16px;margin-bottom:6px}
+.p3a-q .req>svg{width:32px;height:32px;margin-top:4px}.p3a-q .mono{white-space:nowrap;overflow-wrap:normal;font-size:.86em;background:#AA4E0812;border-radius:6px;padding:1px 5px;margin:0 -1px}
+.p3a-mess{display:grid;grid-template-columns:minmax(0,.86fr) auto minmax(0,1.14fr);gap:24px;align-items:center;width:100%}
+.p3a-mess>div{min-width:0;display:flex;flex-direction:column;gap:18px}
+.p3a-mess>div:last-child .tree{font-size:24px;padding:14px 12px 16px}.p3a-mess>div:last-child .tree .tr{padding-top:7px;padding-bottom:7px}.p3a-mess>div:last-child .tree-h{font-size:18px;padding-bottom:10px}
+.p3a-name{border:2px dashed #AAB3BC;border-radius:14px;background:#fff;padding:18px 22px 14px;font:22px/1.2 "SFMono-Regular",Menlo,Consolas,monospace;display:flex;align-items:flex-start;white-space:nowrap}
+.p3a-name span{display:inline-flex;flex-direction:column;gap:7px}.p3a-name i{font:650 16px/1 var(--font);font-style:normal;letter-spacing:.3px;padding-top:6px}
+.p3a-name .d{color:var(--data);font-weight:650}.p3a-name .s{color:var(--noise);font-weight:650}
+.p3a-name u{text-decoration:none;border-bottom:3px solid currentColor;padding-bottom:5px}
+.p3a-walk{display:grid;grid-template-columns:1fr 1.42fr;gap:30px;align-items:center;width:100%}
+.p3a-walk>div,.p3a-walk .state-slot>div{min-width:0;display:flex;flex-direction:column;gap:14px}
+.p3a-wrap .win-body{white-space:pre-wrap;overflow-wrap:anywhere}
+.p3a-err{display:flex;flex-direction:column;gap:20px;width:100%}
+.p3a-err .top{display:grid;grid-template-columns:.9fr 1.25fr;gap:34px;align-items:center}.p3a-err .top>div{min-width:0}
+.p3a-ba{display:grid;grid-template-columns:minmax(0,.66fr) auto minmax(0,1.2fr);gap:22px;align-items:stretch;width:100%}.p3a-ba>div{display:flex;min-width:0}.p3a-ba>div>.tree{flex:1}.p3a-ba>div:first-child .tree .tr{padding-top:5.5px;padding-bottom:5.5px}.p3a-ba>.p3a-arrow{align-self:center}
+.p3a-ba .tree.s .tr{padding-top:0;padding-bottom:0}.p3a-ba .tree.s .tr.dir{margin-top:4px}
+.p3a-chk{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:44px;align-items:center;width:100%}
+.p3a-key{border:2px solid var(--line);border-radius:14px;background:#fff;padding:8px 18px 10px;display:grid;grid-template-columns:max-content minmax(0,1fr) 92px 92px;align-items:stretch}
+.p3a-key>*{padding:5px 22px 5px 0;min-width:0;border-top:1px solid #EEF0F3;display:flex;align-items:center}.p3a-key>div{justify-content:center;padding-right:0}.p3a-key>b{font:700 16px/1.2 var(--font);letter-spacing:.6px;text-transform:uppercase;color:var(--muted);border-top:0;padding:6px 0 7px}
+.p3a-key>b.c{justify-content:center;padding-right:0}
+.p3a-key .f{font:19px/1.3 "SFMono-Regular",Menlo,Consolas,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.p3a-key .k{font-size:20px;line-height:1.24;color:#374151}
+.p3a-dot{display:block;width:13px;height:13px;border-radius:50%;border:2.5px solid #C5CCD6;margin:0 auto}.p3a-key .state-slot{place-items:center}
+.p3a-tick{display:flex;align-items:center;height:100%}.p3a-tick.ok{color:var(--d)}.p3a-tick.no{color:var(--loss)}.p3a-tick svg{stroke-width:3}
+.p3a-nums{display:flex;flex-direction:column;gap:30px}.p3a-nums>div{display:flex;flex-direction:column;gap:4px;border-left:6px solid var(--d);padding-left:20px}
+.p3a-nums b{font-size:62px;line-height:1;letter-spacing:-2px;font-weight:700;color:var(--d);font-variant-numeric:tabular-nums}.p3a-nums b small{font-size:30px;letter-spacing:0;font-weight:650}
+.p3a-nums span{font-size:25px;line-height:1.3;color:#374151}.p3a-nums .bad{border-color:var(--loss)}.p3a-nums .bad b{color:var(--loss)}
+.p3a-nums.run>div{border-color:#AAB3BC}.p3a-nums.run b{color:var(--ink)}
+.p3a-job{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);gap:36px;align-items:center;width:100%}
+.p3a-orders{border:2px solid var(--line);border-radius:14px;background:#fff;padding:10px 8px 8px}
+.p3a-orders .tree-h{display:flex;align-items:center;gap:8px;font:650 17px/1 var(--font);color:var(--muted);padding:4px 10px 8px;letter-spacing:.3px}
+.p3a-orders table{font-size:23px;line-height:1.3}.p3a-orders th{font-size:17px;letter-spacing:.3px;padding:6px 12px}.p3a-orders td{padding:10px 12px;border-top:1px solid #EEF0F3}
+.p3a-orders td.n,.p3a-orders th.n{text-align:right;font-variant-numeric:tabular-nums}.p3a-orders td .mono{font-size:.88em}
+.p3a-orders tr.hit td{transition:background .3s ease}
+.scene:not([data-build="1"]) .p3a-orders tr.hit td{background:#245EDB14}.scene:not([data-build="1"]) .p3a-orders tr.hit td.diff{color:var(--loss);font-weight:700}
+.p3a-did{display:grid;grid-template-columns:1.12fr 1fr;gap:38px;align-items:center;width:100%}.p3a-did>div{min-width:0}
+.p3a-calls{display:flex;flex-direction:column;gap:6px;margin:0;font:inherit;white-space:normal}.p3a-calls .tc{padding:4px 14px 5px;animation:slidein .35s ease both;animation-delay:calc(var(--i)*.22s)}
+.p3a-calls .tc code{font-size:19px}.p3a-calls .tc-who{display:none}.p3a-calls .more{font-size:19px;color:var(--muted);padding:0 16px}
+.reveal-hidden .p3a-calls .tc,.p3a-calls .reveal-hidden .tc{animation:none}
+.p3a-found{display:flex;flex-direction:column;gap:24px;width:100%}
+.p3a-six{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:12px}
+.p3a-six>div{position:relative;border:2px solid var(--line);border-top:6px solid #AAB3BC;border-radius:14px;background:#fff;padding:14px 12px 13px 16px;min-width:0;display:flex;flex-direction:column;gap:6px;min-height:126px}
+.p3a-six code{font:650 20px/1.2 "SFMono-Regular",Menlo,Consolas,monospace;color:#374151}.p3a-six p{font-size:22px;line-height:1.2;color:var(--muted)}
+.p3a-six>div{transition:border-color .3s ease}.scene:not([data-build="1"]) .p3a-six .wrong{border-top-color:var(--loss)}.p3a-six .wrong p{color:var(--loss);font-weight:650}
+.p3a-six em{font:650 16px/1 var(--font);font-style:normal;margin-top:auto;display:inline-flex;align-items:center;gap:6px;color:var(--muted)}
+.p3a-six em.flag{align-self:flex-start;color:#fff;background:var(--q);border-radius:999px;padding:5px 11px 5px 9px}
+.p3a-six .p3a-tick{position:absolute;right:10px;top:9px;height:auto}
+.p3a-who{display:flex;align-items:center;gap:14px;font-size:27px;line-height:1.3;background:#AA4E080F;border:2px solid #AA4E0855;border-radius:14px;padding:11px 20px}
+.p3a-who svg{flex:none}
+.p3a-same{display:flex;flex-direction:column;gap:34px;width:100%}.p3a-same .statement{min-height:0}
+.p3a-jobs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.p3a-jobs>div{border:2px solid var(--line);border-top:6px solid var(--noise);border-radius:16px;background:#fff;padding:16px 20px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.p3a-jobs h3{font-size:26px;line-height:1.2;display:flex;align-items:center;gap:10px;margin:0}.p3a-jobs p{font-size:22px;line-height:1.3;color:var(--muted)}
+@media(max-width:760px){.reading .p3a-mess,.reading .p3a-walk,.reading .p3a-err .top,.reading .p3a-ba,.reading .p3a-chk,.reading .p3a-job,.reading .p3a-did,.reading .p3a-jobs{grid-template-columns:minmax(0,1fr)}
+ .reading .p3a-six{grid-template-columns:repeat(2,minmax(0,1fr))}.reading .p3a-q .req{font-size:20px;padding:14px 16px}.reading .p3a-q .mono{white-space:normal;overflow-wrap:anywhere}
+ .reading .p3a-arrow{display:none}.reading .p3a-nums b{font-size:40px}.reading .p3a-name{font-size:12px;flex-wrap:wrap}
+ .reading .p3a-key{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr) 38px 38px;padding:6px 10px}.reading .p3a-key>*{padding-right:8px}.reading .p3a-key .f{font-size:12px}.reading .p3a-key .k{font-size:14px}.reading .p3a-key>b{font-size:11px}
+ .reading .p3a-orders table{font-size:15px;min-width:0}.reading .p3a-orders td,.reading .p3a-orders th{padding:6px}.reading .p3a-calls .tc code{font-size:14px}
+ .reading .p3a-six code{font-size:15px}.reading .p3a-six p{font-size:16px}.reading .p3a-who{font-size:18px}.reading .p3a-jobs h3{font-size:20px}}`);
 
-/** The task slide of a job: its illustration, the request, and (at click 2) the tools it would need. Two builds. */
-function task(id,title,o){
- S_(id,'work',title,{builds:2,nb:o.nb,
-  body:`<div class="p3a-task">${illo(o.img,o.alt)}<div>${request(o.req,{who:o.who||'The request'})}
-   ${at(2,`<div class="p3a-need"><small>It would need</small><div class="chips">${o.tools.map(([ic,t,role])=>chip(ic,t,role)).join('')}</div></div>`)}</div></div>`,
-  lines:o.lines,ask:o.ask,expected:o.expected,point:o.point,misconception:o.misconception,transition:o.transition,
-  source:`${o.source?o.source+' ':''}Illustration: generated.`});
-}
+partBreak(3,'The same agent, other jobs','From here on the agent’s code does not change. Only the request does.',
+ ['Tidy a messy folder','Check invoices against orders','The same loop in real products','How much freedom each job should get'],
+ {img:'part-work.jpg',alt:'Illustration: a small town with an office, a farm, a lab and a clinic, joined by thin lines to one small spark',nb:nb('part-3'),
+  line:'Key question: what else can the same four tools and loop do, and who checks the result?',
+  ask:'Which job in your week is mostly opening files, reading them and filing them?',
+  expected:'Expense claims, supplier paperwork, a shared drive, a monthly report. Keep one in mind: the next two jobs are of that kind.',
+  point:'The agent from Part 1 was not built for code. It can do any job that can be done by reading files, writing files and running commands.',
+  transition:'The first job is a folder nobody has sorted.',source:'Illustration: generated (Gemini image model).'});
 
-/** The slide of what an agent does: app() with no illustration and a wider trace, without the request bubble (the
- task slide just showed it). */
-const WIDE={laneH:100,fs:20,laneOpts:{gap:6,left:196}};
-function does(id,title,o){
- app(id,title,{...WIDE,...o,req:'·'});
- const s=slides.find(x=>x.id===id),r=request('·',{who:'The request'});
- if(!s.body.includes(r)||!s.body.includes('<div class="app noimg">'))throw new Error(`${id}: app() no longer draws its slide this way`);
- s.body=s.body.replace(r,'').replace('<div class="app noimg">','<div class="app noimg p3a-does">');
-}
-/** Where lanes() puts the nodes of a trace (the same arithmetic as figures.js, for drawing on top of it). */
-function geom(steps,{laneH,fs,laneOpts:{gap,left}},W=1152){
- const n=steps.length,colW=(W-left-6)/n,lines=Math.max(...steps.map(s=>String(s.t).split('\n').length)),idx={you:0,agent:1,tools:2};
- const r=Math.max(16,Math.min(25,Math.floor((laneH-14-lines*(fs+2)-fs*.3)/2)));
- return {r,x:i=>left+colW*(i+.5),y:i=>4+idx[steps[i].lane]*(laneH+gap)+r+5};
-}
-/** A dashed arrow through points, in the style of the trace's own arrows, with a label: the path most cases take. */
-function route(pts,{text='',at:[tx,ty],halo}){
- const [hx,hy]=pts.at(-1),[px,py]=pts.at(-2),a=Math.atan2(hy-py,hx-px),h=10,ink='#4B5563';
- return `<path d="M${pts.map(q=>q.map(v=>v.toFixed(1)).join(',')).join(' L')}" fill="none" stroke="${ink}" stroke-width="2.2" stroke-dasharray="7 5" stroke-linejoin="round"/>`+
-  `<path d="M${hx.toFixed(1)},${hy.toFixed(1)} L${(hx-h*Math.cos(a-.42)).toFixed(1)},${(hy-h*Math.sin(a-.42)).toFixed(1)} L${(hx-h*Math.cos(a+.42)).toFixed(1)},${(hy-h*Math.sin(a+.42)).toFixed(1)}Z" fill="${ink}"/>`+
-  `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" fill="${COL.ink}" font-size="20" font-style="italic" text-anchor="middle" style="paint-order:stroke;stroke:${halo};stroke-width:6px;stroke-linejoin:round">${text}</text>`;
-}
-/** Draw extra SVG on top of a slide's trace, after checking that geom() g still matches figures.js. */
-function overlay(id,g,svg){
- const s=slides.find(x=>x.id===id),open='<div class="diagram-scroll lanes">',i=s.body.indexOf(open),j=s.body.indexOf('</svg></div>',i);
- if(i<0||j<i)throw new Error(`${id}: no trace`);
- if(!s.body.slice(i,j).includes(`<circle cx="${g.x(0).toFixed(1)}" cy="${g.y(0)}" r="${g.r}"`))throw new Error(`${id}: the trace geometry no longer matches figures.js`);
- s.body=s.body.slice(0,j)+svg+s.body.slice(j);
-}
-
-// ---------------------------------------------------------------------------------------- the part break
-partBreak(3,'Agents at work','We look at real jobs one at a time: what the agent does, and where a person checks its work. Some of them we run live.',
- APPS.families.map(f=>f.name),
- {img:'part-work.jpg',alt:'Illustration: a small town of offices, a farm, a lab and a clinic, joined by thin lines to one small spark',nb:nb('part-3'),
-  line:'Key question: for each job, how much should the agent do without a person?',
-  ask:'Which job in your team would you hand to an agent first?',
-  expected:'Answers vary: reports, ticket triage, data clean-up, first drafts. Keep two of them; at the end of the part we place them on a map.',
-  point:'Every job gets the same two questions: what does the agent do, and where does a person check it?',
-  transition:'Each job is drawn the same way, as a trace. First, how to read one.',source:'Illustration: generated (Gemini image model).'});
-
-// ---------------------------------------------------------------------------------------- how to read a trace
+// ---------------------------------------------------------------------------------------- 3.1 tidy a messy folder
+chap('3.1','Tidy a folder');
+const N=TD.inbox.length,FILE=Object.fromEntries(TD.inbox.map(f=>[f.name,f]));
+const NAMES=TD.inbox.map(f=>f.name).sort((a,b)=>a<b?-1:a>b?1:0);            // the order ls prints them in
+const KINDS=[...new Set(TD.inbox.map(f=>f.kind))];
+const KIND_TEXT={delivery_notes:'a delivery note',customer_letters:'a customer’s letter',price_lists:'a price list',receipts:'a payment receipt'};
+const kindText=k=>KIND_TEXT[k]||k.replace(/_/g,' ');
+const kindName=k=>k.replace(/_/g,' ').replace(/s$/,'');
+const TS=TD.steps,of=s=>`Round ${s.round} of ${TD.rounds}`;
 {
- const [c0,c1]=D.opening.calls_per_turn,rounds=D.opening.calls_per_turn.filter(c=>c>0).length;
- const OPEN=[{lane:'you',icon:'person',t:'Your\nquestion'},{lane:'agent',icon:'spark',t:'Ask for\nforecasts'},
-  {lane:'tools',icon:'sensor',t:'Forecasts',n:c0},{lane:'agent',icon:'spark',t:`Ask for\n${word(c1)} sums`},
-  {lane:'tools',icon:'code',t:'Calculator',n:c1},{lane:'agent',icon:'spark',t:'Answer'},{lane:'you',icon:'eye',t:'Read the\nanswer'}];
- /** One node of a trace, small, for the key. */
- const node=(c,ic,{filled=false,n=0}={})=>`<svg viewBox="0 0 58 54" width="58" height="54" aria-hidden="true"><circle cx="26" cy="29" r="20" fill="${filled?c:'#fff'}" stroke="${c}" stroke-width="2.6"/>${icon(ic,26,29,21,filled?'#fff':c)}${n?`<circle cx="43" cy="12" r="11" fill="${c}"/><text x="43" y="16.5" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">×${n}</text>`:''}</svg>`;
- const KEY=[[node(ROLE.tools,'sensor',{n:c0}),'Calls made at once'],[node(ROLE.you,'approve',{filled:true}),'A person approves'],
-  [node(COL.green,'check',{filled:true}),'A checked result']];
- S_('read-card','work','How to read a trace',{builds:2,
-  body:`${lanes(OPEN,{W:1152,laneH:96,fs:19,gap:6,alt:'The opening run as a trace: you ask, the agent asks for three forecasts at once, then six sums at once, and answers; you read the answer'})}
-   ${at(2,`<div class="p3a-key">${KEY.map(([n,t])=>`<div>${n}<span>${t}</span></div>`).join('')}</div>`)}`,
-  lines:['Our opening run, drawn as a trace. Time runs left to right, and each row shows who acts.',
-   'Here a person had a say only at the two ends. In the jobs ahead, watch for the amber circle.'],
-  ask:['Who acts most often in this run?','Where in this run did a person have a say?'],
-  expected:[`The tools: ${word(D.opening.calls)} calls in ${word(rounds)} rounds. The agent only decides what to ask for.`,
-   'Only at the two ends: you asked, and you read the answer. In every trace that follows, look for where the person sits.'],
-  point:'Every job in this part is drawn the same way, so you can compare who decides, what acts, and where a person checks.',
-  transition:'The first job: fixing code.',
-  source:`The opening run (${esc(T.model)}, ${T.date_text}): ${word(D.opening.calls)} tool calls in ${word(D.opening.steps)} rounds.`});
+ const ex=(TD.goal.match(/(\d{4}-\d{2}-\d{2})_([\w-]+)(\.\w+)/)||(base(TD.check[0].now).match(/(\d{4}-\d{2}-\d{2})_([\w-]+)(\.\w+)/))||[]).slice(1);
+ claim(ex.length===3,'the request gave an example of a dated file name');
+ S_('tidy-mess','work',`${Word(N)} files, and no name says what is inside`,{builds:2,
+  body:`<div class="p3a-mess"><div>${tree('inbox/',NAMES)}</div>${ARROW}
+   <div>${tree('where they should go',KINDS.map(k=>k+'/'))}
+    ${at(2,`<div class="p3a-name"><span class="d"><u>${esc(ex[0])}</u><i>date</i></span><span>_</span><span class="s"><u>${esc(ex[1])}</u><i>sender</i></span><span>${esc(ex[2])}</span></div>`)}</div></div>`,
+  lines:[`The shop’s inbox for October. Each file belongs in one of ${word(KINDS.length)} folders, and no name says which.`,
+   'We also want each file renamed to its date and its sender.'],
+  ask:['Which of these is a complaint from a customer?','Why put the date first in the name?'],
+  expected:['Nobody can tell from the names. Someone has to open each file and read it.','Then any file browser lists the folder in date order.'],
+  point:`A dull, real office chore: open, read, decide, file and rename. ${Word(N)} times here, and thousands of times in a real office.`,
+  transition:'We give this job to the same agent.',
+  source:'The inbox is made up for this talk. The notebook creates it (make_workspace).'});
 }
 
-// ---------------------------------------------------------------------------------------- 3.1 knowledge work: coding
-chap('3.1','Knowledge work');
-task('app-coding-task','Coding: a test has started failing',{
- img:'app-coding.jpg',alt:'Illustration: a developer at a laptop in the evening, a small helper beside it',
- who:'A developer',req:'A test started failing after yesterday’s change. Find the cause and fix it.',
- tools:[['terminal','run the tests'],['file','read and edit files'],['search','search the code'],['branch','open a pull request']],
- lines:['What would an agent need for this job? Think of what a developer opens first.',
-  'The same tools a developer uses. The last one proposes the change for a person to review.'],
- ask:['What would you open first if you had to fix this yourself?','Which of these tools touches something other people depend on?'],
- expected:['The failing test and its error, then the code that changed yesterday. An agent needs the same: a way to run the tests and to read the files.',
-  'Editing changes only the agent’s own copy. The pull request is where the change meets everyone else’s code, so that is where a person comes in.'],
- point:'A coding agent needs the tools a developer already uses: run the tests, read and edit files, search, and propose a change.',
- transition:'Here is what it does with them.'});
+S_('tidy-ask','work','We ask in plain words',{builds:1,
+ body:`<div class="p3a-q">${request(named(TD.goal,KINDS),{who:'Our request'})}</div>`,
+ lines:['We name the folders and give one example. We do not say which file goes where.'],
+ ask:['What have we left for the agent to work out?'],
+ expected:['What each file is, its date and who sent it. All of that is inside the files, so it will have to read them.'],
+ point:'The request describes the result we want. The steps are left to the model.',
+ transition:'Over to the notebook.'});
 
-does('app-coding','Coding: it stops at a pull request',{builds:3,factsAt:2,evidenceAt:3,
- steps:[{lane:'tools',icon:'terminal',t:'Run the\ntests'},{lane:'agent',icon:'search',t:'Find the\ncause',at:1},
-  {lane:'tools',icon:'pen',t:'Edit the\ncode',at:1},{lane:'tools',icon:'terminal',t:'Rerun\nthe tests',kind:'done',at:1},
-  {lane:'tools',icon:'branch',t:'Open a pull\nrequest',at:2},{lane:'you',icon:'approve',t:'Review\nand merge',kind:'check',at:2}],
- check:'The change itself, before it is merged.',
- evidence:{label:'SWE-bench Verified',big:`${num(SW.leaderboard_pct,0)}%`,text:`of ${SW.tasks} real GitHub issues fixed, the top independent score.`},
- lines:['It works on its own copy of the code, and it can tell when the fix works: the tests pass.',
-  'It does not merge the fix itself. A person reads the change and decides.',
-  'How good are coding agents? This is the best-known public test of them.'],
- ask:['The tests pass now. Is the job done?','Why stop at a pull request instead of merging?','What does a score on this test tell you about your own code?'],
- expected:['Not yet. Passing tests say the failure has gone; whether the fix is the right one is a reviewer’s call.',
-  'Merging changes the code everyone else depends on. A review takes minutes, and the tests already did most of the checking.',
-  `Less than it seems. The ${SW.tasks} tasks come from public Python projects, and the test has leaked into training data. Run your own evals (Part 4). Developers use the tools anyway: ${D.so.use_or_plan}% use or plan to use AI tools, and ${num(D.so.agents_weekly,0)}% use agents at least weekly (Stack Overflow survey, ${D.so.year}).`],
- point:`A coding agent can do most of the work because tests check it in seconds, and a person approves the merge. ${where('coding')}`,
- misconception:`That vendor scores are the ones to quote. Vendors report higher numbers (${num(SW.mid.pct,1)}% for ${esc(SW.mid.model)}, ${num(SW.late.pct,1)}% for the restricted ${esc(SW.late.model)}), and OpenAI has said the test is contaminated and stopped reporting it. The independent leaderboard is the safer number.`,
- transition:'Code has tests. Data analysis has something almost as good: code you can rerun.',
- source:'Trace: a sketch of how coding agents such as Claude Code or Codex typically work. Score: the swebench.com leaderboard.'});
-
-// ---------------------------------------------------------------------------------------- data analysis (notebook 3.1)
-{
- const TOOLS=usedTools(T.analyst,{describe_table:['database','describe the table'],run_pandas:['code','run Python code']});
- task('app-analyst-task','Data analysis: which city had the worst winter air?',{
-  img:'app-analyst.jpg',alt:'Illustration: a laptop showing simple charts, a hazy city skyline in the window',
-  req:esc(AN.req_short),tools:TOOLS,
-  lines:[`A table of daily PM2.5 for ${word(AN.n_cities)} Indian cities. What would an agent need to answer this?`,
-   `Only ${word(TOOLS.length)} tools. The second runs any code the model writes, so it can count, average and draw.`],
-  ask:['How would you answer this yourself?','Why one tool that runs code, instead of one tool for each question?'],
-  expected:['Open the table, keep the winter months, count each city’s days over the limit, and draw a bar chart.',
-   'Because the questions change. With code it can filter, count and chart whatever the question needs. In a real deployment that code runs in a sandbox.'],
-  point:'An analysis agent needs only a way to see the data and a way to run code on it.',
-  transition:'Over to the notebook to run it.',
-  source:'Data: daily PM2.5 for each city, CAMS model estimates via Open-Meteo.'});
-}
-
-nbRun('nb-analyst','work','3.1','A data analyst',{
- run:'tools = [describe_table, run_pandas]\nanalyst = run_agent(question, tools, system=ANALYST)',
- look:['Does it look at the table before it counts?','The code it writes, and the chart it draws'],
- line:'This run takes about a minute, so we start it and watch the code it writes.',
- ask:'What should a careful analyst do before counting anything?',
- expected:'Look at the table: which columns, which cities, which dates. Watch whether the agent does.',
- point:'The agent writes and runs its own code, and we can read every line of it.',
- demo:`Notebook 3.1: run the cells under “A data analyst”. Live, it takes about a minute: our recorded run spent ${num(AN.seconds,0)} seconds in the model, and drawing the chart adds a little. Read out each run_pandas call while it works. If it is slow or fails, move on: the next slides show our recorded run.`,
- transition:'Here is what our recorded run did.'});
-
-does('app-analyst','It looked at the table before it counted',{builds:2,
- steps:[{lane:'tools',icon:'database',t:'Describe\nthe table'},{lane:'tools',icon:'code',t:'Count with\ncode',at:1},
-  {lane:'agent',icon:'search',t:`Over ${S}, or\n${S} and over?`,at:2},{lane:'tools',icon:'code',t:'Count\nboth ways',at:2},
-  {lane:'tools',icon:'chart',t:'Draw the\nchart',at:2},{lane:'agent',icon:'pen',t:'Answer',at:2}],
- check:`The code, and what “over ${S}” means.`,
- evidence:{label:'Our run',big:`${num(AN.seconds,0)} seconds`,text:`and ₹${num(AN.cost_inr,2)}, in ${word(AN.steps)} rounds.`},
- lines:['First it asked what is in the table: the columns, the cities, the dates. Then it wrote code to count.',
-  `${Word(AN.at_standard)} days sat at exactly ${S}, so it questioned its own definition and counted both ways.`],
- ask:['Why look at the table before counting?','What would you check before trusting these counts?'],
- expected:['To learn the column names and the date range. Code written blind fails, or worse, counts the wrong thing.',
-  `The definition: does “over the standard” mean above ${S}, or ${S} and above? Counting both ways changed ${AN.changed_by_definition.join(' and ')} by a day or two; it kept “above ${S}”.`],
- point:`An analysis agent shows its work as code, so anyone can rerun it and check the numbers. ${where('analyst')}`,
- misconception:`That code makes the answer right. ${Word(AN.failed_runs)} of its ${word(AN.code_calls)} code runs failed, and it read the error and fixed the code. A wrong definition raises no error at all, so that is what a person checks.`,
- transition:'Here is the chart it drew, and its answer.',
- source:`Real run (notebook 3.1, ${esc(T.model)}, ${T.date_text}): ${word(AN.calls)} tool calls, condensed to its main steps.`});
-
-{
- const rows=[...AN.cities].sort((a,b)=>b.days_over-a.days_over),W=640,H=372,L=134,top=42,rh=(H-top-2)/rows.length,bw=W-L-58;
- const bar=(c,i,full)=>`<rect x="${L}" y="${(top+i*rh+4).toFixed(1)}" width="${Math.max(c.days_over/AN.winter_days*bw,2).toFixed(1)}" height="${(rh-8).toFixed(1)}" rx="3" fill="${COL.data}"${full?'':' opacity=".55"'}/>`;
- const bars=label(0,22,`Days over ${S} µg/m³, out of ${AN.winter_days}`,{size:20,fill:MUTED,weight:650})+rows.map((c,i)=>{
-  const y=top+i*rh+rh/2+7,on=c.city===AN.worst,x=L+c.days_over/AN.winter_days*bw;
-  return label(L-12,y,esc(c.city),{size:20,fill:COL.ink,anchor:'end'})+bar(c,i,false)+(on?gat(2,bar(c,i,true)):'')+label(x+8,y,String(c.days_over),{size:20,fill:COL.ink});}).join('');
- const [,second,third]=rows;
- S_('analyst-answer','work','Its chart and its answer',{builds:2,
-  body:`<div class="p3a-chart"><svg class="p3a-bars" viewBox="0 0 ${W} ${H}" role="img" aria-label="Days over ${S} µg/m³ last winter in each of ${word(AN.n_cities)} cities, redrawn from the agent’s numbers">${bars}</svg>
-   ${at(2,`<div class="p3a-head"><small>Its answer</small><b>${esc(AN.worst)}</b><p>${AN.worst_days} of ${AN.winter_days} winter days over ${S} µg/m³, and the worst average: ${num(AN.worst_mean,1)} µg/m³.</p></div>`)}</div>`,
-  lines:['Its chart, redrawn from its numbers. The top cities were over the limit on most winter days.',
-   'Its answer agrees with the chart. Every number came from code, so we can rerun it to check.'],
-  ask:['Which city would you have guessed?','Would you put this headline in a report as it stands?'],
-  expected:[`Most guess Delhi. ${esc(AN.worst)} comes first, with ${esc(second.city)} and ${esc(third.city)} close behind.`,
-   `After one check: rerun the code and confirm the definition of “over ${S}”. And say what the data are: model estimates for each city, from CAMS. At the other end, ${AN.fewest_cities.join(' and ')} had ${word(AN.fewest_days)} day each over the limit.`],
-  point:'The answer comes with the code that produced it, so checking it is cheap: rerun and compare.',
-  misconception:`That the chart shows measured air. These are CAMS model estimates for each city, ${AN.period}; no monitoring station was read. The agent’s own chart is figures/${AN.chart.file}, too small to read in a hall, so the slide redraws it.`,
-  transition:'Research is harder to check. There is no code to rerun, only sources.',
-  source:`Real run (notebook 3.1, ${esc(T.model)}, ${T.date_text}), chart redrawn from its numbers. Data: CAMS model estimates via Open-Meteo.`});
-}
-
-// ---------------------------------------------------------------------------------------- research (notebook 3.2)
-{
- const TOOLS=usedTools(T.research,{search_wikipedia:['search','search Wikipedia'],read_wikipedia:['globe','read a page']});
- task('app-research-task','Research: an answer with sources',{
-  img:'app-research.jpg',alt:'Illustration: a stack of documents and a magnifying glass, cards flying into a finished report',
-  req:esc(RS.goal),tools:TOOLS,
-  lines:['A question about a government programme, and we want a source for every claim. What would an agent need?',
-   'A search and a reader. Ours uses Wikipedia; at work it would be the web and your own files.'],
-  ask:['Where would you look first for this?','What could go wrong with an answer built from search results?'],
-  expected:['A search engine, then the programme’s own pages. An agent needs the same: a search tool, and a way to read what it finds.',
-   'It might rest on one weak source, quote an old figure, or attach a link that does not say what the claim says.'],
-  point:'A research agent needs a search tool, a way to read, and instructions to cite what it read. Products sold as “deep research” do the same with many more searches, for market scans or literature reviews.',
-  transition:'Over to the notebook.'});
-}
-
-nbRun('nb-research','work','3.2','A research assistant with sources',{
- run:'tools = [search_wikipedia, read_wikipedia]\nresearch = run_agent(question, tools, system=RESEARCH)',
- look:['Which page does it choose to read?','A link after each claim'],
- line:'We tell it: answer only from what you read, and put a link after each claim.',
- ask:'How many pages do you think it will read?',
- expected:'Most guess several. Watch the tool calls: it may read fewer than you expect.',
- point:'We ask for a link after each claim, so that we can see where each claim came from.',
+nbRun('nb-tidy','work','3.1','Tidy a messy folder',{
+ run:'tidy = run_agent(TIDY_TASK, max_rounds=30)\nprint(sh("ls -R inbox")[1])',
+ look:['What does it do before it moves anything?','What does inbox/ look like at the end?'],
+ line:'The agent is the one from Part 1, with the same four tools. Only the request is new.',
+ ask:'What does it have to do before it can move a single file?',expected:'Open each file and read it. The names tell it nothing.',
+ point:'A new job needed a new request. It needed no new code.',
  transition:'Here is our recorded run.'});
 
 {
- const calls=T.research.turns.flatMap(t=>t.calls),nSearch=calls.filter(c=>c.name==='search_wikipedia').length;
- const reads=calls.filter(c=>c.name==='read_wikipedia'),hits=T.research.turns[0].results[0].result;
- if(!reads.length||!Array.isArray(hits))throw new Error('research trace: expected a search, then a read');
- does('app-research',`Our run read ${word(reads.length)} page${reads.length>1?'s':''}`,{builds:2,
-  steps:[{lane:'tools',icon:'search',t:'Search\nWikipedia'},{lane:'agent',icon:'list',t:'Pick a\npage',at:1},
-   {lane:'tools',icon:'globe',t:'Read\nthe page',at:1},{lane:'agent',icon:'pen',t:'Answer,\nwith links',at:2},
-   {lane:'you',icon:'approve',t:'Open the\nlinks',kind:'check',at:2}],
-  check:'Open each link and read what the page says.',
-  evidence:{label:'Our run',big:`${num(RS.seconds,0)} seconds`,text:`and ₹${num(RS.cost_inr,2)}, in ${word(RS.steps)} rounds.`},
-  lines:[`It searched ${times(nSearch)}, picked ${word(reads.length)} page from the results, and read it.`,
-   'Then it answered with a link after each claim, as we asked. Are the links enough?'],
-  ask:[`The search returned ${word(hits.length)} titles. Which would you have read?`,'Every claim has a link. Can you forward the answer to your manager?'],
-  expected:[`It read “${esc(reads[0].args.title)}”, a general page. The programme had no page of its own among the results.`,
-   'Not yet. A link says where to look. Someone has to open it and read the sentence it points to.'],
-  point:`A research agent saves the searching and reading, but its answer is a draft until someone checks the sources. ${where('research')}`,
-  transition:'Here is its answer, with its links.',
-  source:`Real run (notebook 3.2, ${esc(T.model)}, ${T.date_text}): ${word(RS.calls)} tool calls.`});
+ const reads=TS.filter(s=>s.name==='read_file'&&FILE[base(s.args.path)]),seen=[...new Set(reads.map(s=>base(s.args.path)))];
+ claim(reads.length>=2,'the agent opened the inbox files with read_file');
+ const r1=reads[0],r2=reads.find(s=>s!==r1&&FILE[base(s.args.path)].kind==='customer_letters')||reads.at(-1);
+ const f1=FILE[base(r1.args.path)],f2=FILE[base(r2.args.path)],plain=f2.kind==='customer_letters'&&!/letter/i.test(f2.text);
+ const rounds=new Set(reads.map(s=>s.round)).size;
+ const marks=Object.fromEntries(seen.map(n=>[n,[[n===f1.name?'1,2':'2','read']]]));
+ const show=(s,f)=>`${toolCall(s.name,s.args)}<div class="p3a-wrap">${editor(s.args.path,f.text,{lang:'text'})}</div>`;
+ S_('tidy-reads','work',seen.length===N?'First it reads every file':`First it reads ${word(seen.length)} of the ${word(N)} files`,{builds:2,
+  body:`<div class="p3a-walk"><div>${tree('inbox/',NAMES,{marks})}</div><div>${only('1',show(r1,f1))}${only('2',show(r2,f2))}</div></div>`,
+  lines:[`A name tells it nothing, so it asks to read the first file. It is ${kindText(f1.kind)}.`,
+   `${Word(reads.length)} reads in ${word(rounds)} rounds. This one is ${kindText(f2.kind)}${plain?', and no line in it says so':''}.`],
+  ask:['Could it have sorted the files without opening them?',`How does it know that this file is ${kindText(f2.kind)}?`],
+  expected:[`No. A name like ${f1.name} says nothing about what is inside.`,`From what the text says${plain?': someone is writing to the shop about something they bought':''}. A rule that searched for a fixed word would miss it.`],
+  point:'It reads the way we would, one file at a time, and it sorts by what the text means.',
+  transition:'It now knows what every file is. Next it moves them.',
+  source:`Our recorded run, ${T.date_text}: rounds ${reads[0].round} to ${reads.at(-1).round} of ${TD.rounds}. Two of the files it read are shown.`});
 }
 
 {
- // The claims of its answer: "* **Label:** text (url)". Each is cut to its key phrase, quoted as the model wrote it.
- const CUT={'Start date':/launched in \d{4}/,'Aim':/improve air quality across \d+ Indian cities/,'Target':/an? [\d%]+ to [\d%]+ reduction in .+? by \d{4}/};
- const claims=T.research.answer.split('\n').filter(l=>/^\s*\*/.test(l)&&l.includes('http')).map(l=>{
-  const m=l.match(/\*\*(.+?):\*\*\s*(.+?)\s*\((https?:\/\/[^\s)]+)\)/);if(!m)throw new Error('research answer: a claim without a label and link');
-  const text=m[2].replace(/\$\\text\{PM\}_\{([\d.]+)\}\$/g,'PM$1'),cut=CUT[m[1]]&&text.match(CUT[m[1]]);
-  if(!cut)throw new Error('research answer: no key phrase for '+m[1]);
-  return {label:m[1],text:cut[0],url:m[3]};});
- if(claims.length!==RS.claims||new Set(claims.map(c=>c.url)).size!==RS.distinct_links)throw new Error('research answer: claims or links changed');
- const year=claims.at(-1).text.match(/by (\d{4})$/)[1];
- S_('research-links','work','Every claim has a link',{builds:2,
-  body:`<div class="p3a-claims">${claims.map(c=>`<b>${esc(c.label)}</b><span>${esc(c.text)}</span>${chip('globe',esc(new URL(c.url).pathname))}`).join('')}
-   ${at(2,`<div class="p3a-one">${RS.distinct_links===1?'one page':`${word(RS.distinct_links)} pages`}</div>`)}</div>`,
-  lines:['Its answer, cut to the key phrase of each claim. It looks well sourced.',
-   `All ${word(RS.links)} links go to one general page. Someone still has to open it and read it.`],
-  ask:['Which of these claims would you check before quoting it?','What would a careful researcher add?'],
-  expected:[`The target. It is the number a decision would rest on, and it is for ${year}, which has passed. Is it still the target today? The answer cannot tell you.`,
-   'A primary source, such as the programme’s own documents, and the date of each figure. A general page is only a starting point.'],
-  point:'A link shows where a claim came from. Only reading the source shows whether the claim is right and still current.',
-  misconception:'That a citation proves a claim. A model can attach a plausible link to a sentence the page does not support; only reading the source checks it.',
-  transition:'From knowledge work to operations: customer support.',
-  source:`Real answer (notebook 3.2, ${esc(T.model)}, ${T.date_text}), each claim cut to its key phrase. Every link: ${esc(claims[0].url)}`});
+ const iBad=TS.findIndex(s=>s.name==='bash'&&s.exit),bad=TS[iBad],retry=bad&&TS[iBad+1]?.name==='bash'?TS[iBad+1]:null;
+ const bare=l=>l.replace(/["'\\]/g,'');
+ const badLine=bad&&(cmdLines(bad).find(l=>bad.result.includes(l))||cmdLines(bad)[0]);
+ const fixLine=retry&&cmdLines(retry).find(l=>l!==badLine&&bare(l)===bare(badLine));
+ const size=n=>n<=84?'':n<=100?'s':'xs';
+ const asks=(cmd,note)=>`<div class="tc"><span class="tc-who">${iconHTML('spark',COL.guess,18)}The model asks</span><code>${hl(cmd.includes('"')?`bash('${cut(cmd,36)}')`:`bash("${cut(cmd,36)}")`,'python')}</code><small>${note}</small></div>`;
+ if(fixLine){
+  const err=bad.result.split('\n').find(l=>l.trim())||'',n=cmdLines(bad).length;
+  const brackets=/[()]/.test(badLine),quoted=/["']/.test(fixLine)&&!/["']/.test(badLine);
+  const gone=(retry.result.match(/No such file/g)||[]).length;
+  const long=Math.max(badLine.length,fixLine.length,err.length)+2;
+  S_('tidy-error','work','A command fails. It reads the error and tries again',{builds:2,
+   body:`<div class="p3a-err"><div class="top"><div>${only('1',loopStrip({tool:'1',result:'1'},{round:of(bad)}))}${only('2',loopStrip({model:'2',tool:'2',result:'2'},{round:of(retry)}))}</div>
+     <div>${only('1',asks(badLine,`One of ${word(n)} lines in the same request.`))}${only('2',asks(fixLine,quoted?'The same line, with the name in quotes.':'The same line, corrected.'))}</div></div>
+    ${term([{cmd:cut(badLine,112),wrap:false},{out:`exit code ${bad.exit}`,kind:'bad'},{out:cut(err,112),kind:'bad'},{cmd:cut(fixLine,112),at:2,wrap:false},{out:`exit code ${retry.exit}`,kind:retry.exit?'bad':'ok',at:2}],{size:size(long)})}</div>`,
+   lines:[`It asks for all the moves in one command. ${brackets?'One file name has brackets, and the shell stops.':'The shell stops with an error.'}`,
+    `The error goes back to the model as the result. Next round, ${quoted?'that name is in quotes':'the line is corrected'}.`],
+   ask:['What does our code do when a command fails?',quoted?'Who told it to add the quotes?':'Who told it what to change?'],
+   expected:[`Nothing special. It returns the exit code and the error text to the model, like any other result.${gone?` (The lines above the bad one had already run, so the retry complained about ${word(gone)} files that were gone. The agent then listed the folder to check.)`:''}`,
+    'Nobody, in that round. It read the error message. Our description of the bash tool does ask for quotes around such names, and the first time it left them out.'],
+   point:'An error is one more result in the conversation. The loop lets the model read it and try again.',
+   misconception:'That an agent has to get every step right. It has to notice when a step went wrong, and here the exit code and the error text told it.',
+   transition:'So what does the inbox look like now?',
+   source:`Our recorded run, ${T.date_text}: rounds ${bad.round} and ${retry.round} of ${TD.rounds}. Each command had ${n} lines; the one that failed is shown.`});
+ }else{
+  const mv=TS.find(s=>s.name==='bash'&&/\bmv\b/.test(s.args.command||''));
+  claim(mv,'the agent moved the files with mv');
+  const ls=cmdLines(mv),shown=ls.slice(0,5).map(l=>cut(l,112)),long=Math.max(...shown.map(l=>l.length))+2;
+  S_('tidy-error','work','Then it moves and renames the files',{builds:1,
+   body:`<div class="p3a-err"><div class="top"><div>${loopStrip({model:'1',tool:'1'},{round:of(mv)})}</div><div>${asks(ls[0],`${Word(ls.length)} ${ls.length>1?'lines':'line'} in one request.`)}</div></div>
+    ${term([...shown.map(l=>({cmd:l,wrap:false})),...(ls.length>shown.length?[{out:'…',kind:'dim'}]:[]),{out:`exit code ${mv.exit}`,kind:mv.exit?'bad':'ok'}],{size:size(long)})}</div>`,
+   lines:['Each move puts a file in its folder and gives it the new name, in one step.'],
+   ask:['Where did the new names come from?'],
+   expected:['From the text of each file: its date and its sender. Nothing in the old names helped.'],
+   point:'One shell command does the moving. The work was in knowing where each file belongs.',
+   transition:'So what does the inbox look like now?',
+   source:`Our recorded run, ${T.date_text}: round ${mv.round} of ${TD.rounds}.`});
+ }
 }
 
-// ---------------------------------------------------------------------------------------- 3.2 operations: customer support
-chap('3.2','Operations');
 {
- const TOOLS=[['database','look up orders'],['file','read the refund policy'],['rupee','refund','risk'],['send','reply to the customer','risk']];
- const nAct=TOOLS.filter(t=>t[2]==='risk').length;
- task('app-support-task','Customer support: the refund from Part 1',{
-  img:'app-support.jpg',alt:'Illustration: a customer with a phone, and a support desk where a small helper types a reply',
-  who:'A customer',req:`My ${esc(REF.item)} (order ${REF.order}, ₹${big(REF.amount)}) arrived damaged. I want a refund.`,tools:TOOLS,
-  lines:['The refund from Part 1, now as a customer’s message. What would an agent need to settle it?',
-   `${Word(TOOLS.length-nAct)} of these only read. The ${word(nAct)} in red act: one moves money, one sends a message.`],
-  ask:['What would a person on the support desk check first?','Which of these tools would you let it use without asking you?'],
-  expected:['The order: was it delivered, and for how much? Then the policy: is damage covered, and is it within the time limit?',
-   'Reading, always. Refunds only up to a small amount. Replies perhaps, once you trust its wording.'],
-  point:'Reading tools are safe to give an agent. The tools that move money or send messages need limits.',
-  transition:'So we put a cap on the refund tool.',
-  source:'The refund is from the notebook’s demo inbox.'});
+ const placed=TD.check.map(c=>{const [dir,...rest]=c.now.split('/');return {...c,dir,file:rest.join('/')};}).filter(c=>c.file);
+ const dirs=[...new Set(placed.map(c=>c.dir))].filter(d=>d!=='inbox').sort((a,b)=>(KINDS.indexOf(a)+1||99)-(KINDS.indexOf(b)+1||99)||(a<b?-1:1));
+ const index=!!String(TD.index||'').trim();
+ const rows=[...dirs.flatMap(d=>[d+'/',...placed.filter(c=>c.dir===d).map(c=>'  '+c.file).sort()]),...placed.filter(c=>c.dir==='inbox').map(c=>c.file).sort(),...(index?['INDEX.md']:[])];
+ const marks=Object.fromEntries([...dirs.map(d=>d+'/'),'INDEX.md'].map(n=>[n,[['2','new']]]));
+ S_('tidy-after','work','The inbox, before and after',{builds:2,
+  body:`<div class="p3a-ba"><div>${tree('inbox/ before',NAMES)}</div>${ARROW}<div>${tree('inbox/ after',rows,{size:'s',marks})}</div></div>`,
+  lines:[`On the left, the inbox as we found it. On the right, the same folder ${sec(TD)} seconds later.`,
+   `${Word(dirs.length)} new folders${index?' and an index file':''}. ${placed.length===N?`${Word(N)} files went in and ${word(N)} came out`:`${Word(placed.length)} of the ${word(N)} files are still there`}.`],
+  ask:['What do the new names have in common?','What should we check before we trust this?'],
+  expected:['Each starts with the date, then the sender. The folder now lists in date order.','That each file is in the right folder, and that nothing was lost or overwritten. A folder can look tidy and still be wrong.'],
+  point:'One request, and the whole chore is done: read, decide, move, rename, index.',
+  transition:'It looks right. Is it right?',
+  source:`Our recorded run, ${T.date_text} (${esc(T.model)}): the folder as the notebook lists it after the run.`});
+
+ const all=TD.right===N&&TD.dated===N;
+ S_('tidy-check','work','Did it get it right?',{builds:2,
+  body:`<div class="p3a-chk"><div class="p3a-key"><b>File</b><b>What it really is</b><b class="c">Folder</b><b class="c">Name</b>
+    ${TD.check.map(c=>`<span class="f">${esc(c.was)}</span><span class="k">${esc(kindName(FILE[c.was].kind))}</span>${[c.right_folder,c.dated_name].map(ok=>`<div>${only('1','<span class="p3a-dot"></span>')}${only('2',tick(ok))}</div>`).join('')}`).join('')}</div>
+   <div>${only('1',`<div class="p3a-nums run"><div><b>${TD.rounds} <small>rounds</small></b><span>each one a call to the model</span></div><div><b>${sec(TD)} <small>seconds</small></b><span>of model time</span></div></div>`)}
+    ${only('2',`<div class="p3a-nums"><div${TD.right===N?'':' class="bad"'}><b>${TD.right} <small>of ${N}</small></b><span>in the right folder</span></div>
+    <div${TD.dated===N?'':' class="bad"'}><b>${TD.dated} <small>of ${N}</small></b><span>named by date and sender</span></div></div>`)}</div></div>`,
+  lines:['We wrote these files, so we know what each one really is.',
+   `${all?'Every file is in the right folder, with a dated name':`${Word(TD.right)} are in the right folder and ${word(TD.dated)} have a dated name`}.`],
+  ask:['How would you check this in a real office, where nobody has an answer key?','Would you run this on your own documents folder tomorrow?'],
+  expected:['Check a sample by hand, or sort a small set yourself first and compare. That small labelled set is an eval; Part 4 builds one.',
+   'On a copy, yes. It moves and renames real files, so a wrong move matters. Part 4 is about that.'],
+  point:'We can count how well it did only because we know the right answers. Keep a small set like this for your own tasks.',
+  transition:'The second job involves money.',
+  source:`Checked by the notebook (section 3.1) against the list the files were made from. ${esc(T.model)}, ${T.date_text}.`});
 }
 
+// ---------------------------------------------------------------------------------------- 3.2 check invoices against orders
+chap('3.2','Check invoices');
+const NI=IV.invoices.length,IS=IV.steps;
 {
- const steps=[{lane:'tools',icon:'mail',t:'Read the\nmessage'},{lane:'tools',icon:'database',t:'Look up\nthe order',at:1},
-  {lane:'tools',icon:'file',t:'Check the\npolicy',at:1},{lane:'agent',icon:'scale',t:'Under\nthe cap?',at:1},
-  {lane:'you',icon:'approve',t:'Approve if\nover cap',kind:'check',at:2},{lane:'tools',icon:'rupee',t:'Refund',at:2},
-  {lane:'tools',icon:'send',t:'Reply',at:2}];
- does('app-support','Customer support: refunds up to a cap',{builds:2,steps,
-  check:'Refunds over the cap, and any case the policy does not cover.',
-  lines:['It reads the message, the order and the policy, then asks: is the amount under the cap?',
-   'Under the cap, it refunds and replies by itself. Over the cap, a person approves first.'],
-  ask:['What cap would you set, and why?','What else should send a case to a person?'],
-  expected:['Most choose a small amount: small, clear cases run alone, large or odd ones go to a person. That is Part 1’s autonomy level, set by amount.',
-   'An angry customer, a repeat claim, a legal threat, anything the policy does not cover. Keep the cap low: whatever the agent promises, the company has to honour (Air Canada, Part 4).'],
-  point:`A support agent can settle small, routine refunds; anything over the cap goes to a person. ${where('support')}`,
-  misconception:'That the cap is something the model remembers to respect. It belongs in the refund tool itself, in our code, so it holds whatever the model writes.',
-  transition:'Has anyone run this at scale? One payments company did.',
-  source:'Trace: a design drawn for this talk; it describes no deployed system.'});
- // the path most cases take: out of "Under the cap?" low on its right, along the agent lane, down into Refund's top
- const g=geom(steps,WIDE),y3=g.y(3),y5=g.y(5),dy=12,dx=Math.sqrt(g.r**2-dy**2);
- overlay('app-support',g,gat(2,route([[g.x(3)+dx+3,y3+dy],[g.x(5),y3+dy],[g.x(5),y5-g.r-6]],{text:'yes',at:[g.x(4),y3+dy-8],halo:'#F3EDF9'})));
+ const head=IV.orders.trim().split('\n')[0].split(','),ORD=IV.orders.trim().split('\n').slice(1).map(l=>Object.fromEntries(l.split(',').map((v,i)=>[head[i],v])));
+ const x=IV.invoices.find(i=>i.problem==='unit price')||IV.invoices.find(i=>i.problem==='quantity')||IV.invoices[0],o=ORD.find(r=>r.po_number===x.po);
+ const L=x.text.replace(/\n$/,'').split('\n'),ln=re=>L.findIndex(l=>re.test(l))+1,lPO=ln(/^Against purchase order/i),lQ=ln(/^Quantity/i),lP=ln(/^Unit price/i);
+ const price=o&&x.problem==='unit price',qty=o&&x.problem==='quantity';
+ const notes=price?{[lP]:[`the order says Rs ${esc(o.unit_price)}`,COL.loss,[2]]}:qty?{[lQ]:[`the order says ${esc(o.quantity)}`,COL.loss,[2]]}:{};
+ S_('invoice-job','work',`${Word(NI)} invoices to check before anything is paid`,{builds:2,
+  body:`<div class="p3a-job"><div>${editor(`invoices/${x.number}.txt`,x.text,{lang:'text',focus:{2:[lPO,lQ,lP].filter(Boolean)},notes})}</div>
+   <div class="p3a-orders"><div class="tree-h">${iconHTML('database',COL.data,20)}data/purchase_orders.csv</div>
+    <table><thead><tr><th>Order</th><th>Item</th><th class="n">Quantity</th><th class="n">Unit price</th></tr></thead><tbody>${ORD.map(r=>`<tr${r===o?' class="hit"':''}><td><span class="mono">${esc(r.po_number)}</span></td><td>${esc(r.item)}</td><td class="n${r===o&&qty?' diff':''}">${esc(r.quantity)}</td><td class="n${r===o&&price?' diff':''}">Rs ${esc(r.unit_price)}</td></tr>`).join('')}</tbody></table></div></div>`,
+  lines:['An invoice from a supplier, and the orders the shop placed. Do they match?',
+   `${price?`The order says Rs ${esc(o.unit_price)} each. The invoice charges Rs ${x.unit_price}.`:qty?`The order was for ${esc(o.quantity)}. The invoice bills ${x.quantity}.`:'Three lines have to agree with the order.'} ${Word(NI)} invoices need this check.`],
+  ask:['What would you compare, and in what order?','Who does this job in your organisation today?'],
+  expected:['The order number first, then the quantity and the unit price against that order.','Usually someone in accounts, by eye, near the end of the month. It is slow work, and a tired reader misses things.'],
+  point:'Checking one document against another is careful, repetitive work, and a lot of office work looks like it.',
+  transition:'Again, all we write is the request.',
+  source:'The invoices and the orders are made up for this talk; the notebook creates them. The orders file also names each supplier.'});
 }
 
-S_('support-klarna','work',`Klarna’s assistant took ${KL.share} of its chats`,{builds:2,
- body:`<div class="p3a-stats"><div><div><b>${KL.chats}</b><p>chats handled</p></div></div>
-  <div><div><b>under ${KL.minutes_after} min</b><p>per query, down from ${KL.minutes_before}</p></div></div>
-  ${at(2,`<div class="r"><b>“Lower quality”</b><p>its CEO’s verdict. Some chats now go to people again.</p></div>`)}</div>`,
- lines:['Klarna, a payments company, put an AI assistant on its customer chats. In its first month:',
-  'Its CEO later said the focus on cost had lowered quality. What would you measure besides cost?'],
- ask:[`It handled ${KL.share} of the chats. Is ${KL.share} of the job done?`,'Why do you think quality fell?'],
- expected:['No. The rest are the hard cases, and speed says nothing about whether the customer was helped.',
-  `Its CEO said cost had been too dominant a factor in judging it. Klarna now offers a person for some cases; the new staff are freelance, gig-style workers, and total headcount kept falling. Klarna had said the assistant did the work of about ${KL.fte} full-time agents.`],
- point:'Handling a share of the chats is a different thing from helping those customers. Measure quality from the start, and keep a person within reach.',
- misconception:'That “Klarna is hiring people again” means it reversed course. The hires are freelance, gig-style agents, and headcount kept falling.',
- transition:'Now our own inbox assistant, with an approval step built in.',
- source:`Klarna: press release (${KL.date}); its CEO’s interview with Bloomberg (${KL.turn_date}), as reported by Entrepreneur.`});
+S_('invoice-ask','work','The request says what “fine” means',{builds:1,
+ body:`<div class="p3a-q">${request(named(IV.goal),{who:'Our request'})}</div>`,
+ lines:['We ask for a list. We do not ask it to pay or reject anything.'],
+ ask:['What did we not ask it to do?'],
+ expected:['Pay, reject or write to a supplier. We asked for a report only. That was a choice, and we come back to it.'],
+ point:'The request holds the rule and the output we want: a report, and no action.',
+ transition:'Over to the notebook.'});
+
+nbRun('nb-invoices','work','3.2','Check invoices against orders',{
+ run:'audit = run_agent(INVOICE_TASK, max_rounds=20)\nprint((WORK / "mismatches.md").read_text())',
+ look:['How many files does it read?','Which invoices end up in mismatches.md?'],
+ line:'Same agent again. We pass the new request, and wait for the file it writes.',
+ ask:`How many of the ${word(NI)} do you expect it to flag?`,expected:`We put a problem in ${word(IV.problems)} of them. Watch whether it finds exactly those.`,
+ point:'Again there is no new code, only a new request.',
+ transition:'Here is our recorded run.'});
 
 {
- const I=T.inbox,mails=I.turns[0].results[0].result,nRead=I.turns[1].calls.filter(c=>c.name==='read_email').length;
- const ok=I.approvals.filter(a=>a.allowed),sent=I.sent;
- if(!ok.length||ok[0].call!==D.inbox.gated_tool||!sent.length)throw new Error('inbox trace: expected an approved send');
- nbRun('nb-inbox','work','3.3','An inbox assistant that asks first',{
-  run:'@tool(needs_approval=True)\ndef send_email(to, subject, body): ...',
-  look:['It reads every email without asking','It stops and asks before it sends'],
-  line:`A made-up inbox of ${word(mails.length)} emails, with this refund among them. Sending an email needs a person’s approval.`,
-  ask:'Which of its actions should wait for you?',
-  expected:'Sending. Reading is safe, but a sent email cannot be taken back.',
-  point:'The approval sits in our code, on the tool, so the model cannot skip it.',
-  demo:'Notebook 3.3: run the cells under “An inbox assistant that asks first”. When it stops and asks before send_email, read the request out, then type y. If it is slow or fails, move on: the next slide shows our recorded run.',
-  transition:'Here is our recorded run.'});
+ const reads=IS.filter(s=>s.name==='read_file'),inv=reads.filter(s=>/(^|\/)invoices\//.test(s.args.path)),writes=IS.filter(s=>s.name==='write_file');
+ claim(writes.length&&inv.length,'the agent read the invoices with read_file and wrote its report with write_file');
+ const iW=IS.indexOf(writes[0]),wrote=new Set(writes.map(s=>s.args.path)),paths=[...new Set([...reads,...writes].map(s=>s.args.path))];
+ const dirs=[...new Set(paths.filter(p=>p.includes('/')).map(p=>p.split('/')[0]))];
+ const rows=[...dirs.flatMap(d=>[d+'/',...paths.filter(p=>p.startsWith(d+'/')).map(p=>'  '+p.slice(d.length+1))]),...paths.filter(p=>!p.includes('/')).map(p=>wrote.has(p)?{name:p,at:2}:p)];
+ const marks=Object.fromEntries(paths.map(p=>[base(p),wrote.has(p)?[['2','new']]:[['1,2','read']]]));
+ const each=new Set(inv.map(s=>s.round)).size===inv.length,unused=['read_file','write_file','edit_file','bash'].filter(t=>!IS.some(s=>s.name===t));
+ const list=IS.length<=10?IS.map((s,i)=>[s,i]):[...IS.slice(0,4).map((s,i)=>[s,i]),[null,4],...IS.slice(-4).map((s,i)=>[s,IS.length-4+i])];
+ S_('invoice-did','work','It reads everything, then writes one file',{builds:2,
+  body:`<div class="p3a-did"><pre class="p3a-calls">${list.map(([s,i],k)=>s?toolCall(s.name,s.args,{max:40,i:i>=iW?0:k,at:i>=iW?2:0}):`<div class="more">… ${IS.length-8} more</div>`).join('')}</pre>
+   <div>${tree('workspace/',rows,{marks})}</div></div>`,
+  lines:[`It lists the folder, reads the orders, then reads ${inv.length===NI?`all ${word(NI)} invoices`:`${word(inv.length)} of the ${word(NI)} invoices`}${each?', one each round':''}.`,
+   `Then ${word(writes.length)} write_file, and it stops: ${IV.rounds} rounds, ${sec(IV)} seconds, and one new file in the project.`],
+  ask:['Which of the four tools has it not used so far?','What has changed in the project?'],
+  expected:[`${unused.includes('edit_file')?'edit_file. There is nothing here to change: it is only reading.':'Count them in the list on the left.'}`,
+   `One new file, ${[...wrote].join(' and ')}. The invoices and the orders file are untouched.`],
+  point:'The same loop as the bug fix: look, read what matters, then act once.',
+  transition:'What is in the file?',
+  source:`Our recorded run, ${T.date_text} (${esc(T.model)}): ${IV.rounds} rounds, ${IV.calls} tool calls, ${num(IV.seconds,1)} seconds of model time.`});
 
- const steps=[{lane:'tools',icon:'list',t:'List the\ninbox'},{lane:'tools',icon:'mail',t:'Read the\nemails',n:nRead,at:1},
-  {lane:'agent',icon:'send',t:'Ask to send\na reply',at:2},{lane:'you',icon:'approve',t:'Approve',kind:'check',at:2},
-  {lane:'tools',icon:'send',t:'Send',at:2},{lane:'agent',icon:'notes',t:'Summarise\nthe rest',at:2}];
- const a=ok[0].args;
- S_('inbox-run','work','It asked before it sent',{builds:2,
-  body:`${lanes(steps,{W:1152,laneH:96,fs:20,gap:6,left:196,alt:'Our inbox run as a trace: list the inbox, read the emails at once, ask to send a reply, a person approves, send, summarise the rest'})}
-   ${at(2,`<div class="p3a-gate">${iconHTML('approve',COL.amber,34)}<div><small>Held for a person</small><span class="mono">${esc(ok[0].call)}</span> to ${esc(a.to)}: “${esc(a.body)}”</div>
-    <b>${iconHTML('check','#fff',24)}Approved</b></div>`)}`,
-  lines:[`We asked it to reply to Priya and summarise the rest. First it read all ${word(nRead)} emails.`,
-   'Then it asked to send one reply. Our code held it until a person approved, and only then sent it.'],
-  ask:['It read the refund email too. Did it act on it?','What if the reply had gone to the wrong person?'],
-  expected:['No. We did not ask it to; it only mentioned the refund in its summary. Reading it was harmless.',
-   'The approval would catch it: you see the address and the text before anything is sent. In Part 4 an email in this inbox tries to trick the agent, and this same step stops it.'],
-  point:`The approval step worked: the agent read freely, and the one action with an effect outside, sending, waited for a person. ${Word(ok.length)} approval, ${word(sent.length)} email sent.`,
-  transition:'That is knowledge work and operations. Now, jobs outside the office.',
-  source:`Real run (notebook 3.3, ${esc(T.model)}, ${T.date_text}): ${word(I.steps)} rounds, ${word(I.calls)} tool calls, ${num(I.seconds,0)} seconds. The inbox is made up for the demo.`});
+ const flagged=IV.check.filter(c=>c.flagged).length,allRight=IV.right===NI,rep=IV.report.replace(/\s+$/,'').split('\n'),repShown=rep.slice(0,8);
+ S_('invoice-found','work',`It flags ${word(flagged)} of the ${word(NI)} invoices`,{builds:3,
+  body:`<div class="p3a-found"><div class="p3a-wrap">${editor(writes[0].args.path,[...repShown,...(rep.length>8?['…']:[])].join('\n'),{lang:'text',size:rep.length>4?'s':Math.max(...repShown.map(l=>l.length))<=72?'l':''})}</div>
+   <div class="p3a-six" style="--n:${NI}">${IV.check.map(c=>`<div class="${c.problem?'wrong':''}"><span data-at="2">${tick(c.flagged===!!c.problem)}</span><code>${esc(c.invoice)}</code><p data-at="2">${esc(c.problem||'fine')}</p>${c.flagged?`<em class="flag">${iconHTML('spark','#fff',16)}flagged</em>`:''}</div>`).join('')}</div>
+   ${at(3,`<div class="p3a-who">${iconHTML('person',COL.amber,30)}<span>${kY('A person')} reads this file and decides what to pay.</span></div>`)}</div>`,
+  lines:[`This is the file it wrote, word for word. It names ${word(flagged)} of the ${word(NI)} invoices.`,
+   `We put a problem in ${word(IV.problems)} of the invoices. ${allRight?`It flagged those ${word(IV.problems)}, and none of the others.`:`It judged ${word(IV.right)} of the ${word(NI)} correctly.`}`,
+   'The agent paid nobody and wrote to nobody. Its whole output is this list.'],
+  ask:['Is each line of the report true?','How do we know it missed nothing?','Would you let it reject these invoices itself?'],
+  expected:['Check one against the orders table from two slides back. The numbers in the report are the numbers in the files.',
+   'Because we made the invoices, and we know which ones are wrong. In real use you would not know, so you check a sample.',
+   'Not yet. A wrong rejection annoys a supplier and a wrong payment loses money. A list is cheap to check, and a payment is hard to undo.'],
+  point:'A good first job for an agent: it reads and reports, and a person keeps the decision.',
+  transition:'That is three jobs. What changed between them?',
+  source:`Our recorded run, ${T.date_text}. The file is exactly what the agent wrote; the cards compare it with the problems we put in.`});
+}
+
+// ---------------------------------------------------------------------------------------- the same agent
+chap();
+{
+ const JOBS=[['code','Fix a failing test',A],['folder','Tidy a folder',TD],['list','Check invoices',IV]];
+ S_('invoice-same-agent','work','What changed between the three jobs?',{builds:1,
+  body:`<div class="p3a-same">${statement(`Across ${word(JOBS.length)} jobs, we changed only ${kY('the request')}.`)}
+   <div class="p3a-jobs">${JOBS.map(([ic,name,r])=>`<div><h3>${iconHTML(ic,COL.amber,28)}${name}</h3><p>${r.rounds} rounds, ${sec(r)} seconds</p></div>`).join('')}</div></div>`,
+  lines:['The model, the four tools and the loop are the ones we built in Part 1.'],
+  ask:['So where did the skill for each new job come from?'],
+  expected:['From the model, which can already read a letter or compare two numbers, and from our request. The tools only gave it access to the folder.'],
+  point:'One general agent did three different jobs. What we wrote for each was a request, and a way to check the result.',
+  transition:'The same loop runs inside products you have heard of.',
+  source:`All three runs are real (${esc(T.model)}, ${T.date_text}). For the two longer jobs we raised the limit on rounds; nothing else changed.`});
 }

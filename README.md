@@ -12,35 +12,39 @@ companion notebook. The session is listed as “The Engine of Autonomy: Unlockin
 
 ## What the talk covers
 
-The talk moves between the slides and the notebook. A slide titled **"In the notebook"** names a numbered section
-(1.1, 1.2, …); the notebook has the same section, and the slide after it shows our own recorded run of it, so the
-talk can go on even if a live run is slow.
+The talk builds one small agent and then uses it: an open model (Gemma 4), four tools (`read_file`, `write_file`,
+`edit_file`, `bash`) and a loop of about twenty lines, working on a small project folder. It moves between the slides
+and the notebook. A slide titled **"In the notebook"** names a numbered section (1.1, 1.2, …); the notebook has the
+same section, and the slide after it shows our own recorded run of it.
 
 | Part | |
 |---|---|
-| Opening | A question about three cities' air, sent to a model on its own (notebook 1.1); the plan |
-| 1 · What an agent is | What a model cannot do alone; write a tool; the reply as a request; the loop as a flowchart, built one box at a time; check the agent's answer; workflow or agent; five levels of autonomy |
-| 2 · One run, step by step | The opening run round by round, with tokens and cost; the loop in Python; the context; notes as memory; routing and other patterns; MCP |
-| 3 · Agents at work | Nine applications on the main route (four of them run live) and five more in the appendix, placed on a map of "how easy is the result to check" against "what does a mistake cost" |
-| 4 · How agents fail | Errors that add up; real failures, each placed on the loop's flowchart; prompt injection and the lethal trifecta; approvals and step limits; evals |
-| 5 · Agents in your organisation | Should this task be an agent; raising autonomy in steps; the cost of a task; what changes for a team |
+| Opening | Two failing tests, a one-sentence request, and an agent that fixes the code |
+| 1 · From a model to an agent | The model on its own; one tool; the reply as a request; four tools; the loop as a flowchart and as code; the bug-fix run round by round; checking its work |
+| 2 · Inside one run | What the model reads each round; the instructions; notes that outlast a run |
+| 3 · The same agent, other jobs | Tidy a messy folder; check supplier invoices against orders; the same loop in real products; how much freedom each job should get |
+| 4 · How agents fail | Errors that add up; a file with hidden instructions; approvals, a safe list and a sandbox; a step limit; an eval on two model sizes |
+| 5 · Agents in your organisation | Workflow or agent; should this task be an agent; raising autonomy in steps; cost; what changes for a team |
 
 ## The notebook
 
-`notebook/agents.ipynb` builds an agent from scratch in plain Python (no framework) and runs every example in the
-talk: the air-quality question, a data analyst on ten Indian cities' PM2.5, a research assistant that cites
-Wikipedia, an inbox assistant that asks before sending, a Gujarati farm advisory with a writer and a checker, an email
-with hidden instructions, a step limit, and an eval over ten runs. Its sections are numbered like the slides. Choose
-the backend in the first cell:
+`notebook/agents.ipynb` builds the agent from scratch in plain Python, with no framework, and runs every example in
+the talk. It uses Google's open model **Gemma 4** through [Ollama](https://ollama.com), so it needs no key and no
+account: in Colab, choose a T4 GPU and run the cells (the first one installs Ollama and downloads the model, about
+8 GB). On a laptop, install Ollama and run the same notebook. To use a hosted model instead, set
+`BACKEND = "gemini"` and supply a Gemini API key.
 
-- `BACKEND = "gemini"` (default): a free Gemini API key from https://aistudio.google.com/apikey , stored in Colab's
-  Secrets as `GEMINI_API_KEY`. Runs on a CPU runtime.
-- `BACKEND = "open"`: Qwen 2.5 (3B) from Hugging Face on a free Colab T4 GPU. No key.
+Three examples to follow along with, all with the same four tools:
+
+1. **Fix a failing test** (Part 1): the agent runs the tests, reads the code, changes one line, and runs them again.
+2. **Tidy a messy folder** (3.1): ten badly named files, sorted into folders and renamed by date and sender.
+3. **Check invoices against orders** (3.2): six supplier invoices, three with a problem, flagged with the reason.
 
 ## How it is built
 
 The slides are one HTML page (`index.html`) on a small engine in `shared/`, with the talk in `parts/*.js` and the
-figures drawn as SVG (`figures.js`, `widgets.js`). No number is typed into a slide: every number comes from a JSON
+figures drawn as SVG and HTML (`figures.js`, `widgets.js`, and the editor, terminal, diff and file-tree screens in
+`stage.js`). No number is typed into a slide: every number comes from a JSON
 file in `data/`, written by a script in `scripts/sci/` that checks it. The real agent runs come from the notebook
 (`data/traces/`), and published numbers were checked against primary sources (`SOURCES.md`).
 
@@ -52,14 +56,16 @@ python3 scripts/serve.py                      # http://127.0.0.1:8795/
 node scripts/verify.mjs && node scripts/density.mjs && node scripts/export.mjs
 ```
 
-To re-record the runs (needs `GEMINI_API_KEY`; changes the numbers on the slides):
+To re-record the runs the slides show (Gemma 4 served locally by llama.cpp; the numbers on the slides follow):
 
 ```bash
-RECORD_DIR=data/traces python3 scripts/build_notebook.py --run && python3 scripts/sci/traces.py
+sh scripts/serve_gemma.sh 12b & sh scripts/serve_gemma.sh e4b &
+RECORD_DIR=data/traces AGENT_BASE_URL=http://127.0.0.1:8791/v1 AGENT_SERVERS='{"gemma4:e4b":"http://127.0.0.1:8792/v1"}' python3 scripts/build_notebook.py --run
+python3 scripts/sci/traces.py && python3 scripts/check_sync.py
 ```
 
-`AUTHORING.md` describes the conventions; `plan/slow-deck.md` the current shape of the deck (slower, with notebook
-slides and the loop flowchart as a map).
+`AUTHORING.md` describes the conventions; `plan/slow-deck.md` is the brief for the current deck: the story, the data, the
+screen components (`stage.js`) and the voice.
 
 ## Credits
 

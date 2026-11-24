@@ -1,183 +1,140 @@
-# The slower deck: brief for the rewrite (Nov 2026)
+# The deck, third version: brief for every part (24 Nov 2026)
 
-Nipun's feedback on the deck: the slides are intimidating. There is too much on each slide. He wants:
+Nipun's verdict on the second version: "okayish at best". The opening example (an air-quality trip) was boring. He
+asked for:
 
-1. **More slides, fewer things on each.** Slow down.
-2. **A live example wherever one helps.** Run it in the notebook, then show it on a slide.
-3. **The talk alternates between slides and the notebook**, in step. The deck says when to switch.
-4. **No historical context.** No timelines and no "in 2023 ... in 2025".
-5. **Natural spoken language.** It should sound like a teacher talking to a room.
-6. **Flowcharts where they help**, shown again with "we are here" on the box being discussed.
+- **A realistic agent**: one that runs `bash`, reads a file, writes a file, edits a file.
+- **Three examples people can follow** in a notebook that really runs, on an open model (Gemma 4, in Colab).
+- **Slides he does not have to modify**: beautiful flow, beautiful intuitions, animations, not a lot of text, code
+  nicely highlighted.
 
-`parts/00-opening.js` and `parts/01-what.js` are already rewritten this way. Read them first: they are the model for
-every other part.
+Earlier feedback still holds: slow, one idea per slide; the talk alternates with the notebook; no history; plain,
+spoken language; a loop map with "we are here".
 
-## The shape of a slide now
+`parts/00-opening.js` and `parts/01-what.js` are written this way. **Read them first.** They are the model for every
+other part.
 
-- **One idea per slide.** Two builds is normal; three is the most. One build is fine.
-- **Story line (`lines[k]`): 25 words or fewer**, ideally 12 to 20. Say it the way you would say it out loud.
-- **A state (body + story line + half the SVG labels): aim for 50 words or fewer.**
-  - `scripts/density.mjs` fails at 75 and warns at 50.
-  - If a state is over 50, split the slide.
-- **Fewer elements.** Drop secondary captions, extra tiles and "facts strips" where they crowd. Move caveats and
-  credits into the notes (`point`, `misconception`, `source`).
-- **Bigger type is fine** when a slide has less on it. Do not shrink text to fit more in: split instead.
-- **If an old slide had 3 to 6 builds, it is now 2 to 3 slides.**
+## The story
+
+One small project folder (a stationery shop's `workspace/`) and one small agent: an open model, four tools
+(`read_file`, `write_file`, `edit_file`, `bash`) and a loop. Everything on the slides is a recorded run of the
+notebook (`data/traces.json`).
+
+| Part | What happens | Notebook |
+|---|---|---|
+| Opening | Two tests fail. We ask in one sentence. An agent fixes it. | |
+| 1 · From a model to an agent | The model alone; one tool; the reply is a request; four tools; the loop; the bug-fix run round by round; we check its work. | 1.1 to 1.7 |
+| 2 · Inside one run | What the model reads each round (it only grows); the instructions; notes that outlast a run (`NOTES.md`). | 2.1, 2.2 |
+| 3 · The same agent, other jobs | Tidy a messy folder; check invoices against orders. Then the same loop in industry, and how much freedom each job should get. | 3.1, 3.2 |
+| 4 · How agents fail | Small errors add up; a file with hidden instructions; ask before a risky command; a step limit; an eval on two model sizes. | 4.1 to 4.6 |
+| 5 · Agents in your organisation | Workflow or agent; should this task be an agent; raising autonomy in steps; cost; what changes for a team; your turn. | 5.1, 5.2 |
+
+The three examples people follow: **A** fix a failing test (Part 1), **F** tidy a messy folder (3.1), **E** check
+supplier invoices against purchase orders (3.2).
+
+## The notebook sections (exact numbers and titles)
+
+| Number | Title |
+|---|---|
+| 1.1 | The model on its own |
+| 1.2 | Write a tool |
+| 1.3 | Ask again, with the tool |
+| 1.4 | Run the request, return the result |
+| 1.5 | Four tools |
+| 1.6 | Put it in a loop |
+| 1.7 | Check the work |
+| 2.1 | What the model read each round |
+| 2.2 | Notes that outlast a run |
+| 3.1 | Tidy a messy folder |
+| 3.2 | Check invoices against orders |
+| 4.1 | Small errors add up |
+| 4.2 | A file with hidden instructions |
+| 4.3 | The same file, ten runs |
+| 4.4 | Ask before a risky command |
+| 4.5 | A step limit |
+| 4.6 | An eval: ten runs per model |
+| 5.1 | Give it your own task |
+| 5.2 | Write your own tool |
+
+4.3 and 4.6 take minutes; their notebook slides say "start it and come back".
+
+`notebook/agents.py` is the source. Read the section you are making slides for, so the slide's `run` lines and
+wording match the real code.
+
+## The data: `data/traces.json` (written by `scripts/sci/traces.py`)
+
+Every run is condensed to the same shape:
+
+```
+{goal, status, answer, rounds, calls, tokens_read, tokens_written, seconds, model, inr_hosted,
+ log:   [{read, written, seconds}]            one entry per round
+ steps: [{round, name, args, exit, result}]}  one entry per tool call; exit is the shell exit code for bash
+```
+
+Top-level keys:
+
+- `model`, `date_text`, `hosted` (a hosted model's price, for the cost slide);
+- `alone`, `request`, `agent` (+ `before`, `after`), `check`: Part 1;
+- `memory` `{first, later, notes}`: Part 2;
+- `tidy` (+ `check`, `tree`, `index`, `inbox`, `right`, `dated`, `failed_commands`): 3.1;
+- `invoices` (+ `check`, `report`, `invoices`, `orders`, `right`, `problems`): 3.2;
+- `injection` `{note, task, open, gated}` (each side a run + `asked`, `tried`, `secret_reached_model`,
+  `secret_in_answer`), `injection_trials` `{n, tried, reached, leaked}`: 4.2, 4.3;
+- `approval` (+ `asked`, `files_left`): 4.4;
+- `steplimit`: 4.5;
+- `evals.models[]` `{name, n, fixed, touched_tests, median_seconds, median_rounds, stopped, runs}`: 4.6.
+
+**Never type a number, a command or a model's words that the data holds.** The runs will be recorded once more before
+the talk, and the slides must follow. Where a sentence depends on how a run went, build it from the data (counts with
+`word()`, conditions in code), and add an assert to `scripts/sci/traces.py` for any claim that could turn false.
+
+## The screens (`stage.js`, exported through `kit.js`): compose slides from these
+
+| Helper | What it draws |
+|---|---|
+| `editor(file, code, {lang, focus, notes, size, at, from})` | A dark code editor. `focus: {2: [4, [6, 8]]}` dims all other lines at build 2. `notes: {4: ['text', colour, [builds]]}` puts a small tag at the end of a line. `lang`: `python`, `json`, `bash`, `text`. |
+| `term(rows, {title, size})` | A terminal. Rows: `{cmd, at}` is typed; `{out, kind, at}` is output (`ok`, `bad`, `dim`, `hot`). |
+| `testRows(step, {at})`, `bashRows(step, {at, lines})` | Terminal rows for a recorded `bash` step. |
+| `diff(file, rows, {plusAt, size})` | A change: rows `[' ', text]`, `['-', text]`, `['+', text]`. |
+| `tree(title, rows, {marks, size})` | The project folder. `marks: {'billing.py': [['2', 'read']]}` tags a row at those builds (`read`, `edit`, `new`, `run`, `gone`, `risk`). |
+| `toolCall(name, args, {at, note, max})` | The model's request as a purple card. |
+| `toolBack(text, {kind})`, `says(text, {who})` | A short result; the model's words. `firstSentence(answer)` trims an answer. |
+| `loopStrip({model: '1', tool: '2', result: '2'}, {round})` | The loop as a strip that lights up where we are. |
+| `statement(html, sub)` | One big sentence, for a beat between sections. |
+| `loopMap({hi, guards, text, cols, here})` | The full flowchart (figures.js), with "We are here". |
+| `nbRun(id, section, '3.1', 'Tidy a messy folder', {run, look, line, ...})` | An "In the notebook" slide. |
+
+Layout classes: `.duo` (two columns; set `--l` and `--r`), `.duo.top`. Sizes for windows: `''` (21px), `'s'` (18px),
+`'xs'` (16px, avoid), `'l'` (24px).
+
+Motion is automatic: things fade and rise when they appear, terminal commands type, output follows, diff lines slide
+in, tree tags pop. Do not add JavaScript animation. Everything must still read as a still picture (the PDF).
+
+## What a good slide looks like here
+
+- **One idea, one screen.** A slide is usually a short title, one or two screens, and a story line. Two builds.
+- **Show the real thing.** The command the model wrote, the output that came back, the file as it was.
+- **Very little text on the slide.** Aim for 40 words a click state; `density.mjs` fails at 75. The story line is at
+  most 25 words, ideally 12 to 18.
+- **Fill the slide.** A lone 150px object in the middle of the slide looks unfinished. Use the larger window size,
+  put two screens side by side, or use `statement()`.
+- **Nothing under 16px on screen**, and code must never be cut off at the right edge of a window (`verify` fails on
+  it: use fewer characters per line, a smaller size, or a wider column).
+- **A run is walked in rounds**: `loopStrip` + `toolCall` on the left, the screen on the right, as in Part 1's
+  `run-*` slides.
 
 ## Voice
 
-The voice is plain, literal and spoken: "we", "you", short sentences, real numbers.
+Plain, literal, spoken: "we", "you", short sentences, real numbers. Titles are a plain question or a literal
+statement ("It runs the tests, and reads the failure"). No metaphors, no slogans, no "X, not Y" flourishes, no forced
+triples, no meta lines ("Notice…"), no filler, no history as narrative, no em or en dashes, no gendered pronouns for
+people in examples. Call a model turn a "round". Say "a person approves".
 
-**Titles** are a plain question or a literal statement. Good examples from Part 1:
-- "What can a model not do on its own?"
-- "The reply is a request, not an answer"
-- "Our run went round three times"
-- "Was the agent right?"
-- "Some jobs have fixed steps"
+## Rules that still hold (AUTHORING.md)
 
-**Story lines** say what we did or what happened, or ask the room a question. Good examples:
-- "The model replied with a request in a fixed format: which tool, and with which arguments."
-- "Doing this by hand, one request at a time, gets tedious. A real task may need ten rounds."
-- "Three cities, three days, one city a day. Which order means the cleanest air? What would you answer?"
-
-**Avoid:**
-- metaphors (engine, plug, dial, climb, stall);
-- aphorisms and slogans;
-- "X, not Y" endings used for effect;
-- forced groups of three;
-- meta lines ("Notice…", "The picture shows…", "Here is the key idea");
-- filler ("It is worth noting", "Importantly", "In today's world");
-- history and dates as narrative;
-- em or en dashes anywhere (write "1 to 4");
-- gendered pronouns for people in examples.
-
-Curly quotes are fine.
-
-## The two new helpers (in `kit.js` and `figures.js`; do not edit those files)
-
-### `nbRun(id, section, num, title, {run, look, line, ask, expected, point, transition})`
-
-This is a notebook slide: the moment we switch to the notebook and run section `num` live.
-- `run` is the one or two key lines of code (a few lines at most).
-- `look` is one or two things to watch for.
-- The title becomes "In the notebook: <title>".
-- `num` and `title` must match the notebook section exactly (list below).
-- The slide right after a notebook slide shows **our recorded run** from `data/traces.json`, so the talk goes on if
-  the live run is slow or fails. Its story line usually starts from what happened ("Our run…", "Here is what came
-  back…").
-
-Example from Part 1:
-
-```js
-nbRun('nb-ask','what','1.3','Ask again, with the tool',{
- run:'reply = chat(messages, tools=[get_air_quality])\nprint(reply["calls"])',
- look:['The reply has no answer in it','What does it ask for?'],
- line:'Back to the notebook. Same question, same model, but now the tool is on offer.',
- ask:'What do you think comes back this time?',expected:'Not an answer. Watch the reply.',
- point:'With a tool on offer, the model can reply with a request instead of an answer.',
- transition:'Here is what came back in our run.'});
-```
-
-### `loopMap({hi, at, text, icons, guards, here})`
-
-The agent loop as a flowchart: the talk's map. Its boxes are `goal`, `model`, `ask` (the decision), `tool`, `result`
-and `answer`. With `guards:true` it also has the pills `gate` ("A person approves") and `limit` ("Step limit").
-
-- `hi:'model'` (or an array of boxes) highlights that box with a "We are here" tag and fades the rest. Use it on short
-  "where are we" slides, with a one-sentence story line, whenever a part moves to a different part of the loop.
-- `text:{tool:'Our code runs\nthe calculator'}` relabels a box.
-- `at:{tool:2}` reveals a box on click 2.
-
-It is full width, about 420px tall, so give it a slide of its own, or add only a one-line `ps()` under it.
-
-Part 1 builds it up box by box (`loop-map`). After that, the other parts show it with `hi` to say where we are:
-
-| Part | Boxes to highlight |
-|---|---|
-| 2 | `model` (what it reads), `result` (the context grows), `tool` (MCP) |
-| 4 | the failures mapped to boxes; `gate` and `limit` with `guards:true` |
-| 5 | the summary |
-
-## The notebook sections (exact numbers and titles; notebook/agents.py is being changed to match)
-
-| Number | Title | Slides |
-|---|---|---|
-| 1.1 | The model on its own | opening |
-| 1.2 | Write a tool | Part 1 |
-| 1.3 | Ask again, with the tool | Part 1 |
-| 1.4 | Run the request, return the result | Part 1 |
-| 1.5 | Put it in a loop | Part 1 |
-| 1.6 | Check the answer | Part 1 |
-| 2.1 | What the model read each round | Part 2 |
-| 2.2 | Notes that outlast a run | Part 2 |
-| 2.3 | Routing: one call picks the queue | Part 2 |
-| 3.1 | A data analyst | Part 3 |
-| 3.2 | A research assistant with sources | Part 3 |
-| 3.3 | An inbox assistant that asks first | Part 3 |
-| 3.4 | A farm advisory, written and checked | Part 3 |
-| 4.1 | Small errors add up | Part 4 |
-| 4.2 | An email with hidden instructions | Part 4 |
-| 4.3 | The same email, ten runs | Part 4 |
-| 4.4 | A step limit | Part 4 |
-| 4.5 | An eval: ten runs per model | Part 4 |
-| 5.1 | Write your own tool | Part 5 |
-| 5.2 | One tool for every agent: MCP | Part 5 |
-
-Notes on the long runs:
-- **4.3 and 4.5** take a few minutes. Their notebook slides say so: "start it now, we come back to the result".
-- **3.1** (the analyst) takes about a minute.
-
-A "round" is one model turn (Part 1 calls them rounds: "Our run went round three times").
-
-## Time budget, as built (20 Nov 2026): about 85 minutes, then 5 for questions
-
-| Part | Minutes | Main-route slides | Clicks | Notebook stops |
-|---|---:|---:|---:|---:|
-| Opening | 4 | 5 | 6 | 1 |
-| Part 1 | 17 | 21 | 33 | 5 |
-| Part 2 | 14 | 19 | 32 | 3 |
-| Part 3 | 25 | 33 | 60 | 4 |
-| Part 4 | 15 | 21 | 30 | 5 |
-| Part 5 | 7 | 11 | 17 | 1 |
-| Wrap-up | 3 | 3 | 6 | 0 |
-| Total | 85 | 113 | 184 | 19 |
-
-The estimate is about 20 seconds a click plus about a minute per notebook stop. Start 4.3 and 4.5 early, and come back to them.
-
-## Part 3: which applications stay on the main route
-
-There are fourteen applications in all. The main route keeps nine. The other five become appendix slides: the same
-`app()` call with `section:'optional', optional:true`. The stakes map at the end still places all fourteen.
-
-- **Main route:**
-  - coding;
-  - data analysis (notebook 3.1);
-  - research (notebook 3.2);
-  - customer support, with the inbox assistant run (notebook 3.3);
-  - AlphaEvolve;
-  - farm advisory (notebook 3.4);
-  - air-quality alerts;
-  - building energy;
-  - clinic notes.
-- **Appendix:** invoices, IT incidents, web forms, co-scientist, lab robot.
-
-Each main-route application is two slides at a slower pace:
-1. **The task.** The illustration, the request, and the question "what would it need?", with the tools as chips.
-2. **What it does.** A trace with fewer steps (five to seven), and who checks what, plus one number of evidence if
-   there is one.
-
-For the four notebook applications the order is: the task → the notebook slide → our recorded run (one or two
-slides).
-
-## Rules that still hold (see AUTHORING.md)
-
-- **Numbers come from `data/*.json`.** Never type a number that a data file has.
-- **Colours mean roles.** Amber is a person, purple the model, teal tools and the world, red risk, green a checked
-  result, blue memory and data.
-- **No non-vegetarian examples.**
-- **`builds` must equal the lengths of `lines`, `ask` and `expected`.**
-- **Check your part:**
-  - start the server with `python3 scripts/serve.py`; it is already running on port 8795;
-  - `DECK_PART=02 node scripts/verify.mjs` must pass;
-  - `DECK_PART=02 node scripts/density.mjs` must report nothing over a limit;
-  - look at your screenshots in `qa/parts/02/` with the Read tool.
+- Colours mean roles: amber a person, purple the model, teal tools and the world, red risk, green a checked result,
+  blue memory and data.
+- `builds` must equal the lengths of `lines`, `ask` and `expected`.
+- Published numbers only from `plan/research/verified.md`, worded as verified.
+- Check your part: `DECK_PART=02 node scripts/verify.mjs` must pass, `DECK_PART=02 node scripts/density.mjs` must
+  report nothing over a limit, and you must look at your screenshots in `qa/parts/02/`. The server is on port 8795.

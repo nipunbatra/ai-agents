@@ -1,20 +1,18 @@
-"""Part 3b's numbers: the published results on the science, India and clinic slides, and the figures those slides
-take from two real runs in data/traces.json (the farm advisory and the air-quality analyst).
+"""Published numbers for the real jobs of Part 3 in science, farming and the clinic: AlphaEvolve and clinic notes on
+the main route (parts/03b-work.js), the co-scientist and the lab robot in the appendix (parts/09-more-apps.js), and
+the two farm services quoted in the notes of the stakes map.
 
     python3 scripts/sci/p3b.py        writes data/p3b.json
 
 Published values are recorded from plan/research/verified.md (rows 9 to 15, checked 19 Nov 2026), with the wording its
 notes recommend; SOURCES.md has the URLs. Nothing published is computed except the roundings the slides say aloud.
-The run figures are read from data/traces.json (scripts/sci/traces.py), and the asserts guard what the slides say
-about them, so a re-recording that changes the story fails here, not on stage.
+Nothing here comes from our own runs.
 """
 import json
-import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'data' / 'p3b.json'
-T = json.loads((ROOT / 'data' / 'traces.json').read_text())
 MON = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split()
 
 # ---------------------------------------------------------------------------------------- published (verified.md)
@@ -50,49 +48,7 @@ clinic = {'physicians': TPMG['physicians'], 'encounters_m': round(TPMG['encounte
           'from': f"{MON[TPMG['from'][1] - 1]} {TPMG['from'][0]}", 'to': f"{MON[TPMG['to'][1] - 1]} {TPMG['to'][0]}"}
 assert months == 15 and clinic['hours'] == 15800 and clinic['encounters_m'] == 2.58
 
-# ---------------------------------------------------------------------------------------- the farm advisory (real run)
-farm = T['farm']
-days = farm['forecast']['days']
-draft = farm['rounds'][-1]['draft']
-interval = [int(v) for v in re.search(r'every (\d+) to (\d+) days', farm['notes']).groups()]
-nice = lambda d: f"{int(d[8:])} {MON[int(d[5:7]) - 1]}"
-# The pieces of the draft that come from the forecast (teal on the slide) and from the crop notes (blue).
-from_forecast = [m.group(0) for m in re.finditer(r'\d+ થી \d+ નવેમ્બર|\d+(?:\.\d+)?%|\d+(?:\.\d+)?°C', draft)]
-from_notes = [m.group(0) for m in re.finditer(r'\d+ થી \d+ દિવસે', draft)]
-low = min(d['min_c'] for d in days)
-farm_out = {
-    'place': farm['forecast']['place'], 'source': farm['forecast']['source'], 'first': nice(days[0]['date']), 'last': nice(days[-1]['date']),
-    'days': [{'day': nice(d['date']), 'max_c': d['max_c'], 'min_c': d['min_c'], 'rain_chance': d['rain_chance'],
-              'rain_mm': d['rain_mm']} for d in days],
-    'low_c': low, 'rain_chance_max': max(d['rain_chance'] for d in days), 'interval': interval,
-    'checks': len(farm['checklist']), 'rounds': len(farm['rounds']), 'passed': farm['rounds'][-1]['verdict']['pass'],
-    'draft': draft, 'words': len(draft.split()), 'from_forecast': from_forecast, 'from_notes': from_notes,
-}
-assert farm_out['place'] == 'Mehsana' and farm_out['passed'] and farm_out['rounds'] == 1 and farm_out['checks'] == 5
-assert farm_out['rain_chance_max'] == 0 and sum(d['rain_mm'] for d in days) == 0      # "no rain" on the slide
-assert f'{low}°C' in from_forecast and '0%' in from_forecast                              # the numbers it used
-assert f'{interval[0]} થી {interval[1]} દિવસે' in from_notes
-assert farm_out['words'] < 80                                                             # one of the critic's checks
-
-# ---------------------------------------------------------------------------------------- the air-quality desk (real run)
-an = T['analyst']
-table = an['turns'][1]['results'][0]['result']
-cities = []
-for row in table.splitlines()[2:]:
-    name, avg, over, total = row.split()
-    cities.append({'city': name, 'avg': float(avg), 'over': int(over), 'days': int(total)})
-cities.sort(key=lambda c: -c['over'])
-code = an['turns'][1]['calls'][0]['args']['code']
-start, end = re.findall(r"'(\d{4}-\d{2}-\d{2})'", code)[:2]
-standard = int(re.search(r'Standard \((\d+) µg/m³\)', an['answer']).group(1))
-assert f"> {standard}" in code and len(cities) == 10 and {c['days'] for c in cities} == {120}
-by = {c['city']: c for c in cities}
-assert cities[0]['city'] == 'Kolkata' and by['Delhi']['over'] > 100 and by['Gandhinagar']['over'] < 30
-air = {'standard': standard, 'days': cities[0]['days'], 'from': f"{MON[int(start[5:7]) - 1]} {start[:4]}",
-       'to': f"{MON[int(end[5:7]) - 1]} {end[:4]}", 'cities': cities, 'model': an['model']}
-
 OUT.write_text(json.dumps({'coscientist': COSCIENTIST, 'lab': LAB, 'robin': ROBIN, 'evolve': EVOLVE, 'kisan': KISAN,
-                           'farmerchat': FARMERCHAT, 'clinic': clinic, 'farm': farm_out, 'air': air},
-                          indent=1, ensure_ascii=False) + '\n')
-print(OUT, 'farm', farm_out['first'], 'to', farm_out['last'], 'low', low, '| air', cities[0]['city'], cities[0]['over'],
-      'of', air['days'], '| clinic', clinic['hours'], 'hours in', months, 'months')
+                           'farmerchat': FARMERCHAT, 'clinic': clinic}, indent=1, ensure_ascii=False) + '\n')
+print(OUT, '| AlphaEvolve', EVOLVE['compute_pct'], '% | clinic', clinic['hours'], 'hours in', months, 'months',
+      '| co-scientist', COSCIENTIST['days'], 'days')

@@ -5,7 +5,7 @@
   "series": "IITGN-X Residency Program",
   "subtitle": "Language models that use tools in a loop",
   "date": "3 December 2026",
-  "minutes": 85,
+  "minutes": 80,
   "sections": [
     {
       "id": "open",
@@ -14,28 +14,28 @@
     },
     {
       "id": "what",
-      "title": "Part 1 · What an agent is",
-      "minutes": 17
+      "title": "Part 1 · From a model to an agent",
+      "minutes": 22
     },
     {
       "id": "engine",
-      "title": "Part 2 · One run, step by step",
-      "minutes": 14
+      "title": "Part 2 · Inside one run",
+      "minutes": 10
     },
     {
       "id": "work",
-      "title": "Part 3 · Agents at work",
-      "minutes": 25
+      "title": "Part 3 · The same agent, other jobs",
+      "minutes": 16
     },
     {
       "id": "risk",
       "title": "Part 4 · How agents fail",
-      "minutes": 15
+      "minutes": 17
     },
     {
       "id": "adopt",
       "title": "Part 5 · Agents in your organisation",
-      "minutes": 7
+      "minutes": 8
     },
     {
       "id": "wrap",
@@ -48,9 +48,9 @@
       "minutes": 0
     }
   ],
-  "coreSlides": 113,
-  "optionalSlides": 11,
-  "totalStates": 200,
+  "coreSlides": 100,
+  "optionalSlides": 10,
+  "totalStates": 189,
   "slides": [
     {
       "id": "title",
@@ -61,24 +61,24 @@
       "optional": false
     },
     {
-      "id": "question",
-      "title": "Let us start with a question",
+      "id": "broken",
+      "title": "A small project, and two failing tests",
+      "section": "open",
+      "chapter": "",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "the-ask",
+      "title": "We ask in one sentence",
       "section": "open",
       "chapter": "",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "nb-alone",
-      "title": "In the notebook",
-      "section": "open",
-      "chapter": "",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "alone-said",
-      "title": "What did the model say?",
+      "id": "watch",
+      "title": "10 seconds later, the tests pass",
       "section": "open",
       "chapter": "",
       "builds": 2,
@@ -94,7 +94,7 @@
     },
     {
       "id": "part-1",
-      "title": "Part 1 · What an agent is",
+      "title": "Part 1 · From a model to an agent",
       "section": "what",
       "chapter": "",
       "builds": 1,
@@ -104,15 +104,23 @@
       "id": "alone",
       "title": "On its own, a model only writes text",
       "section": "what",
-      "chapter": "1.1 The model alone",
+      "chapter": "1.1 The model on its own",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "limits",
-      "title": "What can a model not do on its own?",
+      "id": "nb-alone",
+      "title": "In the notebook",
       "section": "what",
-      "chapter": "1.1 The model alone",
+      "chapter": "1.1 The model on its own",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "alone-said",
+      "title": "It asks us to paste the code",
+      "section": "what",
+      "chapter": "1.1 The model on its own",
       "builds": 2,
       "optional": false
     },
@@ -120,15 +128,15 @@
       "id": "tool-fn",
       "title": "A tool is an ordinary Python function",
       "section": "what",
-      "chapter": "1.2 A tool",
-      "builds": 1,
+      "chapter": "1.2 Write a tool",
+      "builds": 2,
       "optional": false
     },
     {
       "id": "nb-tool",
       "title": "In the notebook",
       "section": "what",
-      "chapter": "1.2 A tool",
+      "chapter": "1.2 Write a tool",
       "builds": 1,
       "optional": false
     },
@@ -136,7 +144,7 @@
       "id": "tool-menu",
       "title": "The model sees only this entry",
       "section": "what",
-      "chapter": "1.2 A tool",
+      "chapter": "1.2 Write a tool",
       "builds": 2,
       "optional": false
     },
@@ -144,15 +152,15 @@
       "id": "nb-ask",
       "title": "In the notebook",
       "section": "what",
-      "chapter": "1.3 A tool call",
+      "chapter": "1.3 Ask again, with the tool",
       "builds": 1,
       "optional": false
     },
     {
       "id": "tool-call",
-      "title": "The reply is a request, not an answer",
+      "title": "The reply is a request",
       "section": "what",
-      "chapter": "1.3 A tool call",
+      "chapter": "1.3 Ask again, with the tool",
       "builds": 2,
       "optional": false
     },
@@ -160,15 +168,31 @@
       "id": "nb-run",
       "title": "In the notebook",
       "section": "what",
-      "chapter": "1.3 A tool call",
+      "chapter": "1.4 Run the request",
       "builds": 1,
       "optional": false
     },
     {
       "id": "tool-result",
-      "title": "The result goes back into the conversation",
+      "title": "Our code reads the file, and the model answers",
       "section": "what",
-      "chapter": "1.3 A tool call",
+      "chapter": "1.4 Run the request",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "actors",
+      "title": "The model never touches the folder",
+      "section": "what",
+      "chapter": "1.4 Run the request",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "four-tools",
+      "title": "Four tools are enough for a lot",
+      "section": "what",
+      "chapter": "1.5 Four tools",
       "builds": 2,
       "optional": false
     },
@@ -176,7 +200,15 @@
       "id": "loop-map",
       "title": "Put it in a loop",
       "section": "what",
-      "chapter": "1.4 The loop",
+      "chapter": "1.6 Put it in a loop",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "loop-code",
+      "title": "The loop is eleven lines of Python",
+      "section": "what",
+      "chapter": "1.6 Put it in a loop",
       "builds": 3,
       "optional": false
     },
@@ -184,72 +216,80 @@
       "id": "nb-loop",
       "title": "In the notebook",
       "section": "what",
-      "chapter": "1.4 The loop",
+      "chapter": "1.6 Put it in a loop",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "loop-run",
-      "title": "Our run went round three times",
+      "id": "run-look",
+      "title": "First it looks around",
       "section": "what",
-      "chapter": "1.4 The loop",
-      "builds": 3,
+      "chapter": "1.6 Put it in a loop",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "run-test",
+      "title": "It runs the tests, and reads the failure",
+      "section": "what",
+      "chapter": "1.6 Put it in a loop",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "run-read",
+      "title": "It reads the code",
+      "section": "what",
+      "chapter": "1.6 Put it in a loop",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "run-edit",
+      "title": "It changes one line",
+      "section": "what",
+      "chapter": "1.6 Put it in a loop",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "run-pass",
+      "title": "It runs the tests again, and stops",
+      "section": "what",
+      "chapter": "1.6 Put it in a loop",
+      "builds": 2,
       "optional": false
     },
     {
       "id": "nb-check",
       "title": "In the notebook",
       "section": "what",
-      "chapter": "1.4 The loop",
+      "chapter": "1.7 Check the work",
       "builds": 1,
       "optional": false
     },
     {
       "id": "check",
-      "title": "Was the agent right?",
+      "title": "Did it really fix it?",
       "section": "what",
-      "chapter": "1.4 The loop",
-      "builds": 2,
+      "chapter": "1.7 Check the work",
+      "builds": 3,
       "optional": false
     },
     {
       "id": "same-model",
-      "title": "The same model, two answers",
+      "title": "The same model, two outcomes",
       "section": "what",
-      "chapter": "1.4 The loop",
+      "chapter": "",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "workflow",
-      "title": "Some jobs have fixed steps",
+      "id": "agent-is",
+      "title": "What is an agent?",
       "section": "what",
-      "chapter": "1.5 How much freedom",
+      "chapter": "",
       "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "agent-or-workflow",
-      "title": "When is an agent worth it?",
-      "section": "what",
-      "chapter": "1.5 How much freedom",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "levels",
-      "title": "How much should it decide without you?",
-      "section": "what",
-      "chapter": "1.5 How much freedom",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "autonomy",
-      "title": "One refund at five levels",
-      "section": "what",
-      "chapter": "1.5 How much freedom",
-      "builds": 2,
       "optional": false
     },
     {
@@ -262,50 +302,18 @@
     },
     {
       "id": "part-2",
-      "title": "Part 2 · One run, step by step",
+      "title": "Part 2 · Inside one run",
       "section": "engine",
       "chapter": "",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "map-model",
-      "title": "Where are we in the loop?",
+      "id": "reread",
+      "title": "Each round, the model rereads everything",
       "section": "engine",
       "chapter": "2.1 What the model reads",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "trace-walk",
-      "title": "Round 1: three forecasts at once",
-      "section": "engine",
-      "chapter": "2.1 What the model reads",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "trace-walk-2",
-      "title": "Round 2: six sums at once",
-      "section": "engine",
-      "chapter": "2.1 What the model reads",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "trace-walk-3",
-      "title": "Round 3: the answer, and what the run cost",
-      "section": "engine",
-      "chapter": "2.1 What the model reads",
-      "builds": 3,
-      "optional": false
-    },
-    {
-      "id": "loop-code",
-      "title": "The loop in eleven lines of Python",
-      "section": "engine",
-      "chapter": "2.1 What the model reads",
-      "builds": 3,
+      "builds": 4,
       "optional": false
     },
     {
@@ -317,26 +325,34 @@
       "optional": false
     },
     {
-      "id": "context",
-      "title": "What did round 3 read?",
+      "id": "read-total",
+      "title": "How much did it read in all?",
       "section": "engine",
       "chapter": "2.1 What the model reads",
       "builds": 2,
       "optional": false
     },
     {
-      "id": "context-cost",
+      "id": "context-short",
       "title": "Why keep the context short?",
       "section": "engine",
       "chapter": "2.1 What the model reads",
-      "builds": 2,
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "instructions",
+      "title": "The instructions are plain English",
+      "section": "engine",
+      "chapter": "2.1 What the model reads",
+      "builds": 3,
       "optional": false
     },
     {
       "id": "memory-q",
       "title": "How would it remember you next week?",
       "section": "engine",
-      "chapter": "2.2 Memory",
+      "chapter": "2.2 Notes that outlast a run",
       "builds": 2,
       "optional": false
     },
@@ -344,64 +360,40 @@
       "id": "nb-memory",
       "title": "In the notebook",
       "section": "engine",
-      "chapter": "2.2 Memory",
+      "chapter": "2.2 Notes that outlast a run",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "memory",
-      "title": "The second run read its notes first",
+      "id": "notes-write",
+      "title": "The first run wrote its notes to a file",
       "section": "engine",
-      "chapter": "2.2 Memory",
+      "chapter": "2.2 Notes that outlast a run",
       "builds": 2,
       "optional": false
     },
     {
-      "id": "patterns",
-      "title": "A chain runs the same steps every time",
+      "id": "notes-read",
+      "title": "A new run reads the notes first",
       "section": "engine",
-      "chapter": "2.3 Patterns",
+      "chapter": "2.2 Notes that outlast a run",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "notes-answer",
+      "title": "It answers in rupees, with the school discount",
+      "section": "engine",
+      "chapter": "2.2 Notes that outlast a run",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "memory-is",
+      "title": "Its memory is a file",
+      "section": "engine",
+      "chapter": "2.2 Notes that outlast a run",
       "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "nb-route",
-      "title": "In the notebook",
-      "section": "engine",
-      "chapter": "2.3 Patterns",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "routing",
-      "title": "Each message went to one queue",
-      "section": "engine",
-      "chapter": "2.3 Patterns",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "patterns-2",
-      "title": "Several model calls can work together",
-      "section": "engine",
-      "chapter": "2.3 Patterns",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "map-tool",
-      "title": "Where are we in the loop?",
-      "section": "engine",
-      "chapter": "2.4 MCP",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "mcp",
-      "title": "How many connectors do we need?",
-      "section": "engine",
-      "chapter": "2.4 MCP",
-      "builds": 2,
       "optional": false
     },
     {
@@ -413,162 +405,138 @@
       "optional": false
     },
     {
-      "id": "p2-memory-kinds",
-      "title": "Three kinds of memory",
-      "section": "optional",
-      "chapter": "",
-      "builds": 1,
-      "optional": true
-    },
-    {
       "id": "part-3",
-      "title": "Part 3 · Agents at work",
+      "title": "Part 3 · The same agent, other jobs",
       "section": "work",
       "chapter": "",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "read-card",
-      "title": "How to read a trace",
+      "id": "tidy-mess",
+      "title": "Ten files, and no name says what is inside",
       "section": "work",
-      "chapter": "",
+      "chapter": "3.1 Tidy a folder",
       "builds": 2,
       "optional": false
     },
     {
-      "id": "app-coding-task",
-      "title": "Coding: a test has started failing",
+      "id": "tidy-ask",
+      "title": "We ask in plain words",
       "section": "work",
-      "chapter": "3.1 Knowledge work",
+      "chapter": "3.1 Tidy a folder",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "nb-tidy",
+      "title": "In the notebook",
+      "section": "work",
+      "chapter": "3.1 Tidy a folder",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "tidy-reads",
+      "title": "First it reads every file",
+      "section": "work",
+      "chapter": "3.1 Tidy a folder",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "tidy-error",
+      "title": "A command fails. It reads the error and tries again",
+      "section": "work",
+      "chapter": "3.1 Tidy a folder",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "tidy-after",
+      "title": "The inbox, before and after",
+      "section": "work",
+      "chapter": "3.1 Tidy a folder",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "tidy-check",
+      "title": "Did it get it right?",
+      "section": "work",
+      "chapter": "3.1 Tidy a folder",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "invoice-job",
+      "title": "Six invoices to check before anything is paid",
+      "section": "work",
+      "chapter": "3.2 Check invoices",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "invoice-ask",
+      "title": "The request says what “fine” means",
+      "section": "work",
+      "chapter": "3.2 Check invoices",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "nb-invoices",
+      "title": "In the notebook",
+      "section": "work",
+      "chapter": "3.2 Check invoices",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "invoice-did",
+      "title": "It reads everything, then writes one file",
+      "section": "work",
+      "chapter": "3.2 Check invoices",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "invoice-found",
+      "title": "It flags three of the six invoices",
+      "section": "work",
+      "chapter": "3.2 Check invoices",
+      "builds": 3,
+      "optional": false
+    },
+    {
+      "id": "invoice-same-agent",
+      "title": "What changed between the three jobs?",
+      "section": "work",
+      "chapter": "",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "work-real",
+      "title": "Real products run the same loop",
+      "section": "work",
+      "chapter": "3.3 Real products",
       "builds": 2,
       "optional": false
     },
     {
       "id": "app-coding",
-      "title": "Coding: it stops at a pull request",
+      "title": "Coding agents work the way ours did",
       "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 3,
-      "optional": false
-    },
-    {
-      "id": "app-analyst-task",
-      "title": "Data analysis: which city had the worst winter air?",
-      "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "nb-analyst",
-      "title": "In the notebook",
-      "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "app-analyst",
-      "title": "It looked at the table before it counted",
-      "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "analyst-answer",
-      "title": "Its chart and its answer",
-      "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-research-task",
-      "title": "Research: an answer with sources",
-      "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "nb-research",
-      "title": "In the notebook",
-      "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "app-research",
-      "title": "Our run read one page",
-      "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "research-links",
-      "title": "Every claim has a link",
-      "section": "work",
-      "chapter": "3.1 Knowledge work",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-support-task",
-      "title": "Customer support: the refund from Part 1",
-      "section": "work",
-      "chapter": "3.2 Operations",
+      "chapter": "3.3 Real products",
       "builds": 2,
       "optional": false
     },
     {
       "id": "app-support",
-      "title": "Customer support: refunds up to a cap",
+      "title": "Customer support: it answers the routine chats",
       "section": "work",
-      "chapter": "3.2 Operations",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "support-klarna",
-      "title": "Klarna’s assistant took two-thirds of its chats",
-      "section": "work",
-      "chapter": "3.2 Operations",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "nb-inbox",
-      "title": "In the notebook",
-      "section": "work",
-      "chapter": "3.2 Operations",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "inbox-run",
-      "title": "It asked before it sent",
-      "section": "work",
-      "chapter": "3.2 Operations",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "work-beyond",
-      "title": "Outside the office, who checks the work?",
-      "section": "work",
-      "chapter": "",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "app-evolve-task",
-      "title": "AlphaEvolve: a better rule for Google’s servers",
-      "section": "work",
-      "chapter": "3.3 Science and engineering",
+      "chapter": "3.3 Real products",
       "builds": 2,
       "optional": false
     },
@@ -576,95 +544,23 @@
       "id": "app-evolve",
       "title": "AlphaEvolve: a program scores every attempt",
       "section": "work",
-      "chapter": "3.3 Science and engineering",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-farmer-task",
-      "title": "A voice note from a farmer near Mehsana",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "nb-farm",
-      "title": "In the notebook",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "farm-reply",
-      "title": "The advisory our run wrote",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "farm-critic",
-      "title": "Did the draft pass the checks?",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-farmer",
-      "title": "Who checks the advice before a farmer hears it?",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-air-task",
-      "title": "Whom should a city warn about tomorrow’s air?",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-air",
-      "title": "Air-quality alerts, every morning",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-building-task",
-      "title": "When should a campus cool its lecture halls?",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-building",
-      "title": "Building energy: a schedule for the week",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "app-clinic-task",
-      "title": "Could an agent write a doctor’s notes?",
-      "section": "work",
-      "chapter": "3.4 India and sustainability",
+      "chapter": "3.3 Real products",
       "builds": 2,
       "optional": false
     },
     {
       "id": "app-clinic",
-      "title": "Clinic notes: from the consultation to the record",
+      "title": "Clinic notes: the doctor signs every note",
       "section": "work",
-      "chapter": "3.4 India and sustainability",
+      "chapter": "3.3 Real products",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "who-checks",
+      "title": "Who checked the work?",
+      "section": "work",
+      "chapter": "3.4 How much freedom?",
       "builds": 2,
       "optional": false
     },
@@ -672,8 +568,8 @@
       "id": "stakes-map",
       "title": "How much freedom should each job get?",
       "section": "work",
-      "chapter": "",
-      "builds": 3,
+      "chapter": "3.4 How much freedom?",
+      "builds": 4,
       "optional": false
     },
     {
@@ -701,50 +597,18 @@
       "optional": false
     },
     {
-      "id": "nb-compound",
-      "title": "In the notebook",
-      "section": "risk",
-      "chapter": "4.1 Small errors add up",
-      "builds": 1,
-      "optional": false
-    },
-    {
       "id": "compound",
       "title": "What if we check each step?",
       "section": "risk",
       "chapter": "4.1 Small errors add up",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "fail-replit",
-      "title": "What went wrong at Replit?",
-      "section": "risk",
-      "chapter": "4.2 Real failures",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "fail-aircanada",
-      "title": "What went wrong at Air Canada?",
+      "id": "inj-note",
+      "title": "A note from a supplier arrives",
       "section": "risk",
-      "chapter": "4.2 Real failures",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "fail-ours",
-      "title": "What went wrong in our own run?",
-      "section": "risk",
-      "chapter": "4.2 Real failures",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "injection",
-      "title": "An email with instructions hidden in it",
-      "section": "risk",
-      "chapter": "4.3 Hidden instructions",
+      "chapter": "4.2 Hidden instructions",
       "builds": 2,
       "optional": false
     },
@@ -752,95 +616,127 @@
       "id": "nb-inject",
       "title": "In the notebook",
       "section": "risk",
-      "chapter": "4.3 Hidden instructions",
+      "chapter": "4.2 Hidden instructions",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "injection-run",
-      "title": "Did our agent fall for it?",
+      "id": "inj-open",
+      "title": "With everything allowed, the secret ends up in its answer",
       "section": "risk",
-      "chapter": "4.3 Hidden instructions",
-      "builds": 2,
+      "chapter": "4.2 Hidden instructions",
+      "builds": 3,
       "optional": false
     },
     {
       "id": "nb-trials",
       "title": "In the notebook",
       "section": "risk",
-      "chapter": "4.3 Hidden instructions",
+      "chapter": "4.3 How often, and why",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "injection-trials",
-      "title": "What happened in ten runs?",
+      "id": "inj-trials",
+      "title": "Ten of ten runs put the key in the summary",
       "section": "risk",
-      "chapter": "4.3 Hidden instructions",
+      "chapter": "4.3 How often, and why",
+      "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "one-stream",
+      "title": "Why it works: the model reads one stream of text",
+      "section": "risk",
+      "chapter": "4.3 How often, and why",
       "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "attacks",
-      "title": "The same trick on real products",
-      "section": "risk",
-      "chapter": "4.3 Hidden instructions",
-      "builds": 1,
       "optional": false
     },
     {
       "id": "trifecta",
       "title": "The lethal trifecta",
       "section": "risk",
-      "chapter": "4.3 Hidden instructions",
+      "chapter": "4.3 How often, and why",
       "builds": 2,
       "optional": false
     },
     {
-      "id": "gate",
-      "title": "A person approves before an email goes out",
+      "id": "inj-gated",
+      "title": "The same request, with a person who says no",
       "section": "risk",
-      "chapter": "4.4 Guardrails",
+      "chapter": "4.4 Ask before a risky command",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "guard-code",
+      "title": "This check was in our loop all along",
+      "section": "risk",
+      "chapter": "4.4 Ask before a risky command",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "nb-approval",
+      "title": "In the notebook",
+      "section": "risk",
+      "chapter": "4.4 Ask before a risky command",
       "builds": 1,
+      "optional": false
+    },
+    {
+      "id": "approval",
+      "title": "It wants to run rm, so the notebook asks us",
+      "section": "risk",
+      "chapter": "4.4 Ask before a risky command",
+      "builds": 2,
+      "optional": false
+    },
+    {
+      "id": "sandbox",
+      "title": "A safe list is not a sandbox",
+      "section": "risk",
+      "chapter": "4.4 Ask before a risky command",
+      "builds": 2,
       "optional": false
     },
     {
       "id": "nb-steplimit",
       "title": "In the notebook",
       "section": "risk",
-      "chapter": "4.4 Guardrails",
+      "chapter": "4.5 A step limit",
       "builds": 1,
       "optional": false
     },
     {
       "id": "steplimit",
-      "title": "The step limit stopped our run after four rounds",
+      "title": "The step limit stopped it after four rounds",
       "section": "risk",
-      "chapter": "4.4 Guardrails",
+      "chapter": "4.5 A step limit",
       "builds": 1,
       "optional": false
     },
     {
-      "id": "guardrails",
-      "title": "Guardrails before, during and after a run",
+      "id": "real-failures",
+      "title": "Two real failures, on the same map",
       "section": "risk",
-      "chapter": "4.4 Guardrails",
-      "builds": 3,
+      "chapter": "",
+      "builds": 2,
       "optional": false
     },
     {
       "id": "nb-evals",
       "title": "In the notebook",
       "section": "risk",
-      "chapter": "4.5 Evals",
+      "chapter": "4.6 Evals",
       "builds": 1,
       "optional": false
     },
     {
       "id": "evals",
-      "title": "Which model should we use?",
+      "title": "Which model do we need?",
       "section": "risk",
-      "chapter": "4.5 Evals",
+      "chapter": "4.6 Evals",
       "builds": 2,
       "optional": false
     },
@@ -861,58 +757,50 @@
       "optional": false
     },
     {
+      "id": "workflow",
+      "title": "A workflow or an agent?",
+      "section": "adopt",
+      "chapter": "A workflow or an agent? ",
+      "builds": 2,
+      "optional": false
+    },
+    {
       "id": "should-agent",
       "title": "Should this task be an agent?",
       "section": "adopt",
-      "chapter": "",
-      "builds": 2,
+      "chapter": "A workflow or an agent? ",
+      "builds": 3,
       "optional": false
     },
     {
-      "id": "should-check",
-      "title": "Can a person check the result cheaply?",
+      "id": "freedom",
+      "title": "Give an agent more freedom in steps",
       "section": "adopt",
-      "chapter": "",
-      "builds": 1,
-      "optional": false
-    },
-    {
-      "id": "should-stakes",
-      "title": "Is a mistake costly, or impossible to undo?",
-      "section": "adopt",
-      "chapter": "",
-      "builds": 2,
-      "optional": false
-    },
-    {
-      "id": "ramp",
-      "title": "Raise autonomy in steps",
-      "section": "adopt",
-      "chapter": "",
+      "chapter": "How much freedom? ",
       "builds": 2,
       "optional": false
     },
     {
       "id": "cost",
-      "title": "What did our opening run cost?",
+      "title": "What did the bug fix cost?",
       "section": "adopt",
-      "chapter": "",
+      "chapter": "What one task costs ",
       "builds": 2,
       "optional": false
     },
     {
       "id": "cost-person",
-      "title": "Now add a person who checks it",
+      "title": "Now add the person who checks it",
       "section": "adopt",
-      "chapter": "",
+      "chapter": "What one task costs ",
       "builds": 2,
       "optional": false
     },
     {
       "id": "skills",
-      "title": "What new work does a team take on?",
+      "title": "What changes for a team?",
       "section": "adopt",
-      "chapter": "",
+      "chapter": "What changes for a team ",
       "builds": 1,
       "optional": false
     },
@@ -920,12 +808,12 @@
       "id": "cancel",
       "title": "What does Gartner predict for agent projects?",
       "section": "adopt",
-      "chapter": "",
+      "chapter": "What changes for a team ",
       "builds": 2,
       "optional": false
     },
     {
-      "id": "nb-own-tool",
+      "id": "nb-own-task",
       "title": "In the notebook",
       "section": "adopt",
       "chapter": "",
@@ -942,10 +830,10 @@
     },
     {
       "id": "summary",
-      "title": "The talk, on the loop from Part 1",
+      "title": "The whole talk, on one loop",
       "section": "wrap",
       "chapter": "",
-      "builds": 3,
+      "builds": 5,
       "optional": false
     },
     {
@@ -953,7 +841,7 @@
       "title": "Three things to try on Monday",
       "section": "wrap",
       "chapter": "",
-      "builds": 2,
+      "builds": 3,
       "optional": false
     },
     {
@@ -966,7 +854,7 @@
     },
     {
       "id": "glossary",
-      "title": "Glossary: the loop",
+      "title": "Glossary: the agent",
       "section": "optional",
       "chapter": "",
       "builds": 1,
@@ -974,7 +862,7 @@
     },
     {
       "id": "glossary-2",
-      "title": "Glossary: what the model reads",
+      "title": "Glossary: one run",
       "section": "optional",
       "chapter": "",
       "builds": 1,
@@ -982,15 +870,15 @@
     },
     {
       "id": "glossary-3",
-      "title": "Glossary: running it safely",
+      "title": "Glossary: keeping it safe",
       "section": "optional",
       "chapter": "",
       "builds": 1,
       "optional": true
     },
     {
-      "id": "mcp-code",
-      "title": "The air-quality tool as an MCP server",
+      "id": "mcp-server",
+      "title": "MCP publishes a tool once, for any agent",
       "section": "optional",
       "chapter": "",
       "builds": 1,
@@ -1006,7 +894,7 @@
     },
     {
       "id": "app-documents",
-      "title": "Invoices: mostly a workflow",
+      "title": "Invoices at scale: mostly a workflow",
       "section": "optional",
       "chapter": "",
       "builds": 2,
@@ -1014,7 +902,7 @@
     },
     {
       "id": "app-incident",
-      "title": "IT incidents: errors after a deploy",
+      "title": "IT incidents: one approval, before the rollback",
       "section": "optional",
       "chapter": "",
       "builds": 2,
@@ -1022,7 +910,7 @@
     },
     {
       "id": "app-browser",
-      "title": "Web forms: renewing a trade licence",
+      "title": "Web forms: it stops before it pays",
       "section": "optional",
       "chapter": "",
       "builds": 2,
@@ -1030,7 +918,7 @@
     },
     {
       "id": "app-coscientist",
-      "title": "Google’s AI co-scientist: several agents, one goal",
+      "title": "Google’s AI co-scientist: agents propose, a lab tests",
       "section": "optional",
       "chapter": "",
       "builds": 2,
@@ -1038,7 +926,7 @@
     },
     {
       "id": "app-lab",
-      "title": "A chemistry experiment on a lab robot",
+      "title": "A lab robot: the model writes the experiment",
       "section": "optional",
       "chapter": "",
       "builds": 2,

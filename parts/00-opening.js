@@ -1,74 +1,99 @@
-// The opening: the cover, the question the whole talk returns to, the model on its own (run live in notebook 1.1,
-// then the recorded reply), and the plan. Numbers: data/traces.json (scripts/sci/traces.py, from the notebook run).
-import {S_,p,ps,request,at,data,need,meta,css,esc,word,kR,kA,
- COL,iconHTML,loopFig,nb,nbRun,PARTS} from '../kit.js';
+// The opening: the cover (the whole run, replayed in a terminal), two failing tests, the one-sentence request, the
+// agent fixing it, and the plan. Everything shown is the recorded run: data/traces.json (scripts/sci/traces.py).
+import {S_,ps,request,at,only,data,need,meta,css,esc,word,Word,num,kG,kA,
+ COL,iconHTML,nb,PARTS,term,diff,tree,toolCall,callText,statement,tailLines,isTest,testRows,hl} from '../kit.js';
 
-const T=need(await data('traces'),'alone','agent','check','date_text','model');
+const T=need(await data('traces'),'agent','check','alone','model','date_text'),A=T.agent;
+const tests=A.steps.filter(isTest),fail=tests[0],pass=tests.at(-1);
+const failed=(fail.result.match(/(\d+) failed/)||[])[1]||'2';
+/** The project, as the agent first finds it. */
+export const PROJECT=['README.md','billing.py','test_billing.py','data/','  purchase_orders.csv','inbox/','  10 files, badly named','invoices/','  6 supplier invoices'];
+/** Terminal rows for a failing test run: the command, each failing test's name with its assertion, and the summary. */
+export function failRows(s,{at=0,cmd=s.args.command}={}){
+ const base=testRows(s,{at}),rows=[];let name='';
+ for(const l of s.result.split('\n').map(x=>x.trimEnd())){
+  const h=l.match(/^_{3,}\s+(\S+)\s+_{3,}$/);if(h){name=h[1];continue;}
+  if(name&&/^E\s+\w*Error/.test(l)){rows.push({out:`____ ${name} ____`,at},{out:l.replace(/^E\s+/,'E   '),kind:'hot',at});name='';}
+ }
+ return rows.length?[{cmd,at},...rows,base.at(-1)]:[{cmd,at},...base.slice(1)];
+}
 
-css(`.p0-q .req{font-size:34px;line-height:1.35;padding:22px 28px;border-radius:22px 22px 22px 6px}
-.p0-q .req b{font-size:16px}
-.p0-said blockquote{margin:0;font-size:32px;line-height:1.4;color:#374151;border-left:5px solid var(--muted);padding:6px 0 6px 24px}
-.p0-said .verdict{font-size:28px;line-height:1.4;margin-top:22px}
+css(`.p0-cover{display:grid;grid-template-columns:1fr 1.12fr;gap:40px;align-items:center}
+.p0-cover h1{font-size:76px;line-height:1;letter-spacing:-2.6px;margin-bottom:16px}
+.p0-cover .sub{font-size:30px;line-height:1.3;color:var(--q);text-wrap:balance}.p0-cover .term .out.dim{opacity:.9}.p0-cover .who{font-size:21px;color:var(--muted);margin-top:30px;line-height:1.5}
+.scene#title>header h2{display:none}
+.p0-broken{align-items:stretch}.p0-broken .win{flex:1;display:flex;flex-direction:column}.p0-broken .win-body{flex:1}
+.p0-q{display:flex;justify-content:center}
+.p0-q .req{width:fit-content;max-width:900px;font-size:46px;line-height:1.25;padding:34px 44px 38px;border-radius:30px 30px 30px 8px;gap:18px;text-wrap:balance}.p0-q .req b{font-size:17px;margin-bottom:8px}.p0-q .req>svg{width:34px;height:34px;margin-top:0}
+.p0-calls{display:flex;flex-direction:column;gap:10px;counter-reset:call}
+.p0-calls .tc{flex-direction:row;align-items:center;gap:12px;padding:8px 14px;counter-increment:call;animation:slidein .35s ease both;animation-delay:calc(var(--i)*.42s)}
+.p0-calls .tc::before{content:counter(call);flex:none;width:28px;height:28px;border-radius:50%;background:var(--q);color:#fff;font:700 16px/28px var(--font);text-align:center}
+.p0-calls .tc code{font-size:18px;white-space:pre}.p0-calls .tc-who{display:none}
+.p0-watch .state-slot{align-items:center}.p0-watch .state-slot>div{display:flex;flex-direction:column;gap:16px}
+.reveal-hidden .p0-calls .tc{animation:none}
 .p0-route{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
-.p0-route>div{border:2px solid var(--line);border-radius:16px;background:#fff;padding:20px 16px 16px;min-width:0;display:flex;flex-direction:column;gap:10px;min-height:210px}
+.p0-route>div{border:2px solid var(--line);border-top:6px solid var(--q);border-radius:16px;background:#fff;padding:22px 18px 18px;min-width:0;display:flex;flex-direction:column;gap:12px;min-height:250px}
 .p0-route b{font-size:16px;letter-spacing:1px;text-transform:uppercase;color:var(--q)}
-.p0-route p{font-size:25px;line-height:1.3;font-weight:650}.p0-route small{font-size:17px;color:var(--muted);margin-top:auto}
-.p0-nb{display:flex;align-items:center;gap:14px;font-size:24px;line-height:1.35;margin-top:22px;color:#374151}
-@media(max-width:760px){.reading .p0-route{grid-template-columns:minmax(0,1fr)}.reading .p0-q .req{font-size:22px}.reading .p0-said blockquote{font-size:21px}.reading .p0-said .verdict{font-size:19px}}`);
+.p0-route p{font-size:26px;line-height:1.25;font-weight:650;text-wrap:balance}.p0-route small{font-size:18px;color:var(--muted);margin-top:auto}
+.p0-nb{display:flex;align-items:center;gap:14px;font-size:24px;line-height:1.35;margin-top:26px;color:#374151}
+@media(max-width:760px){.reading .p0-cover,.reading .p0-route{grid-template-columns:minmax(0,1fr)}.reading .p0-cover h1{font-size:44px}.reading .p0-q .req{font-size:24px;padding:18px 20px}.reading .p0-calls .tc code{white-space:pre-wrap;font-size:14px}}`);
 
 // ---------------------------------------------------------------------------------------- the cover
+const replay=[{cmd:'python -m pytest -q'},{out:testRows(fail).at(-1).out,kind:'bad'},{cmd:'agent "fix the failing tests"'},
+ ...A.steps.map(s=>({out:'  → '+callText(s.name,s.args,34),kind:'dim'})),{out:testRows(pass).at(-1).out,kind:'ok'}];
 S_('title','open',meta.title,{builds:1,
- body:`<div class="cover"><div><h1>${meta.title}</h1><p class="sub">${meta.subtitle}</p>
+ body:`<div class="p0-cover"><div><h1>${meta.title}</h1><p class="sub">${meta.subtitle}</p>
   <p class="who">${meta.series} · ${meta.date}<br>Session: The Engine of Autonomy<br>Nipun Batra · IIT Gandhinagar</p></div>
-  ${loopFig({W:600,H:450,at:{},labels:{}})}</div>`,
- lines:['Today we build a small agent together, look at where agents are used, and see how they go wrong.'],
- ask:['Who here has used ChatGPT, Gemini or Claude this week? Who has let one of them do a task for them, start to finish?'],
+  ${term(replay,{title:'a real run, replayed',size:'s'})}</div>`,
+ lines:['Today we build this: a small agent that finds a bug and fixes it. Then we give it other jobs, and try to break it.'],
+ ask:['Who here has used ChatGPT, Gemini or Claude this week? Who has let one of them finish a whole task for them?'],
  expected:['Most hands go up for the first question and few for the second. That gap is what today is about.'],
  point:'An agent is a model that uses tools in a loop until a goal is met. We will build one live.',
- transition:'Let us start with a question.',
- source:'Slides, notebook and sources: github.com/nipunbatra/ai-agents'});
+ transition:'Start with a real problem.',
+ source:`The terminal replays our recorded run (${esc(T.model)}, ${T.date_text}). Slides and notebook: github.com/nipunbatra/ai-agents`});
 
-// ---------------------------------------------------------------------------------------- the question
-const TASK='Over the next three days I visit Delhi, Ahmedabad and Pune, one city a day, in any order. Which order keeps the PM2.5 I breathe lowest?';
-S_('question','open','Let us start with a question',{builds:1,
- body:`<div class="p0-q">${request(TASK,{who:'The question'})}</div>`,
- lines:['Three cities, three days, one city a day. Which order means the cleanest air?'],
- ask:['Take a guess: which order would you choose, and how would you decide?'],
- expected:['Most people say “visit Delhi when its air is best”, but nobody in the room knows tomorrow’s forecast. You would need to look it up.'],
- point:'The answer depends on data nobody in the room has: the air-quality forecast for the next three days.',
- misconception:'That the order cannot matter. It matters because each city’s pollution changes from day to day.',
- transition:'Let us ask a model, the way most people use one: just the question.',
- source:'PM2.5 is fine dust in the air, in micrograms per cubic metre. Higher is worse.'});
+// ---------------------------------------------------------------------------------------- a real problem
+S_('broken','open','A small project, and two failing tests',{builds:2,
+ body:`<div class="duo p0-broken" style="--l:.8fr;--r:1.5fr"><div>${tree('workspace/',PROJECT,{marks:{'test_billing.py':[['2','run']]}})}</div>
+  <div>${term(failRows(fail,{at:2,cmd:'python -m pytest -q'}),{size:'l'})}</div></div>`,
+ lines:['This folder belongs to a small stationery shop: its billing code, some tests, an inbox and some invoices.',
+  `We run the tests. ${Word(+failed)} of ${word(T.check.passed)} fail, and we do not know why yet.`],
+ ask:['What would you do first if this were your project?','What do the two failing tests have in common?'],
+ expected:['Read the error, then open the code it points to. Remember that order: the agent will do the same.','Both involve a discount. The two tests without a discount pass.'],
+ point:'A real, small problem: the code runs, but two tests say the answers are wrong.',
+ transition:'We could debug it ourselves. Instead we ask in one sentence.',
+ source:`Real output from our run on ${T.date_text}. The project is made up for this talk; the notebook creates it.`});
 
-nbRun('nb-alone','open','1.1','The model on its own',{
- run:'reply = chat([{"role": "user", "text": TASK}])\nprint(reply["text"])',
- look:['Does it look anything up?','What does it say about the order?'],
- line:'Over to the notebook. We send the question to a Gemini model, with nothing else.',
- ask:'Before it answers: what do you expect it to say?',expected:'Something confident. Watch whether it mentions any forecast numbers.',
- point:'A model on its own can only answer from what it learned in training.',
- transition:'Here is what it said when we ran it.'});
+S_('the-ask','open','We ask in one sentence',{builds:1,
+ body:`<div class="p0-q">${request(esc(A.goal),{who:'Our request'})}</div>`,
+ lines:['We do not say which file, which test, or what is wrong.'],
+ ask:['Could a chatbot do this, if we typed this sentence into it?'],
+ expected:['No: it cannot see the folder or run anything. Hold that thought; we try it in a few minutes.'],
+ point:'The request names a goal. It gives no steps.',
+ transition:'Here is what happened when we gave that sentence to an agent.'});
 
-S_('alone-said','open','What did the model say?',{builds:2,
- body:`<div class="p0-said"><blockquote>“${esc(T.alone.excerpt.trim())}”</blockquote>
-  ${at(2,`<p class="verdict">${kR('It never looked at a forecast.')} And the order does matter: the worst order means ${Math.round(T.check.extra_pct)}% more PM2.5 than the best.</p>`)}</div>`,
- lines:[`Our run on ${T.date_text}. It wrote ${T.alone.words} words, and this is the key sentence.`,
-  'It answered from what it learned in training. It had no way to know the next three days.'],
- ask:['Is this answer right?','What would it need to get it right?'],
- expected:['It sounds reasonable, but it is wrong: each city’s air changes from day to day, so the order changes the total.',
-  'Tomorrow’s forecast for each city, and a way to add up the totals. In other words, tools.'],
- point:'A model on its own is confident even when it has no data. By the end of Part 1 the same model will get this right.',
- misconception:'That a newer model would know. No model can know the next three days from its training data.',
- transition:'Here is the plan.',
- source:`Real reply (${esc(T.model)}, ${T.date_text}, notebook 1.1), shortened to its key sentence. Your run will word it differently.`});
+S_('watch','open',`${num(A.seconds,0)} seconds later, the tests pass`,{builds:2,
+ body:`<div class="duo p0-watch" style="--l:1.05fr;--r:1.2fr"><div class="p0-calls">${A.steps.map((s,i)=>toolCall(s.name,s.args,{max:40,i})).join('')}</div>
+  <div>${only('1',term(testRows(fail),{size:'s',title:'Terminal · before'}))}
+   ${only('2',diff('billing.py',[['-',T.check.minus[0]],['+',T.check.plus[0]]],{size:'s'})+term(testRows(pass),{size:'s',title:`Terminal · ${num(A.seconds,0)} seconds later`}))}</div></div>`,
+ lines:[`The agent made ${word(A.calls)} requests, one after another. Nobody told it which ones.`,
+  `It changed one line of the billing code, and all ${word(T.check.passed)} tests pass.`],
+ ask:['Read the six requests. What is it doing?','Is the new line right?'],
+ expected:['Looking around, running the tests, reading the code, changing it, and running the tests again. What a careful programmer does.',
+  'Yes. A 10 percent discount should take off 10 percent of the amount. The old line took off the number 10.'],
+ point:'Given a goal and a few tools, the model chose the steps itself and checked its own work.',
+ misconception:'That this needed a huge model in a data centre. This run used an open model, Gemma 4, on a laptop.',
+ transition:'How does that work? That is the plan for today.',
+ source:`Our recorded run: ${esc(T.model)}, ${T.date_text}, ${A.rounds} rounds, ${num(A.seconds,1)} seconds of model time on a laptop.`});
 
 // ---------------------------------------------------------------------------------------- the plan
-const ROUTE=[['spark'],['zap'],['building'],['alert'],['approve']];
+const ICON=['spark','zap','building','alert','approve'];
 const mins=meta.sections.filter(s=>PARTS.some(pp=>pp[0]===s.id)).map(s=>s.minutes);
 S_('route','open','Today’s plan',{builds:1,nb:nb('part-0','▶ The notebook'),
- body:`<div class="p0-route">${ROUTE.map(([ic],i)=>`<div>${iconHTML(ic,COL.guess,40)}<b>Part ${i+1}</b><p>${PARTS[i][1]}</p><small>${mins[i]} minutes</small></div>`).join('')}</div>
-  <p class="p0-nb">${iconHTML('code',COL.target,30)}<span>We switch between these slides and a notebook. You can run it too, with a free Gemini key.</span></p>`,
- lines:['Five parts. When a slide says “In the notebook”, we switch over and run the code live.'],
+ body:`<div class="p0-route">${PARTS.map(([,name],i)=>`<div>${iconHTML(ICON[i],COL.guess,40)}<b>Part ${i+1}</b><p>${name}</p><small>${mins[i]} minutes</small></div>`).join('')}</div>
+  <p class="p0-nb">${iconHTML('code',COL.target,30)}<span>The notebook runs in Colab on an open model, Gemma 4. It needs no key.</span></p>`,
+ lines:['Five parts. When a slide says “In the notebook”, we switch over and run the code.'],
  ask:['Which part matters most for your work?'],
  expected:['Most will say Part 3 or Part 5. Promise both, and say that Part 4 is the one to remember.'],
- point:'A map of the talk, and the rhythm: a few slides, then a run in the notebook.',
- transition:'Part 1: what an agent is.',source:'Notebook: github.com/nipunbatra/ai-agents (notebook/agents.ipynb). Open it in Colab from the link at the top right.'});
+ point:'A map of the talk, and its rhythm: a few slides, then a run in the notebook.',
+ transition:'Part 1: from a model to an agent.',source:'Notebook: github.com/nipunbatra/ai-agents (notebook/agents.ipynb). Open it in Colab from the link at the top right.'});

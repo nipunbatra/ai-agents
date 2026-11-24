@@ -11,3 +11,5 @@ notebook/chart-*.png
 exports/*.tmp
 qa/lines.md
 qa/text.md
+notebook/workspace/
+qa/smoke/

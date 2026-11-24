@@ -68,6 +68,9 @@ Slides
   the moment the talk switches to the notebook and runs that numbered section live. The number and title must match
   the section in `notebook/agents.py` (anchor `nb-1-2`); `plan/slow-deck.md` lists them all. The slide after it shows
   our recorded run, so the talk goes on if the live run is slow.
+- The screens (`stage.js`): `editor`, `term`, `diff`, `tree`, `toolCall`, `toolBack`, `says`, `loopStrip`, `statement`,
+  with `testRows`, `bashRows` and `firstSentence` for recorded runs. `plan/slow-deck.md` has the table of what each
+  draws and how a recorded run is walked. Compose slides from these before drawing anything new.
 - `loopMap({hi, at, text, icons, guards})` (figures.js): the agent loop as a flowchart, the talk's map. `hi:'tool'`
   highlights a box with a "We are here" tag and fades the rest; `guards:true` adds the approval and step-limit pills.
 - Text: `p(s)` (lead, 28px), `ps(s)` (26px), `small(s)` (caption), `takeaway(s)`, `answer(build, s)`, `request(s)`.

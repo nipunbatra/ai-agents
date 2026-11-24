@@ -2,14 +2,13 @@
 
     python3 scripts/sci/p5.py        writes data/p5.json
 
-- The cost of one task (live figure p5-cost): the opening run's tokens (data/traces.json, agent) times the price
-  per million tokens (traces.price, from Google's pricing page on 19 Nov 2026), in rupees at traces.inr_per_usd,
-  against a person's minutes spent checking it. The token model is stated on the slide: each step rereads everything
-  before it, so the tokens read grow by a fixed amount per step; that amount is fitted so that our three-step run
-  costs exactly what it cost.
-- Published numbers: constants with their source and the row of plan/research/verified.md they come from.
-- The speaker's settings (review minutes, the cost of an hour, slider ranges) are assumptions, labelled as such.
-The asserts guard what the slides say.
+- The cost of one task. Our run cost nothing per token: the model ran on a laptop. The slides work out what the same
+  tokens would cost on a hosted model straight from data/traces.json (agent.tokens_read, agent.tokens_written, the
+  per-round log and `hosted`, the hosted model's published price), so they follow the run when it is recorded again.
+  This file adds only what a run cannot give: the speaker's assumptions about the person who checks the result, and
+  the ranges of the two sliders.
+- Published numbers: constants with the row of plan/research/verified.md they come from.
+The asserts guard what the slides say. Run this again after every new recording of the notebook.
 """
 import json
 from pathlib import Path
@@ -20,69 +19,67 @@ OUT = ROOT / 'data' / 'p5.json'
 D = {}
 
 # ---------------------------------------------------------------------------------------- the cost of one task
-A, PRICE, INR = T['agent'], T['price'], T['inr_per_usd']
-turns = A['turns']
-n_real = len(turns)
-first_in = turns[0]['usage']['input']
-growth = (A['usage']['input'] - n_real * first_in) / (n_real * (n_real - 1) / 2)   # extra tokens read per step
-out_per_step = A['usage']['output'] / n_real
-assert growth > 0
+A, H = T['agent'], T['hosted']
+log = A['log']
+n_real = len(log)
+assert n_real == A['rounds'] and sum(r['read'] for r in log) == A['tokens_read']
+first_read = log[0]['read']
+growth = (A['tokens_read'] - n_real * first_read) / (n_real * (n_real - 1) / 2)   # extra tokens read per round
+written_per_round = A['tokens_written'] / n_real
+assert growth > 0                                       # each round rereads everything before it
 
 
 def tokens(n):
-    """Tokens read and written by a run of n steps under the slide's model."""
-    return n * first_in + growth * n * (n - 1) / 2, n * out_per_step
+    """Tokens read and written by a run of n rounds: the same model the slide's figure uses (parts/05-adopt.js)."""
+    return n * first_read + growth * n * (n - 1) / 2, n * written_per_round
 
 
-def cost_inr(n, price):
+def hosted_inr(n, usd_in=H['usd_in'], usd_out=H['usd_out']):
     i, o = tokens(n)
-    return (i * price['input'] + o * price['output']) / 1e6 * INR
+    return (i * usd_in + o * usd_out) / 1e6 * H['inr_per_usd']
 
+
+# The speaker's assumptions (not published numbers): five minutes for a person to check one result, at ₹1,000 an hour
+# (roughly ₹20 lakh a year over 2,000 working hours). The sliders let the audience change the minutes and the rounds.
+REVIEW_MIN, INR_PER_HOUR, ROUNDS_MAX = 5, 1000, 30
+model_inr = hosted_inr(n_real)
+person_inr = REVIEW_MIN / 60 * INR_PER_HOUR
+assert abs(model_inr - A['inr_hosted']) < 0.01          # the figure's token model reproduces the recorded run
+assert model_inr < 1                                    # "less than a rupee"
+assert model_inr / (model_inr + person_inr) < 0.01      # "the model is under 1% of the cost"
+assert n_real < ROUNDS_MAX and hosted_inr(ROUNDS_MAX) < person_inr   # "even 30 rounds cost less than the check"
+
+# The workflow slide's notes: Part 3's agent checked the invoices, and some of them do not match their order.
+IV = T['invoices']
+assert 0 < IV['problems'] < len(IV['invoices'])         # "the ones that match" and "the ones that do not" both exist
+assert sum(c['flagged'] for c in IV['check']) > 0       # "it checked the invoices and flagged some"
 
 # verified.md #20: gemini-3.8-flash costs $0.75 in / $3.75 out per 1M tokens through 31 Dec 2026, rising to
-# $1.50 / $7.50 from 1 Jan 2027 (aistudio.google.com/docs/pricing). The current prices are in traces.price.
-FLASH_2027 = {'input': 1.50, 'output': 7.50}
-assert FLASH_2027['input'] == 2 * PRICE['gemini-3.8-flash']['input'] and FLASH_2027['output'] == 2 * PRICE['gemini-3.8-flash']['output']
-MODELS = [
-    {'id': 'flash', 'name': 'Gemini 3.8 Flash', 'label': '3.8 Flash', 'price': PRICE['gemini-3.8-flash']},
-    {'id': 'flash27', 'name': 'Gemini 3.8 Flash from 1 Jan 2027', 'label': '3.8 Flash from 1 Jan', 'price': FLASH_2027},
-    {'id': 'lite', 'name': 'Gemini 3.5 Flash-Lite', 'label': '3.5 Flash-Lite', 'price': PRICE['gemini-3.5-flash-lite']},
-]
+# $1.50 / $7.50 from 1 Jan 2027 (aistudio.google.com/docs/pricing). traces.hosted holds the current price.
+PRICE_CHANGE = {'model': 'Gemini 3.8 Flash', 'when': '1 January 2027', 'usd_in': 1.50, 'usd_out': 7.50}
+if H['name'] == PRICE_CHANGE['model']:
+    assert (PRICE_CHANGE['usd_in'], PRICE_CHANGE['usd_out']) == (2 * H['usd_in'], 2 * H['usd_out'])   # "twice today's price"
+    assert hosted_inr(ROUNDS_MAX, PRICE_CHANGE['usd_in'], PRICE_CHANGE['usd_out']) < person_inr
 
-# The speaker's assumptions (not published numbers): five minutes for a person to check one answer, at ₹1,000 an hour
-# (roughly ₹20 lakh a year over 2,000 working hours). The sliders let the audience change both.
-REVIEW_MIN, INR_PER_HOUR = 5, 1000
-model_inr = cost_inr(n_real, MODELS[0]['price'])
-person_inr = REVIEW_MIN / 60 * INR_PER_HOUR
-assert abs(model_inr - A['cost_inr']) < 0.01            # the fitted model reproduces the real run's cost
 D['cost'] = {
-    'steps': n_real, 'first_input': first_in, 'growth': round(growth, 2), 'out_per_step': round(out_per_step, 2),
-    'input': A['usage']['input'], 'output': A['usage']['output'], 'inr_per_usd': INR,
-    'models': MODELS, 'price_change': '1 January 2027',
-    'review_min': REVIEW_MIN, 'inr_per_hour': INR_PER_HOUR,
-    'model_inr': round(model_inr, 3), 'person_inr': round(person_inr, 2),
-    'model_share': round(model_inr / (model_inr + person_inr), 4),
-    'slider': {'steps_min': 1, 'steps_max': 30, 'review_min': 0, 'review_max': 30, 'hour_min': 250, 'hour_max': 5000,
-               'hour_step': 250},
+    'review_min': REVIEW_MIN, 'inr_per_hour': INR_PER_HOUR, 'person_inr': round(person_inr, 2),
+    'price_change': PRICE_CHANGE,
+    'slider': {'rounds_min': 1, 'rounds_max': ROUNDS_MAX, 'review_min': 0, 'review_max': 30},
 }
-assert D['cost']['model_share'] < 0.01                  # "the model is under 1% of the cost"
-# Even a long run (30 steps) at the 2027 price stays below five minutes of a person's time at the default rate.
-assert cost_inr(30, FLASH_2027) < person_inr
 
 # verified.md #17: Anthropic, "How we built our multi-agent research system", 13 Jun 2025: "agents typically use about
 # 4x more tokens than chat interactions, and multi-agent systems use about 15x more tokens than chats".
 D['tokens_vs_chat'] = {'agent': 4, 'multi_agent': 15, 'when': 'Jun 2025'}
 
 # ---------------------------------------------------------------------------------------- what changes for a team
-# verified.md #26: Anthropic Economic Index, report of 15 Sep 2025: directive use (the user hands over the whole task)
-# "jumped from 27% to 39%"; "77% of API transcripts show automation patterns".
-D['economic_index'] = {'when': 'Sep 2025', 'directive_from': 27, 'directive_to': 39, 'api_automation': 77}
 # verified.md #23: Gartner press release, 25 Jun 2025: "over 40% of agentic AI projects will be canceled by the end of
 # 2027, due to escalating costs, unclear business value or inadequate risk controls".
-D['gartner'] = {'when': 'Jun 2025', 'cancelled_pct': 40, 'by': 2027}
+D['gartner'] = {'when': 'Jun 2025', 'cancelled_pct': 40, 'by': 2027,
+                'reasons': ['escalating costs', 'unclear business value', 'inadequate risk controls']}
 
 OUT.write_text(json.dumps(D, indent=1, ensure_ascii=False) + '\n')
 print(OUT, sorted(D))
-print({k: v for k, v in D['cost'].items() if k != 'models'})
-for n in (1, 3, 10, 30):
-    print(n, [round(cost_inr(n, m['price']), 2) for m in MODELS], [round(x) for x in tokens(n)])
+print(f"our run: {n_real} rounds, {A['tokens_read']} read, {A['tokens_written']} written; hosted ₹{model_inr:.2f} "
+      f"({H['name']}); a person ₹{person_inr:.0f}; model share {model_inr / (model_inr + person_inr):.2%}")
+for n in (1, n_real, 10, ROUNDS_MAX):
+    print(n, 'rounds:', [round(x) for x in tokens(n)], f'₹{hosted_inr(n):.2f}')

@@ -1,415 +1,272 @@
-// Part 2: one run, step by step. Slow: the loop map with "we are here" on the model, the opening run one round per
-// slide (what the model read, how many tokens, what it wrote), the loop as Python, notebook 2.1 and the parts of the
-// context, why to keep it short, memory (a question, notebook 2.2, our recorded run), three patterns (a chain,
-// routing with notebook 2.3, several model calls together) and MCP (the map on the tool box, then n × m against n + m).
-// Real runs: data/traces.json; everything else, and the numbers derived from the runs: data/p2.json (scripts/sci/p2.py).
-import {S_,O,ps,small,request,at,data,need,css,esc,word,Word,kG,highlight,
- fig,label,line,arrow,gat,gonly,COL,MUTED,icon,iconHTML,chip,loopMap,msg,chart,
- widget,register,slider,num,big,nb,nbRun,partBreak,recap,chap} from '../kit.js';
+// Part 2: inside one run. The run from Part 1 (fix the failing test) opened up: what the model read in each round (a
+// bar per round, which only grows), notebook 2.1, the total against the size of the conversation, why we keep the
+// context short, and the instructions we wrote in plain English. Then memory: a run's conversation is thrown away, so
+// the agent writes NOTES.md in one run (notebook 2.2) and reads it at the start of the next.
+// Every number, command and model sentence is from the recorded runs: data/traces.json (scripts/sci/traces.py).
+import {S_,request,at,only,data,need,css,esc,word,num,big,
+ fig,label,line,gat,gonly,COL,MUTED,iconHTML,chip,nb,nbRun,partBreak,recap,chap,
+ editor,term,tree,toolCall,says,statement,loopStrip,isTest,firstSentence,hl} from '../kit.js';
 
-const T=need(await data('traces'),'agent','model','date_text','price','inr_per_usd'),A=T.agent;
-const D=need(await data('p2'),'walk','context','memory','patterns','routing','routing_gloss','multi','mcp','loop');
-const W2=D.walk,WT=W2.turns,PR=T.price['gemini-3.8-flash'],BLUE=COL.data;
-const RD=WT.map(t=>t.read),n1=WT[0].calls.length,n2=WT[1].calls.length;
+const T=need(await data('traces'),'agent','memory','model','date_text','hosted','system'),A=need(T.agent,'log','steps','tokens_read','inr_hosted'),S=A.steps;
+const M=need(T.memory,'first','later','notes'),F=M.first,L=M.later;
+const RD=A.log.map(r=>r.read),N=RD.length,LAST=RD.at(-1),TOTAL=A.tokens_read,BLUE=COL.data;
+if(N<4)throw new Error('Part 2 draws the run of Part 1 round by round and needs at least four rounds');
+const MONO='SFMono-Regular,Menlo,Consolas,monospace';
+const sentences=t=>String(t).trim().split(/(?<=[.!?])\s+/);
+/** The instructions every run starts with: SYSTEM in notebook/agents.py, section 1.6, as recorded with the runs. */
+const SYSTEM=T.system;
+/** The files at the top of the project, read from the output of an `ls` step. */
+const filesIn=s=>{const out=String(s?.result||''),dirs=new Set([...out.matchAll(/^\.\/([^:/]+):$/gm)].map(m=>m[1]));
+ const names=/^ls\b/.test(s?.args?.command||'')?out.split('\n\n')[0].split('\n').map(x=>x.trim()).filter(x=>x&&!x.endsWith('/')&&!dirs.has(x)):[];
+ return names.length?names:['README.md','billing.py','test_billing.py'];};
 
-css(`.p2-round{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px;align-items:start}
-.p2-h{font-size:16px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--muted);margin:0 0 10px}
-.p2-conv{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
-.p2-conv li{display:flex;align-items:center;gap:12px;background:#fff;border:2px solid var(--line);border-left:6px solid var(--c);border-radius:10px;padding:6px 14px;font-size:24px;line-height:1.3}
-.p2-conv li>svg{flex:none}.p2-conv li.old{opacity:.5}
-.p2-conv .new{margin-left:auto;font-size:14px;letter-spacing:1px;text-transform:uppercase;font-weight:700;color:var(--data)}
-.p2-wrote{margin-top:26px}.p2-wrote .msg{font-size:23px;line-height:1.4}.p2-wrote .tchip{font-size:20px}
-.p2-sum{font:600 19px "SFMono-Regular",Menlo,Consolas,monospace}
-.p2-stat{display:flex;gap:44px;margin-top:8px}
-.p2-stat div{font-size:19px;color:var(--muted)}.p2-stat b{display:block;font-size:40px;line-height:1.15;color:var(--ink);font-variant-numeric:tabular-nums}
-.p2-code .code{font-size:23px;line-height:1.6;padding:16px 24px}
-.p2-tag{display:inline-block;font:650 17px/1.3 var(--font);padding:2px 12px;border-radius:999px;color:#fff;vertical-align:2px}
-.p2-tag.agent{background:var(--q)}.p2-tag.tools{background:var(--p)}.p2-tag.done{background:var(--d)}.p2-tag.risk{background:var(--loss)}.p2-tag.memory{background:var(--data)}
-.p2-eq{font-size:54px;font-weight:650;font-variant-numeric:tabular-nums;text-align:center;color:var(--data)}
-.p2-eq span{color:var(--muted);font-weight:400;margin:0 14px}.p2-eq b{color:var(--ink)}
-.p2-eqc{text-align:center;margin-top:4px}
-.p2-tips{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin-top:34px}
-.p2-tips>div{display:flex;gap:14px;align-items:flex-start;border:2px solid var(--line);border-top:6px solid var(--c);border-radius:14px;background:#fff;padding:16px 18px;font-size:24px;line-height:1.35;min-width:0}
-.p2-tips>div>svg{flex:none;margin-top:3px}
-.p2-q .req{font-size:32px;line-height:1.4;padding:22px 28px;border-radius:22px 22px 22px 6px}
-.p2-two-tools{display:flex;gap:40px;margin-top:30px;font-size:24px;align-items:center}
-.p2-two-tools>div{display:flex;gap:12px;align-items:center}.p2-two-tools .tchip{font-size:22px}
-.p2-mem{display:grid;grid-template-columns:minmax(0,1fr) 44px minmax(0,.95fr) 44px minmax(0,1.25fr);gap:8px;align-items:center}
-.p2-mem>div{display:flex;flex-direction:column;gap:10px;min-width:0}
-.p2-mem .msg,.p2-mem .req{font-size:22px}.p2-mem .tchip{font-size:19px}
-.p2-note{border:2px solid #245EDB66;background:#245EDB0A;border-radius:12px;padding:10px 16px;font-size:23px;line-height:1.38}
-.p2-note b{display:flex;gap:6px;align-items:center;font:600 16px "SFMono-Regular",Menlo,Consolas,monospace;color:var(--data);margin-bottom:4px}
-.p2-kB{color:var(--data);font-weight:650}
-.p2-two h3{font-size:27px;color:var(--q);margin-bottom:8px}
-.p2-two .caption{margin-top:6px;font-size:21px;color:#374151}
-@media(max-width:760px){.reading .p2-round,.reading .p2-mem,.reading .p2-tips{grid-template-columns:minmax(0,1fr)}
- .reading .p2-mem>svg{transform:rotate(90deg);margin:0 auto}.reading .p2-eq{font-size:22px;overflow-wrap:anywhere}.reading .p2-eq span{margin:0 4px}.reading .p2-q .req{font-size:22px}.reading .p2-two-tools{flex-direction:column;align-items:flex-start;gap:12px}}`);
+css(`.p2-walk{display:grid;grid-template-columns:1fr 1.4fr;gap:30px;align-items:center;width:100%}
+.p2-walk>div{min-width:0;display:flex;flex-direction:column;gap:14px}
+.p2-walk.even{grid-template-columns:1fr 1fr}
+.p2-why{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;padding:0 5px}
+.p2-why>div{border:2px solid var(--line);border-top:6px solid var(--c);border-radius:16px;background:#fff;padding:30px 28px 30px;min-width:0;display:flex;flex-direction:column;gap:14px;min-height:310px}
+.p2-why h3{font-size:38px;line-height:1.1;color:var(--c);margin-top:6px}.p2-why p{font-size:27px;line-height:1.36;color:#374151;text-wrap:balance}
+.p2-sys .ed .note{font-size:16px;padding:5px 13px}
+.p2-runs{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:stretch;width:100%}
+.p2-run{position:relative;border:2px solid var(--line);border-radius:18px;background:#fff;padding:18px 20px 20px;min-width:0;display:flex;flex-direction:column;gap:11px}
+.p2-run h3{font-size:19px;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:2px}
+.p2-run .it{display:flex;align-items:flex-start;gap:12px;border:2px solid var(--line);border-left:6px solid var(--c);border-radius:12px;padding:10px 14px;font-size:23px;line-height:1.32;background:#fff}
+.p2-run .it>svg{flex:none;margin-top:3px}
+.p2-run .it.none{border:2px dashed #B8BFC7;color:var(--muted);background:none;flex:1;align-items:center}
+.p2-run>.state-slot{flex:1}.p2-items{display:flex;flex-direction:column;gap:11px}
+.p2-what{display:flex;align-items:center;justify-content:center;font-size:150px;line-height:1;font-weight:700;color:#D5DAE0}
+.p2-gone{position:absolute;inset:-2px;border-radius:18px;background:#FAFAFBB3;display:flex;align-items:flex-start;justify-content:flex-end;padding:11px 12px}
+.p2-gone span{display:inline-flex;align-items:center;gap:9px;font-size:20px;font-weight:650;color:#fff;background:var(--loss);border-radius:999px;padding:7px 18px}
+.p2-ask{margin-bottom:12px}.p2-ask .req{font-size:25px;line-height:1.36;padding:13px 20px}
+.p2-notes .ed .mark{background:#245EDB38;border-left-color:#7FA6FF}
+.p2-cmd .term .cmd{white-space:pre-wrap;overflow-wrap:anywhere}
+.p2-cmd .term .type{display:inline;white-space:pre-wrap;overflow-wrap:anywhere;width:auto;max-width:none;animation:none}
+.p2-hit{font-weight:700;color:#fff;background:#245EDBB3;border-radius:5px;padding:1px 4px}
+.p2-kB{color:var(--data);font-weight:700}
+@media(max-width:760px){.reading .p2-walk,.reading .p2-walk.even,.reading .p2-why,.reading .p2-runs{grid-template-columns:minmax(0,1fr)}
+ .reading .p2-why p,.reading .p2-run .it,.reading .p2-ask .req{font-size:18px}.reading .p2-why>div{min-height:0}}`);
 
-partBreak(2,'One run, step by step','We replay the opening run one round at a time, and look at what the model reads.',
- ['What the model reads each round','Notes that outlast a run','A few common patterns','MCP: one way to connect tools'],
- {img:'part-engine.jpg',alt:'Illustration: a small helper reading a paper scroll that grows longer at each step, with tools handing it results',nb:nb('part-2'),
-  line:'Key question: what does the model read each round, and what does that cost?',
-  ask:'When an agent “thinks”, what do you imagine is going on?',
-  expected:'Answers vary: it plans, it searches, it reasons. Keep them. This part shows that each round is the model reading a growing text and writing a short reply.',
-  transition:'First, where we are in the loop.',source:'Illustration: generated (Gemini image model).'});
+partBreak(2,'Inside one run',`The agent fixed the bug in ${word(A.rounds)} rounds. Now we open that run and look at what the model was given each time.`,
+ ['What the model reads each round','Why we keep that short','The instructions we wrote','Notes that outlast a run'],
+ {img:'part-engine.jpg',alt:'Illustration: a small helper reading a paper scroll that grows longer at each step',nb:nb('part-2'),
+  line:'Key question: what does the model read each round, and how does it remember anything?',
+  ask:'Between two rounds, where does the model keep what it has found out so far?',
+  expected:'Most will say “in the model”. It keeps nothing. Our code holds the conversation and sends all of it again each round.',
+  point:'The model has no state of its own. Everything it knows about the task is in the text our code sends it.',
+  transition:'Start with what it reads.',source:'Illustration: generated (Gemini image model).'});
 
 // ---------------------------------------------------------------------------------------- 2.1 what the model reads
 chap('2.1','What the model reads');
-S_('map-model','engine','Where are we in the loop?',{builds:1,
- body:loopMap({hi:'model'}),
- lines:['This part is about one box: each round, the model reads the whole conversation again.'],
- ask:['By round 3 of our run, what is in “the conversation”?'],
- expected:['Our instructions, the tool menu, the question, and every request and result so far.'],
- point:'The model keeps nothing between rounds. Our code sends it the whole conversation every time.',
- transition:'We replay the opening run, one round per slide.'});
-
-// the opening run, one round per slide: what it read, how many tokens, what it wrote
+const added=RD.map((v,i)=>v-(RD[i-1]||0)),NEW=added.at(-1);
+/** In words, what a tool call added to the conversation. */
+const result=s=>!s?'the result of its last request':isTest(s)?'the test output':s.name==='bash'?`what <span class="mono">${esc(s.args.command)}</span> printed`:
+ s.name==='read_file'?`the text of <span class="mono">${esc(s.args.path)}</span>`:'a short note that the file was changed';
 {
- const MAXR=Math.max(...RD);
- const bars=k=>{const W=560,H=262,base=212,mh=168,cw=124,xs=[22,218,414];
-  let g=line(0,base,W,base,{stroke:'#D5DAE0',w:2});
-  RD.forEach((v,i)=>{const x=xs[i],cx=x+cw/2,cur=i===k-1;
-   g+=label(cx,base+34,`Round ${i+1}`,{size:23,anchor:'middle',fill:cur?COL.guess:i<k?COL.ink:'#B8BFC7',weight:cur?700:500});
-   if(i>=k)return;
-   const h=v/MAXR*mh,prev=cur&&i?RD[i-1]/MAXR*mh:0;
-   if(prev)g+=`<rect x="${x}" y="${(base-prev).toFixed(1)}" width="${cw}" height="${prev.toFixed(1)}" fill="${BLUE}" opacity=".35"/>`;
-   g+=`<rect x="${x}" y="${(base-h).toFixed(1)}" width="${cw}" height="${(h-prev).toFixed(1)}" rx="3" fill="${BLUE}" opacity="${cur?1:.35}"/>`;
-   g+=label(cx,base-h-12,big(v),{size:cur?30:23,anchor:'middle',fill:cur?COL.ink:MUTED,weight:cur?700:500});});
-  return fig(W,H,g,`Tokens the model read in each round, up to round ${k}`);};
- // what the model read: round 1 reads three new pieces; each later round rereads everything before, plus two new pieces
- const NEW=[[['file',MUTED,'Our instructions'],['list',COL.target,'The tool menu'],['person',COL.amber,'Your question']],
-  [['spark',COL.guess,`Its ${word(n1)} forecast requests`],['sensor',COL.target,`The ${word(n1)} forecasts`]],
-  [['spark',COL.guess,`Its ${word(n2)} sums`],['code',COL.target,`The ${word(n2)} totals`]]];
- const conv=k=>`<p class="p2-h">What it read</p><ol class="p2-conv">${k>1?`<li class="old" style="--c:#245EDB88">${iconHTML('refresh',BLUE,24)}<span>Everything round ${k-1} read</span></li>`:''}
-  ${NEW[k-1].map(([ic,c,t])=>`<li style="--c:${c}">${iconHTML(ic,c,24)}<span>${t}</span>${k>1?'<span class="new">new</span>':''}</li>`).join('')}</ol>`;
- const wrote=(b,html)=>at(b,`<div class="p2-wrote"><p class="p2-h">It wrote</p>${html}</div>`);
- const round=(k,id,title,o)=>S_(id,'engine',title,{...o,nb:nb('nb-2-1'),
-  body:`<div class="p2-round"><div>${conv(k)}${o.wrote}</div><div><p class="p2-h">Tokens read</p>${bars(k)}${o.right||''}</div></div>`});
- const src=`Real run, ${T.date_text}, ${esc(T.model)} (notebook 1.5). A token is a word or a piece of a word. Pale blue is text the round before had already read.`;
-
- round(1,'trace-walk',`Round 1: ${word(n1)} forecasts at once`,{builds:2,
-  wrote:wrote(2,msg('call',`<div class="chips">${WT[0].calls.map(c=>chip('sensor',esc(c.city))).join('')}</div>`)),
-  lines:[`Round 1. The model reads our instructions, the tool menu and your question: ${big(RD[0])} tokens.`,
-   `It replies with ${word(n1)} forecast requests at once, since none depends on another.`],
-  ask:['What does the model have to work with in round 1?',`Why ask for all ${word(n1)} at once?`],
-  expected:['Only text: our instructions, the menu of tools, and the question. No forecasts yet.',
-   'None depends on another, so one round is enough, and each round saved is one less rereading of the whole conversation. Our instructions also asked for this. Builders call it parallelisation.'],
-  point:'A round is one model call. It reads text and writes text; nothing else happens inside it.',
-  misconception:'That the model keeps running between rounds. Each round is a new call; between calls, only our code runs.',
-  transition:`Our code fetches the ${word(n1)} forecasts. Then round 2.`,source:src});
-
- round(2,'trace-walk-2',`Round 2: ${word(n2)} sums at once`,{builds:2,
-  wrote:wrote(2,msg('call',`<div class="chips">${W2.sums.map(s=>chip('code',`<span class="p2-sum">${esc(s.replace(/ /g,''))}</span>`)).join('')}</div>`)),
-  lines:[`Our code added the ${word(n1)} forecasts. Round 2 reads everything again from the top: ${big(RD[1])} tokens.`,
-   `It asks the calculator for ${word(n2)} sums at once, one for each possible order.`],
-  ask:['Why did round 2 read so much more than round 1?','Could it have asked for the sums in round 1?'],
-  expected:[`It rereads all of round 1, plus its own requests and the ${word(n1)} forecasts. The model keeps nothing between rounds; we send it everything again.`,
-   'No. The sums need the forecasts, and those came back only after round 1.'],
-  point:'Every round starts from the full conversation. The pale part of the bar is text the model already read once.',
-  transition:`${Word(n2)} totals come back. Round 3.`,source:src});
-
- const ans=W2.answer.split(', against')[0]+'.',inCost=A.usage.input*PR.input,outCost=A.usage.output*PR.output;
- round(3,'trace-walk-3','Round 3: the answer, and what the run cost',{builds:3,
-  wrote:wrote(2,msg('model',esc(ans))),
-  right:at(3,`<div class="p2-stat"><div><b>${num(A.seconds,1)} s</b>model time</div><div><b>₹${num(A.cost_inr,2)}</b>the whole run</div></div>`),
-  lines:[`The ${word(n2)} totals are added. Round 3 reads ${big(RD[2])} tokens, ${num(D.context.growth,1)} times what round 1 read.`,
-   'This time it asks for no tool. The reply is the answer, so the loop stops.',
-   'That was the whole run. Where did the money go: reading or writing?'],
-  ask:['If the run had ten rounds, what would round 10 read?','What did round 3 have that round 2 did not?','Where did most of the cost go: reading or writing?'],
-  expected:['Everything from rounds 1 to 9 again. The reading grows every round, which is why long runs get slow and expensive.',
-   `The ${word(n2)} totals. With every number it needed, it could answer without another tool.`,
-   `Here, writing: the ${big(A.usage.output)} tokens written cost ${num(outCost/inCost,1)} times the ${big(A.usage.input)} read, because a written token costs ${word(PR.output/PR.input)} times as much. In long runs reading takes over, because it repeats every round.`],
-  point:`Our run was ${word(WT.length)} model calls, each rereading the whole conversation, with our code running tools in between.`,
-  transition:'All of this rereading is done by a few lines of ordinary Python.',
-  source:`${src} Paid prices: $${PR.input} in, $${PR.output} out per million tokens, thinking counted as output; ₹${T.inr_per_usd} per dollar.`});
-}
-
-// the loop as code: each line tied to a box of the flowchart
-{
- const MS=D.loop.max_steps,PAD=38;
- const tag=(t,role)=>`<span class="p2-tag ${role}">${t}</span>`;
- const L=[[1,'def run_agent(goal, tools, max_steps='+MS+'):'],[1,'    messages = [goal]'],[1,'    for step in range(max_steps):'],
-  [1,'        reply = chat(messages, tools)',tag('The model reads the conversation, replies','agent')],[1,'        messages.append(reply)'],
-  [2,'        if not reply.calls:',tag('Did it ask for a tool?','agent')],[2,'            return reply.text',tag('No: it answers','done')],
-  [3,'        for call in reply.calls:'],[3,'            result = run_tool(call)',tag('Our code runs the tool','tools')],
-  [3,'            messages.append(result)',tag('The result is added to the conversation','memory')],
-  [3,'    return "stopped: step limit"',tag('Step limit','risk')]];
- const steps=`<div class="code-steps p2-code"><pre class="code"><code>${L.map(([b,t,tg])=>`<span class="cl" data-at="${b}">${highlight(tg?t.padEnd(PAD):t)}${tg||''}</span>`).join('')}</code></pre></div>`;
- S_('loop-code','engine',`The loop in ${word(L.length)} lines of Python`,{builds:3,nb:nb('nb-1-5'),
-  body:steps,
-  lines:['The list called messages is the conversation. Each round, chat() sends all of it to the model, and we add the reply.',
-   'If the reply asks for no tool, it is the answer, and the function returns it.',
-   'Otherwise our code runs each tool and adds the result to the list. Then round again, up to a step limit.'],
-  ask:['Which line is the model, and which lines are ordinary code?','Which box of the flowchart is this?','What would happen with no step limit?'],
-  expected:['Only chat() calls the model. Everything else is plain Python that we wrote and can read.',
-   '“Did it ask for a tool?” The answer is just whether the reply has any requests in it.',
-   'A model that keeps asking for tools would loop for ever and spend money doing it. The step limit is the first guardrail (Part 4).'],
-  point:'An agent is an ordinary loop around one model call. Our code runs the tools, keeps the list of messages and decides when to stop.',
-  misconception:'That agent frameworks contain some deeper machinery. They wrap this loop with retries, logging, memory and permissions.',
-  demo:'Notebook 1.5: run_agent is this loop, with printing, an approval check, and errors sent back to the model instead of crashing.',
-  transition:'What fills all that reading? We can count it.',
-  source:'Simplified from run_agent in notebook/agents.py. The real one also asks a person before any tool marked for approval, and returns a failing tool’s error to the model as its result.'});
+ const W=1152,base=292,mh=226,pitch=W/N,bw=Math.min(104,pitch*.62),sc=v=>v/LAST*mh,room=Math.floor((pitch-6)/9.7);
+ const fit=t=>t.length>room?t.slice(0,room-1)+'…':t,mono=(x,y,t,o)=>label(x,y,esc(fit(t)),o).replace('<text ',`<text style="font-family:${MONO}" `);
+ const what=s=>s.name==='bash'?(isTest(s)?'pytest':s.args.command):String(s.args.path||'');
+ let g=line(0,base,W,base,{stroke:'#D5DAE0',w:2})+
+  `<rect x="0" y="4" width="22" height="22" rx="4" fill="${BLUE}"/>`+label(32,22,'new this round',{size:20,fill:COL.ink})+
+  `<rect x="0" y="36" width="22" height="22" rx="4" fill="${BLUE}" opacity=".28"/>`+label(32,54,'read again',{size:20,fill:COL.ink})+label(0,90,'a token is a word, or a piece of one',{size:18,fill:MUTED});
+ RD.forEach((v,i)=>{const x=i*pitch+(pitch-bw)/2,cx=x+bw/2,steps=S.filter(s=>s.round===i);let y=base,b='';
+  added.slice(0,i+1).forEach((d,j)=>{const h=sc(Math.max(0,d));y-=h;b+=`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${Math.max(1,h-2).toFixed(1)}" rx="3" fill="${BLUE}"${j<i?' opacity=".28"':''}/>`;});
+  b+=label(cx,y-12,big(v),{size:25,anchor:'middle',fill:COL.ink,weight:700})+label(cx,base+31,`Round ${i+1}`,{size:22,anchor:'middle',fill:COL.ink,weight:650});
+  if(!i)b+=label(cx,base+57,'instructions, tools,',{size:17,anchor:'middle',fill:'#374151'})+label(cx,base+79,'our request',{size:17,anchor:'middle',fill:'#374151'});
+  else if(steps.length)b+=mono(cx,base+57,'+ '+steps[0].name,{size:17,anchor:'middle',fill:COL.target,weight:650})+
+   mono(cx,base+79,steps.length>1?`and ${steps.length-1} more`:what(steps[0]),{size:16,anchor:'middle',fill:'#374151'});
+  g+=label(cx,base+31,`Round ${i+1}`,{size:22,anchor:'middle',fill:'#B8BFC7'})+(i?gat(Math.min(i+1,4),b):b);});
+ S_('reread','engine','Each round, the model rereads everything',{builds:4,nb:nb('nb-2-1','▶ Open 2.1 in Colab'),
+  body:fig(W,base+90,g,`Tokens the model read in each of the ${word(N)} rounds: ${RD.map(big).join(', ')}. Each bar holds everything in the bar before it, plus one new piece.`),
+  lines:[`Round 1. The model reads our instructions, the tool menu and the request: ${big(RD[0])} tokens.`,
+   `Round 2 reads all of that again, plus its own first request and ${result(S.find(s=>s.round===1))}.`,
+   `Round 3 starts from the top once more. The new part is ${result(S.find(s=>s.round===2))}.`,
+   `It goes on like this. Round ${N} reads ${big(LAST)} tokens, and only ${big(NEW)} of them are new.`],
+  ask:['What does the model have to work with in round 1?','Why does round 2 read the instructions again?','Does anything ever leave the conversation?',`Which round added the most? Why?`],
+  expected:['Only text: our instructions, a description of each tool, and one sentence from us.',
+   'The model keeps nothing between rounds. Each round is a new call, and our code sends the whole list of messages again.',
+   'No. In our loop the list only grows: every request and every result is added and stays.',
+   'The tallest dark piece: a long tool result, such as the test output or a whole file. Short results, such as the note after an edit, add almost nothing.'],
+  point:'The conversation is the model’s only memory during a run, and it reads all of it again in every round.',
+  misconception:'That the model remembers the earlier rounds. It does not: line 4 of the loop sends everything again, every time.',
+  transition:'We can print these numbers ourselves. Over to the notebook.',
+  source:`Our recorded run of Part 1, ${T.date_text} (${esc(T.model)}). The dark piece of each bar also holds the model’s own request from the round before.`});
 }
 
 nbRun('nb-context','engine','2.1','What the model read each round',{
- run:'for m in run.messages:\n    if m["role"] == "model": print(m["usage"]["input"])',
- look:['The count grows every round','Then a count of each part: which is biggest?'],
- line:'Back to the notebook. We count the tokens read in each round, and in each part.',
- ask:'Which part of the conversation do you expect to be the biggest?',
- expected:'Most guess the tool menu or the forecasts. Hold on to that guess.',
- point:'We can count exactly what the model read, round by round and part by part.',
- transition:'Here are the counts from our run.'});
+ run:'for n, r in enumerate(run.log, 1):\n    print(f"round {n}: read {r[\'input\']} tokens")\nprint("total read:", run.tokens_read)',
+ look:['The number goes up in every round','The total: how does it compare with the last round?'],
+ line:'The notebook kept a count for every round of the run we just watched. We print it.',
+ ask:'Guess the total before it prints. Is it closer to the last round’s count, or far above it?',
+ expected:'Far above it: the total adds up every round, and each round holds all the ones before.',
+ point:'Nothing here is hidden. The loop records what each call to the model read and wrote.',
+ transition:'Here is the total from our run.'});
 
 {
- const C=D.context,P=C.parts,tot=C.total,rest=P.at(-1),known=P.slice(0,-1),sumKnown=known.reduce((s,x)=>s+x.tokens,0),pct=Math.round(100*rest.tokens/tot);
- const NAME={'instructions':['Our instructions',MUTED],'tool menu':['The tool menu',COL.target],'task':['Your question',COL.amber],'tool results':['The tool results',COL.target]};
- const W=1152,rh=48,gap=16,x0=330,bw=640,max=Math.max(...P.map(s=>s.tokens)),sc=v=>v/max*bw;
- let g='';
- known.forEach((s,i)=>{const y=i*(rh+gap),[n,c]=NAME[s.key];
-  g+=label(x0-18,y+rh/2+9,n,{size:25,anchor:'end',fill:COL.ink})+`<rect x="${x0}" y="${y}" width="${sc(s.tokens).toFixed(1)}" height="${rh}" rx="5" fill="${c}"/>`+
-   label(x0+sc(s.tokens)+14,y+rh/2+9,big(s.tokens),{size:25,fill:COL.ink,weight:650});});
- const y5=known.length*(rh+gap),wr=sc(rest.tokens);
- g+=gonly('1',`${label(x0-18,y5+rh/2+9,'The rest',{size:25,anchor:'end',fill:MUTED})}<rect x="${x0}" y="${y5}" width="${wr.toFixed(1)}" height="${rh}" rx="5" fill="#C9CFD6"/>${label(x0+wr+14,y5+rh/2+10,'?',{size:30,fill:MUTED,weight:700})}`);
- g+=gat(2,`${label(x0-18,y5+rh/2+9,'Its own earlier replies',{size:25,anchor:'end',fill:COL.guess,weight:700})}<rect x="${x0}" y="${y5}" width="${wr.toFixed(1)}" height="${rh}" rx="5" fill="${COL.guess}"/>${label(x0+wr+14,y5+rh/2+9,`${big(rest.tokens)} · ${pct}%`,{size:25,fill:COL.ink,weight:700})}`);
- S_('context','engine','What did round 3 read?',{builds:2,nb:nb('nb-2-1'),
-  body:fig(W,y5+rh+4,g,`The ${big(tot)} tokens read in round 3, by part: ${known.map(s=>NAME[s.key][0].toLowerCase()).join(', ')}, and the model’s own earlier replies`),
-  lines:[`Round 3 read ${big(tot)} tokens. The ${word(known.length)} parts we counted come to only ${big(sumKnown)}. What is the rest?`,
-   `The rest is the model’s own earlier replies, sent back to it each round: ${pct}% of what it read.`],
-  ask:['What do you think fills the long grey bar?','In a long run, what would you trim first?'],
-  expected:['Its own earlier replies: the requests from rounds 1 and 2, with the formatting around each message.',
-   'Old replies and old results: summarise them, or keep them in notes. Then the tool menu: offer only the tools the task needs.'],
-  point:'The biggest part of the context was the conversation so far, which the model rereads every round.',
-  transition:'What does all this rereading cost?',
-  source:`Real run, ${T.date_text} (notebook 2.1). The ${word(known.length)} parts were counted one by one with Gemini’s token counter, so they are approximate. “Its own earlier replies” is the rest of round 3’s ${big(tot)} tokens, formatting included.`});
-
- const sum=RD.reduce((s,v)=>s+v,0);
- const TIPS=[['list',COL.target,'Offer only the tools the task needs.'],['file',COL.target,'Keep only the part of a result the next step needs.'],
-  ['notes',COL.guess,'Summarise a long history instead of resending it.']];
- S_('context-cost','engine','Why keep the context short?',{builds:2,
-  body:`<div class="p2-eq">${RD.map(big).join('<span>+</span>')}<span>=</span><b>${big(sum)}</b></div><p class="caption p2-eqc">tokens read over the ${word(RD.length)} rounds</p>
-   ${at(2,`<div class="p2-tips">${TIPS.map(([ic,c,t])=>`<div style="--c:${c}">${iconHTML(ic,c,28)}<span>${t}</span></div>`).join('')}</div>`)}`,
-  lines:['We pay for every token the model reads. Each round pays again for everything before it.',
-   'So we choose what goes into each round. People call this context engineering.'],
-  ask:['What happens to this total if a run takes twenty rounds?','Which of these would help in your own chats with ChatGPT or Gemini?'],
-  expected:['It grows much faster than the conversation itself, because each round rereads all the rounds before.',
-   'Starting a fresh chat for a new topic, instead of one endless conversation. It is the same idea.'],
-  point:`Context engineering is choosing what the model reads each round. Every token costs money, and a long context hides what matters. Andrej Karpathy described it (X, ${D.context.karpathy.date}) as filling the context window “with just the right information for the next step”.`,
-  misconception:'That a bigger context window solves this. A longer context costs more each round, and models attend less well to what is buried in the middle.',
-  transition:'One more question about the context: how would an agent remember you next week?',
-  source:`Real run, ${T.date_text}: the tokens read in each of its ${word(RD.length)} rounds.`});
+ const W=1152,BW=1152,h=74,sc=v=>v/TOTAL*BW,y1=44,y2=y1+h+82,times=TOTAL/LAST;
+ let g=label(0,y1-16,'The conversation when the run ended',{size:22,fill:MUTED,weight:650})+
+  `<rect x="0" y="${y1}" width="${sc(LAST).toFixed(1)}" height="${h}" rx="8" fill="${BLUE}"/>`+
+  label(sc(LAST)+18,y1+h/2+16,big(LAST),{size:46,fill:COL.ink,weight:700})+label(sc(LAST)+18+String(big(LAST)).length*27+10,y1+h/2+15,'tokens',{size:24,fill:MUTED});
+ let x=0,b=label(0,y2-16,`What the model read, round by round`,{size:22,fill:MUTED,weight:650});
+ RD.forEach((v,i)=>{const w=sc(v);b+=`<rect x="${x.toFixed(1)}" y="${y2}" width="${(w-4).toFixed(1)}" height="${h}" rx="8" fill="${BLUE}" opacity="${(.5+.5*(i+1)/N).toFixed(2)}"/>`+
+  label(x+(w-4)/2,y2+h/2+9,String(i+1),{size:25,anchor:'middle',fill:'#fff',weight:700});x+=w;});
+ // click 1: the second row is there, and empty. The room guesses before it fills
+ const empty=label(0,y2-16,'What the model read, round by round',{size:22,fill:MUTED,weight:650})+
+  `<rect x="1.5" y="${y2+1.5}" width="${BW-7}" height="${h-3}" rx="8" fill="none" stroke="#B8BFC7" stroke-width="2.5" stroke-dasharray="9 9"/>`+
+  label(0,y2+h+52,'?',{size:46,fill:'#B8BFC7',weight:700})+label(40,y2+h+51,'tokens',{size:24,fill:MUTED});
+ b+=label(0,y2+h+52,big(TOTAL),{size:46,fill:COL.ink,weight:700})+label(String(big(TOTAL)).length*27+10,y2+h+51,`tokens, ${num(times,1)} times the conversation`,{size:24,fill:MUTED});
+ S_('read-total','engine','How much did it read in all?',{builds:2,nb:nb('nb-2-1','▶ Open 2.1 in Colab'),
+  body:fig(W,y2+h+72,g+gonly('1',empty)+gat(2,b),`The conversation at the end was ${big(LAST)} tokens. Over ${word(N)} rounds the model read ${big(TOTAL)} tokens.`),
+  lines:[`When the run ended, the whole conversation was ${big(LAST)} tokens long.`,
+   `To get there, the model read ${big(TOTAL)} tokens. It read the same text again and again.`],
+  ask:['How much do you think the model read to get this far?','What happens to the total if a run takes twice as many rounds?'],
+  expected:['Guesses are usually near the size of the conversation. The real number is several times that.',
+   'It grows much more than twice, because every extra round rereads all the rounds before it.'],
+  point:'The reading adds up faster than the conversation grows. Long runs are mostly rereading.',
+  transition:'Does that matter? Yes, for three reasons.',
+  source:`Our recorded run of Part 1, ${T.date_text} (notebook 2.1). It wrote ${big(A.tokens_written)} tokens in the same ${word(N)} rounds.`});
 }
 
-// ---------------------------------------------------------------------------------------- 2.2 memory
-chap('2.2','Memory');
 {
- const M=D.memory;
+ const WHY=[['rupee',BLUE,'Cost','A hosted model charges for every token it reads, in every round.'],
+  ['clock',BLUE,'Time','More to read makes each round slower.'],
+  ['search',BLUE,'Attention','In a long text, the one line that matters is easier to miss.']];
+ S_('context-short','engine','Why keep the context short?',{builds:1,
+  body:`<div class="p2-why">${WHY.map(([ic,c,t,d])=>`<div style="--c:${c}">${iconHTML(ic,c,54)}<h3>${t}</h3><p>${d}</p></div>`).join('')}</div>`,
+  lines:['What the model reads in a round is called its context. We try to keep it short.'],
+  ask:['How would you keep it short, in a long job?'],
+  expected:['Return short tool results, such as the last lines of a test run. Offer only the tools the job needs. Start a new run for a new job.'],
+  point:`Every round pays again, in money and in time, for everything read so far. Our ${word(N)}-round run would cost ₹${num(A.inr_hosted,2)} at the price of ${esc(T.hosted.name)}, a hosted model; Part 5 has the cost slide.`,
+  misconception:'That a model with a larger context window solves this. It lets the conversation grow longer, and every round still pays for all of it.',
+  transition:'One piece of the context is read first in every round, and we wrote it ourselves.',
+  source:''});
+}
+
+// the instructions: SYSTEM, a sentence to a line
+{
+ const rows=sentences(SYSTEM).flatMap(s=>{if(s.length<=64)return [s];const c=s.lastIndexOf(', ',64),cut=c>0?c+1:s.lastIndexOf(' ',64);return [s.slice(0,cut),'  '+s.slice(cut+1)];});
+ const iList=rows.findIndex(r=>/listing the files/i.test(r))+1,iTest=rows.findIndex(r=>/run the tests/i.test(r))+1;
+ const first=S[0],listed=first?.name==='bash'&&/^ls\b/.test(first.args.command),iEdit=S.findIndex(s=>s.name==='edit_file'),retest=iEdit<0?null:S.slice(iEdit+1).find(isTest);
+ S_('instructions','engine','The instructions are plain English',{builds:3,nb:nb('nb-1-6','▶ Open 1.6 in Colab'),
+  body:`<div class="p2-sys">${editor('SYSTEM · the instructions every run starts with',rows.join('\n'),{lang:'text',icon:'notes',
+   focus:{...(iList?{2:[iList]}:{}),...(iTest?{3:[iTest]}:{})},
+   notes:{...(iList&&listed?{[iList]:[`round ${first.round}: ${esc(first.args.command)}`,COL.target,[2]]}:{}),...(iTest&&retest?{[iTest]:[`round ${retest.round}: it ran the tests again`,COL.target,[3]]}:{})}})}</div>`,
+  lines:['This is the first thing the model reads in every round. We wrote it, in ordinary sentences.',
+   listed?`In Part 1 the agent began with <span class="mono">${esc(first.args.command)}</span>. The request never asked for that. This sentence did.`:'In Part 1 the agent began by looking around. The request never asked for that. This sentence did.',
+   retest?`After its edit it ran the tests again, in round ${retest.round}. That habit was written here too.`:'Running the tests after an edit is written here too.'],
+  ask:['Who is this text written for?','What would the agent do without this sentence?','Which sentence would you add for your own team?'],
+  expected:['The model. Our code puts it at the top of the conversation, before the request.',
+   'It might guess at file names, or answer from what it remembers about billing code in general.',
+   'Answers vary: never touch the tests, ask before deleting, write in our house style. Each is one more sentence.'],
+  point:'Much of what looked like the agent’s good sense in Part 1 was written here. Changing an agent’s behaviour often means editing this text. Builders call it the system prompt.',
+  misconception:'That instructions are rules the model must obey. They are text it usually follows. Part 4 shows what happens when other text disagrees with them.',
+  transition:'One sentence in there mentions a file called NOTES.md. That is how this agent remembers.',
+  source:'From the notebook, section 1.6: the text of SYSTEM, a sentence to a line. The tags are from our recorded run.'});
+}
+
+// ---------------------------------------------------------------------------------------- 2.2 notes that outlast a run
+chap('2.2','Notes that outlast a run');
+const write=F.steps.find(s=>s.name==='write_file')||F.steps.at(-1),noteFile=write.args.path||'NOTES.md';
+{
+ const told=sentences(F.goal)[0].split(/:\s*/).at(-1).replace(/\.$/,'').replace(/^./,c=>c.toUpperCase());
+ const it=(ic,c,t)=>`<div class="it" style="--c:${c}">${iconHTML(ic,c,26)}<span>${t}</span></div>`;
  S_('memory-q','engine','How would it remember you next week?',{builds:2,
-  body:`<div class="p2-q">${request(esc(M.saved_by),{who:'You, this week'})}</div>
-   ${at(2,`<div class="p2-two-tools"><div>${chip('pen','save_note','memory')}<span>writes a note to a file</span></div><div>${chip('notes','read_notes','memory')}<span>reads the file back</span></div></div>`)}`,
-  lines:['When a run ends, its conversation is gone. Next week the model starts from nothing.',
-   'We give it two more tools. A note written in one run can then be read in any later run.'],
-  ask:['How would you make it remember this?','Where would a real product keep these notes?'],
-  expected:['Write it down somewhere, and read it back next time.','In a database or a document store, one per user. In the notebook, a small text file.'],
-  point:'Memory that outlasts a run is text that one tool saves and another reads back. The model itself does not change.',
-  misconception:'That the model learns from your conversations as it goes. Its weights do not change; it remembers only what someone stores and feeds back.',
-  transition:'Over to the notebook to try it.'});
+  body:`<div class="p2-runs"><div class="p2-run"><h3>This week’s run</h3>${it('notes',MUTED,'Instructions and tools')}${it('person',COL.amber,`“${esc(told)}.”`)}${it('spark',COL.guess,'Its requests and the results')}
+    <div class="p2-gone" data-at="2"><span>${iconHTML('stop','#fff',18)}Gone when the run ends</span></div></div>
+   <div class="p2-run"><h3>Next week’s run</h3><div class="p2-what" data-only="1">?</div>
+    <div class="p2-items" data-only="2">${it('notes',MUTED,'Instructions and tools')}${it('person',COL.amber,'A new request')}<div class="it none">Nothing from this week</div></div></div></div>`,
+  lines:['This week we tell the agent two things about our shop. They are now in its conversation.',
+   'When a run ends, its conversation is thrown away. The next run starts without any of it.'],
+  ask:['Where exactly is that sentence stored?','How would you make the agent remember it?'],
+  expected:['In the list of messages inside one run of our loop, and nowhere else. The model itself did not change.',
+   'Write it down somewhere the next run will look. For an agent that works in a folder, that is a file.'],
+  point:'A run’s conversation is its only memory, and it ends with the run. Anything that should last has to be stored outside it.',
+  misconception:'That the model learns from what you tell it. Its weights do not change. It knows only what is in the conversation.',
+  transition:'So we ask it to write things down. Over to the notebook.',
+  source:`The sentence in quotes is from our first request in notebook 2.2, shortened.`});
 }
 
 nbRun('nb-memory','engine','2.2','Notes that outlast a run',{
- run:'run_agent(REMEMBER, [read_notes, save_note])\nrun_agent(QUESTION, [read_notes, save_note, get_air_quality])',
- look:['The first run writes a note to a file','Does the second run read it before it answers?'],
- line:'Two separate runs: the first is told about the asthma, the second is asked a question.',
- ask:'The second run starts with an empty conversation. How could it know about the asthma?',
- expected:'Only by reading its notes. Watch for read_notes in its first round.',
- point:'Two runs, two conversations. Only the file connects them.',
- transition:'Here is what happened in our run.'});
+ run:`first = run_agent("… ${sentences(F.goal).at(-1).replace(/"/g,'\\"')}")\nlater = run_agent("${L.goal.split(' ').slice(0,5).join(' ').replace(/"/g,'\\"')} …")`,
+ look:['The first run writes a file','Does the second run read it before it answers?'],
+ line:'Two separate runs. The first is told what to remember. The second is only asked a question.',
+ ask:'The second run starts with an empty conversation. How could it know about the discount?',
+ expected:'Only from the file. Watch its first two requests.',
+ point:'Two runs, two conversations. The only thing they share is the project folder.',
+ transition:'Here are our two recorded runs.'});
+
+S_('notes-write','engine','The first run wrote its notes to a file',{builds:2,nb:nb('nb-2-2','▶ Open 2.2 in Colab'),
+ body:`<div class="p2-walk"><div>${loopStrip({model:'1',tool:'2',result:'2'},{round:`First run · round ${write.round} of ${F.rounds}`})}${toolCall(write.name,write.args)}</div>
+  <div><div>${only('1',editor('the text it asks to save',M.notes,{lang:'text',icon:'chat'}))}${only('2',editor(noteFile,M.notes,{lang:'text',icon:'notes'}))}</div>
+   ${tree('workspace/',[...filesIn(F.steps[0]),{name:noteFile,at:2}],{marks:{[noteFile]:[['2','new']]},size:'s'})}</div></div>`,
+ lines:['We said what to remember. The model asks to write a file, and chooses the words itself.',
+  `Our code wrote ${esc(noteFile)} into the project. Then the run ended.`],
+ ask:['Which tool is this?','What is left of this run now?'],
+ expected:['write_file, one of the four from Part 1. Memory needed no new tool.',`One small text file in the folder, ${word(M.notes.split('\n').filter(l=>l.trim()).length)} lines long.`],
+ point:'Saving a note is an ordinary tool call that happens to write a file.',
+ transition:'Some days later we start a new run, with a different request.',
+ source:`Our recorded run, ${T.date_text} (notebook 2.2): ${F.rounds} rounds, ${num(F.seconds,1)} seconds of model time.`});
 
 {
- const M=D.memory,arr=`<svg viewBox="0 0 44 24" width="44" height="24" aria-hidden="true"><path d="M2 12h32M26 4l10 8-10 8" fill="none" stroke="${BLUE}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
- const callChips=M.calls.map(c=>c.name==='read_notes'?chip('notes','read_notes','memory'):chip('sensor',esc(c.args.city))).join('');
- const firstWords=(s,n)=>esc(s.split(' ').slice(0,n).join(' '))+' …';
- const [a1,a2]=M.answer.split('. ');
- S_('memory','engine','The second run read its notes first',{builds:2,nb:nb('nb-2-2'),
-  body:`<div class="p2-mem">
-   <div><p class="p2-h">First run</p>${request(firstWords(M.saved_by,6),{who:'You'})}<div class="chips">${chip('pen','save_note','memory')}</div></div>${arr}
-   <div><div class="p2-note"><b>${iconHTML('notes',BLUE,18)}agent_notes.md</b>${esc(M.note)}</div></div>
-   ${at(2,arr)}
-   ${at(2,`<p class="p2-h">Second run</p>${msg('call',`<div class="chips">${callChips}</div>`)}${msg('model',`${esc(a1)}. ${firstWords(a2,3)}`)}`)}</div>`,
-  lines:['Our first run saved one line to a file. Then the run ended, and its conversation was gone.',
-   'The second run started empty. In one round, it read its notes and both forecasts.'],
-  ask:['What exactly was saved?','Why did it read its notes at all?'],
-  expected:[`One sentence of text: “${esc(M.note)}” Nothing about the model changed.`,
-   'The read_notes tool says it holds facts about the user, and the question said “for me”. It asked for the notes and both forecasts in the same round.'],
-  point:'Memory across runs is a file the agent writes with one tool and reads with another.',
-  transition:`Tools, a loop and notes are the parts. Builders put them together in a few common patterns.`,
-  source:`Real run, ${T.date_text} (notebook 2.2): ${word(M.steps)} rounds, with ${word(M.calls_n)} tool calls at once in the first. The first request and the answer are shortened here.`});
+ const ls=L.steps[0],read=L.steps.find(s=>s.name==='read_file'&&s.args.path===noteFile)||L.steps[1];
+ const listing=String(ls.result).split('\n').filter(l=>l.trim()),top=listing.slice(0,4),iNote=top.indexOf(noteFile);
+ const rows=[{cmd:ls.args.command||callOf(ls)},...(iNote<0?[{out:top.join('\n')}]:[...(iNote?[{out:top.slice(0,iNote).join('\n')}]:[]),{out:noteFile,kind:'hot'},...(top.length>iNote+1?[{out:top.slice(iNote+1).join('\n')}]:[])]),...(listing.length>top.length?[{out:'…',kind:'dim'}]:[])];
+ S_('notes-read','engine','A new run reads the notes first',{builds:2,nb:nb('nb-2-2','▶ Open 2.2 in Colab'),
+  body:`<div class="p2-ask">${request(esc(L.goal),{who:'A new request'})}</div>
+   <div class="p2-walk"><div><div>${only('1',loopStrip({model:'1',tool:'1',result:'1'},{round:`Second run · round ${ls.round} of ${L.rounds}`}))}${only('2',loopStrip({model:'2',tool:'2',result:'2'},{round:`Second run · round ${read.round} of ${L.rounds}`}))}</div>
+    <div>${only('1',toolCall(ls.name,ls.args))}${only('2',toolCall(read.name,read.args))}</div></div>
+   <div><div>${only('1',term(rows,{size:'s'}))}${only('2',editor(noteFile,M.notes,{lang:'text',icon:'notes'}))}</div></div></div>`,
+  lines:['The request says nothing about rupees or discounts. The run begins by listing the files.',
+   `It sees ${esc(noteFile)} and reads it before anything else. That is another sentence of our instructions.`],
+  ask:['What does this run know about our shop at this point?','Why did it open the notes before the billing code?'],
+  expected:['Nothing yet. Its conversation holds the instructions, the request and a list of file names.',
+   `The instructions say: if ${esc(noteFile)} exists, read it before anything else and follow it.`],
+  point:'The notes get into the new conversation the way everything else does: a tool reads them and our code adds the result.',
+  transition:'Now the notes are in its context. Watch what it does with them.',
+  source:`Our recorded run, ${T.date_text} (notebook 2.2). The listing is cut short here.`});
 }
-
-// ---------------------------------------------------------------------------------------- 2.3 patterns
-chap('2.3','Patterns');
-const PN=D.patterns.names;
-S_('patterns','engine','A chain runs the same steps every time',{builds:1,
- body:`${chart([{steps:[{k:'tool',col:COL.target,t:`Get ${word(n1)}\nforecasts`},{k:'tool',col:COL.target,t:`Add up ${word(n2)}\norders`},
-   {k:'check',col:COL.green,t:`${Word(W2.totals.length)} totals\nback?`},{k:'model',col:COL.guess,hi:true,t:'Write the\nanswer'}]}],
-   {W:1100,bh:140,fs:29,gx:64,alt:'A chain: get the forecasts, add up the orders, check the totals came back, then the model writes the answer'})}
-  <div style="margin-top:30px">${ps('If every question had this shape, only the last step would need the model.')}</div>`,
- lines:['The simplest pattern is a chain, like Part 1’s workflow: fixed steps in a fixed order, with a check between them.'],
- ask:['What would break this chain?'],
- expected:['A question of a different shape: four cities, or weather instead of air. The chain does only the steps we wrote.'],
- point:`Prompt chaining is the first of the ${word(PN.length)} patterns in Anthropic’s guide. The guide advises the simplest pattern that does the job.`,
- misconception:'That every AI system needs a free-running agent. Chains and routers are workflows, and most systems in production are workflows.',
- transition:'The second pattern sorts things before anyone works on them. Back to the notebook.',
- source:`The ${word(PN.length)} patterns: Anthropic, “Building effective agents” (${D.patterns.source_date}). This chain is a design, not a recorded run.`});
+function callOf(s){return `${s.name} ${Object.values(s.args).join(' ')}`;}
 
 {
- const R=D.routing,GL=D.routing_gloss,dests=[...new Set(R.map(r=>r.route))],hindi=R.find(r=>GL[r.message]);
- const orList=dests.slice(0,-1).join(', ')+' or '+dests.at(-1);
- nbRun('nb-route','engine','2.3','Routing: one call picks the queue',{
-  run:'for message in tickets:\n    print(route(message), "←", message)',
-  look:['One short model call for each message','Where does the message in Hindi go?'],
-  line:`${Word(R.length)} customer messages, one in Hindi. One short model call picks the queue for each.`,
-  ask:'Why use a model to sort these, and not a list of keywords?',
-  expected:'Keywords miss new wording and other languages. Watch the message in Hindi.',
-  point:'Routing: one cheap model call decides who handles a request.',
-  transition:'Here is where each message went in our run.'});
-
- const RO=[...R].sort((a,b)=>dests.indexOf(a.route)-dests.indexOf(b.route));   // grouped by queue: no arrows cross
- const W=1152,sx=724,qx=920,qw=220,qh=46;let yy=40,g1='';const rows=[];
- for(const r of RO){g1+=label(0,yy,`“${esc(r.message)}”`,{size:26,fill:COL.ink});rows.push({r,y:yy-9});
-  if(GL[r.message]){g1+=label(18,yy+32,esc(GL[r.message]),{size:21,fill:MUTED});yy+=32;}
-  yy+=66;}
- const H=yy-34,qy={};
- dests.forEach(d=>{const ys=rows.filter(o=>o.r.route===d).map(o=>o.y);qy[d]=ys.reduce((a,b)=>a+b,0)/ys.length;});
- const seen={};let g2='';
- for(const o of rows){const k=seen[o.r.route]=(seen[o.r.route]??-1)+1,n=rows.filter(q=>q.r.route===o.r.route).length,yd=qy[o.r.route]+(n>1?(k-(n-1)/2)*12:0);
-  g2+=icon('spark',sx-24,o.y,24,COL.guess)+`<path d="M${sx-6} ${o.y} C${sx+100} ${o.y} ${qx-100} ${yd} ${qx-12} ${yd}" fill="none" stroke="#4B5563" stroke-width="2.4"/>`+`<path d="M${qx-1} ${yd} l-12 -6 v12z" fill="#4B5563"/>`;}
- dests.forEach(d=>{g2+=`<rect x="${qx}" y="${qy[d]-qh/2}" width="${qw}" height="${qh}" rx="10" fill="#FBF7F3" stroke="${COL.amber}" stroke-width="2.6"/>`+label(qx+qw/2,qy[d]+8,esc(d),{size:24,anchor:'middle',fill:COL.ink,weight:650});});
- S_('routing','engine','Each message went to one queue',{builds:2,nb:nb('nb-2-3'),
-  body:fig(W,H,g1+gat(2,g2),`Routing: ${word(R.length)} customer messages, one in Hindi, each sent to ${orList} by one model call`),
-  lines:[`Our ${word(R.length)} messages. Which queue should each one go to: ${orList}?`,
-   `One short model call per message picked the queue. The Hindi message has no English keyword, and still went to ${hindi.route}.`],
-  ask:['Where would you send each one?','What would a keyword rule have done with the Hindi message?'],
-  expected:['Most of the room will agree with the model. Sorting is easy for a person, and now cheap for a model too.',
-   `Missed it: there is no word like “refund” in English in it. The model read it as a refund that has not arrived, and sent it to ${hindi.route}.`],
-  point:'Sort first, then hand each request to the right specialist: a person, a cheaper model, or a narrower agent.',
-  transition:'The last two patterns use several model calls that work together.',
-  source:`Real run, ${T.date_text} (notebook 2.3). The messages are written for the notebook. English gloss of the Hindi message: ours.`});
+ const run=L.steps.findLast(s=>s.name==='bash'&&!/^ls\b/.test(s.args.command))||L.steps.at(-1),code=L.steps.find(s=>s.name==='read_file'&&s.args.path!==noteFile);
+ const NL=M.notes.split('\n'),iDisc=NL.findIndex(l=>/discount/i.test(l))+1,iRup=NL.findIndex(l=>/₹|rupee/i.test(l))+1;
+ const usesDisc=/discount_percent\s*=\s*\d+/.test(run.args.command||'');
+ const shell=term([{cmd:run.args.command||callOf(run)},{out:String(run.result).trim()||'(no output)',kind:run.exit?'bad':''}]).replace(/discount_percent\s*=\s*\d+/,m=>`<span class="p2-hit">${m}</span>`);
+ // the request as the model wrote it, cut short; in single quotes when the command itself holds double quotes
+ const cmd=String(run.args.command||callOf(run)).replace(/\s+/g,' '),head=cmd.length>44?cmd.slice(0,43)+'…':cmd;
+ const asked=`<div class="tc"><span class="tc-who">${iconHTML('spark',COL.guess,18)}The model asks</span><code>${hl(head.includes('"')&&!head.includes("'")?`bash('${head}')`:`bash(${JSON.stringify(head)})`,'python')}</code></div>`;
+ const ans=firstSentence(L.answer).replace(/₹\s?[\d,]+(?:\.\d+)?/,m=>`<b class="p2-kB">${m}</b>`).replace(/\d+\s?(?:%|percent)(?: \w+)? discount/,m=>`<b class="p2-kB">${m}</b>`);
+ S_('notes-answer','engine','It answers in rupees, with the school discount',{builds:2,nb:nb('nb-2-2','▶ Open 2.2 in Colab'),
+  body:`<div class="p2-walk"><div><div>${only('1',loopStrip({tool:'1',result:'1'},{round:`Second run · round ${run.round} of ${L.rounds}`}))}${only('2',loopStrip({model:'2',answer:'2'},{round:`Second run · round ${L.rounds} of ${L.rounds}`}))}</div>
+    <div>${only('1',asked)}${only('2',says(ans))}</div></div>
+   <div><div class="p2-cmd">${shell}</div>
+    <div class="p2-notes">${editor(noteFile,M.notes,{lang:'text',icon:'notes',focus:{...(iDisc?{1:[iDisc]}:{}),...(iRup?{2:[iRup,...(iDisc?[iDisc]:[])]}:{})}})}</div></div></div>`,
+  lines:[usesDisc?`${code?`It reads ${esc(code.args.path)}, then`:'It'} runs the code with a discount. Our request never mentioned one.`:`${code?`It reads ${esc(code.args.path)}, then`:'It'} runs the code to work out the total.`,
+   'The answer is in rupees and includes the school discount. Both came from the file.'],
+  ask:['Where did the discount in that command come from?','What changed in the model between the two runs?'],
+  expected:['From the notes. The request only said that a school was ordering.',
+   'Nothing. It is the same model with the same weights. The folder has one more file, and the instructions say to read it.'],
+  point:'What the agent remembered from last week is exactly the text of one file, read at the start of the run.',
+  misconception:'That the agent now “knows” our shop. Delete the file and the next run knows nothing again.',
+  transition:'So what is an agent’s memory?',
+  source:`Our recorded run, ${T.date_text} (notebook 2.2): ${L.rounds} rounds, ${L.calls} tool calls, ${num(L.seconds,1)} seconds of model time.`});
 }
 
-{
- const MU=D.multi;
- let og=`<circle cx="240" cy="44" r="32" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon('spark',240,44,32,COL.guess)+
-  label(192,38,'lead call',{size:21,fill:COL.guess,weight:700,anchor:'end'})+label(192,63,'splits the job',{size:19,fill:'#4B5563',anchor:'end'})+
-  arrow(276,44,420,44,{stroke:COL.green,w:2.6,head:11})+icon('check',446,44,30,COL.green,{sw:2.6})+label(446,86,'report',{size:19,fill:COL.green,anchor:'middle',weight:650});
- [110,240,370].forEach(x=>{og+=arrow(240+(x-240)*.25,78,x,142,{stroke:'#4B5563',w:2.2,head:10})+
-  `<circle cx="${x}" cy="168" r="24" fill="#fff" stroke="${COL.guess}" stroke-width="2.6"/>`+icon('bot',x,168,24,COL.guess)+
-  icon('search',x-22,222,22,COL.target)+label(x-6,229,'search',{size:18,fill:COL.target});});
- og+=label(412,166,'helpers,',{size:19,fill:COL.guess})+label(412,190,'in parallel',{size:19,fill:COL.guess});
- const orch=fig(540,246,og,'A lead call sends three helpers to search in parallel, then writes the report');
- const node=(x,ic,t)=>`<circle cx="${x}" cy="56" r="30" fill="#fff" stroke="${COL.guess}" stroke-width="3"/>`+icon(ic,x,56,28,COL.guess)+label(x,110,t,{size:20,fill:COL.guess,anchor:'middle',weight:650});
- const eg=node(60,'pen','writer')+arrow(94,56,152,56,{stroke:'#4B5563',w:2.4,head:10})+icon('file',184,56,40,COL.ink)+label(184,110,'draft',{size:20,anchor:'middle'})+
-  arrow(214,56,274,56,{stroke:'#4B5563',w:2.4,head:10})+node(310,'list','critic')+arrow(344,56,420,56,{stroke:COL.green,w:2.6,head:11})+icon('send',450,56,30,COL.green)+label(450,110,'pass: send',{size:20,fill:COL.green,anchor:'middle',weight:650})+
-  `<path d="M310 122 V146 H10 V56 H20" fill="none" stroke="${COL.loss}" stroke-width="2.2" stroke-dasharray="7 5"/><path d="M29 56 l-11 -5.5 v11z" fill="${COL.loss}"/>`+
-  label(170,174,'fail: the problems go back to the writer',{size:19,fill:COL.loss,anchor:'middle'});
- const evalf=fig(540,186,eg,'A writer drafts, a critic checks the draft against a list; on failure the problems go back to the writer');
- S_('patterns-2','engine','Several model calls can work together',{builds:2,nb:nb('nb-3-4'),
-  body:`<div class="compare p2-two"><div class="a"><h3>${PN[3]}</h3>${orch}
-    <p class="caption">${kG(`+${num(MU.gain_pct,1)}%`)} on Anthropic’s research eval<br>About ${MU.multi_x}× the tokens of a chat</p></div>
-   ${at(2,`<div class="a"><h3>Writer and critic</h3>${evalf}</div>`)}</div>`,
-  lines:['A lead call splits the job, and helpers work on the parts in parallel, each with its own context.',
-   'One call writes, another checks it against a list, and the writer revises. Part 3’s farm advisory works this way.'],
-  ask:['Why would several helpers beat one agent on a research question?','Why use a second call to check the first, rather than asking the writer to be careful?'],
-  expected:['Each helper explores one direction with a clean context, and they run at the same time. The price is many more tokens.',
-   'A separate check with an explicit list catches what the writer misses, and a person can read and change the list. It is a small eval run on every draft.'],
-  point:`Several model calls can do better than one, at a price in tokens: Anthropic reports agents use about ${MU.agent_x}× the tokens of a chat, and multi-agent systems about ${MU.multi_x}×. Anthropic calls these two patterns “${PN[3]}” and “${PN[4]}”.`,
-  misconception:'That more agents are always better. For most tasks a single agent, or a workflow, is cheaper and easier to debug.',
-  demo:'Notebook 3.4 (Part 3): the writer and critic on today’s forecast.',
-  transition:'Every pattern here runs tools. Back to the loop, at the tool step.',
-  source:`Anthropic, “How we built our multi-agent research system” (${MU.date}).`});
-}
+S_('memory-is','engine','Its memory is a file',{builds:1,
+ body:statement(`It remembers by <span class="p2-kB">writing a file</span>, and <span class="p2-kB">reading it</span> at the start of the next run.`,
+  'Coding agents do the same, with a file such as <span class="mono">AGENTS.md</span> or <span class="mono">CLAUDE.md</span>.'),
+ lines:['Between the two runs the model did not change at all. The folder did.'],
+ ask:['What would you put in such a file for your own project?'],
+ expected:['How to run the tests, and what never to touch. A person can read the file, correct it, and keep it under version control.'],
+ point:'Memory across runs is text stored outside the model and read back into the context. Because it is a file, a person can open it and fix it.',
+ misconception:'That more notes are always better. Every line of the notes is read in every round of every run, so the file should stay short.',
+ transition:'Part 2 in one slide.'});
 
-// ---------------------------------------------------------------------------------------- 2.4 MCP
-chap('2.4','MCP');
-S_('map-tool','engine','Where are we in the loop?',{builds:1,
- body:loopMap({hi:'tool'}),
- lines:['Now the box where our code runs a tool. So far, each tool was a Python function we wrote.'],
- ask:['If Gemini, Claude and ChatGPT should all use your company’s database, how many times do you write that tool?'],
- expected:['Once for each, unless they share a standard. The next slide counts the cost.'],
- point:'Tools connect an agent to your systems. Writing and connecting them is most of the work in practice.',
- transition:'The next slide counts the connectors.'});
-
-{
- const MC=D.mcp,W=1152,H=250,xm=210,xt=700,xh=455,yc=H/2;
- const ys=(k,n)=>n===1?yc:22+k*(H-44)/(n-1);
- const draw=(n,m,hub)=>{let g='';const rr=Math.max(11,Math.min(22,Math.floor((H-44)/Math.max(n-1,m-1,1)/2)-3));
-  const MY=[...Array(n)].map((_,k)=>ys(k,n)),TY=[...Array(m)].map((_,k)=>ys(k,m));
-  if(hub){MY.forEach(y=>{g+=line(xm+rr+2,y,xh-70,yc,{stroke:COL.guess,w:2.4});});TY.forEach(y=>{g+=line(xh+70,yc,xt-rr-2,y,{stroke:COL.target,w:2.4});});
-   g+=`<rect x="${xh-70}" y="${yc-34}" width="140" height="68" rx="14" fill="#fff" stroke="${COL.ink}" stroke-width="3"/>`+label(xh,yc+9,'MCP',{size:26,fill:COL.ink,anchor:'middle',weight:700});}
-  else MY.forEach(y=>TY.forEach(y2=>{g+=line(xm+rr+2,y,xt-rr-2,y2,{stroke:'#9AA3AD',w:1.6});}));
-  MY.forEach((y,k)=>{g+=`<circle cx="${xm}" cy="${y}" r="${rr}" fill="#fff" stroke="${COL.guess}" stroke-width="2.6"/>`+icon('spark',xm,y,rr*1.2,COL.guess)+label(xm-rr-12,y+7,MC.models[k],{size:20,fill:COL.guess,anchor:'end',weight:650});});
-  TY.forEach((y,k)=>{const [ic,t]=MC.tools[k];g+=`<circle cx="${xt}" cy="${y}" r="${rr}" fill="#fff" stroke="${COL.target}" stroke-width="2.6"/>`+icon(ic,xt,y,rr*1.15,COL.target)+label(xt+rr+12,y+7,t,{size:20,fill:COL.target,weight:650});});
-  const c=hub?COL.green:COL.loss,cx=1012;
-  g+=label(cx,yc+8,String(hub?n+m:n*m),{size:66,fill:c,anchor:'middle',weight:700})+label(cx,yc+48,hub?'connections':'connectors',{size:20,fill:c,anchor:'middle',weight:650})+
-   label(cx,yc+74,hub?`${n} models + ${m} tools`:`${n} models × ${m} tools`,{size:18,anchor:'middle'});
-  return fig(W,H,g,hub?`${n} models and ${m} tools joined through MCP: ${n+m} connections`:`${n} models wired to ${m} tools one by one: ${n*m} connectors`);};
- const BUILD_HUB={1:false,2:true};
- register('p2-mcp',(el,ctx)=>{
-  if(ctx.printing){el.innerHTML=`<div class="state-slot"><div data-only="1">${draw(MC.n_models,MC.n_tools,false)}</div><div data-only="2">${draw(MC.n_models,MC.n_tools,true)}</div></div>`;return;}
-  el.innerHTML=`<div class="w-fig"></div><div class="w-controls">${slider('m','Models',1,MC.models.length,1,MC.n_models)}${slider('t','Tools',1,MC.tools.length,1,MC.n_tools)}<button type="button" data-k="hub" aria-pressed="false">With MCP</button></div>`;
-  const f=el.querySelector('.w-fig'),sm=el.querySelector('[data-k="m"]'),st=el.querySelector('[data-k="t"]'),bt=el.querySelector('[data-k="hub"]');
-  const om=el.querySelector('[data-o="m"]'),ot=el.querySelector('[data-o="t"]');
-  const show=()=>{f.innerHTML=draw(+sm.value,+st.value,bt.getAttribute('aria-pressed')==='true');om.textContent=sm.value;ot.textContent=st.value;};
-  for(const s of [sm,st]){s.addEventListener('input',show);s.addEventListener('change',()=>s.blur());}
-  bt.addEventListener('click',()=>{bt.setAttribute('aria-pressed',String(bt.getAttribute('aria-pressed')!=='true'));bt.blur();show();});
-  const scene=el.closest('.scene');
-  if(scene)new MutationObserver(()=>{const h=BUILD_HUB[scene.dataset.build];if(h!==undefined&&String(h)!==bt.getAttribute('aria-pressed')){bt.setAttribute('aria-pressed',String(h));show();}}).observe(scene,{attributes:true,attributeFilter:['data-build']});
-  show();
- });
- S_('mcp','engine','How many connectors do we need?',{builds:2,nb:nb('nb-5-2'),
-  body:widget('p2-mcp','Models wired to tools one by one, or through one shared standard, MCP'),
-  lines:[`${Word(MC.n_models)} models and ${word(MC.n_tools)} tools. Without a standard, every pair needs its own connector: ${MC.custom}.`,
-   `MCP, the Model Context Protocol, is that standard. Each model and each tool implements it once: ${MC.via}.`],
-  ask:['If you add one more tool, how many new connectors do you write?','And with MCP?'],
-  expected:[`One per model: ${MC.n_models} more, and every model vendor has to do it.`,'One: the new tool speaks MCP, and every model that speaks MCP can use it.'],
-  point:'MCP turns an n × m problem into n + m: write a tool once, and any agent that speaks MCP can use it.',
-  misconception:'That MCP makes tools safe. It standardises how tools are connected; a tool result with hidden instructions travels through it just as easily (Part 4).',
-  demo:'Drag the sliders: add a tool and watch the count without MCP jump by the number of models. Notebook 5.2 serves our forecast tool over MCP.',
-  transition:'Part 2 in one slide.',
-  source:'Counts on the slide are arithmetic: n × m against n + m. MCP is an open standard; the specification is at modelcontextprotocol.io.'});
-}
-
-recap(2,['Each round rereads the whole conversation, and we pay for it.','Notes saved with a tool outlast a run.',
- 'Patterns and MCP are built around the same loop.'],
- 'agents at work, and who checks them.',
- {card:{goal:'Suggest a city',model:esc(T.model),
-   tools:`${chip('notes','read_notes','memory')} ${chip('pen','save_note')} ${chip('sensor','forecast')}`,memory:'<span class="p2-kB">A notes file</span>',
-   stop:`An answer, or ${D.loop.max_steps} rounds`,guard:'Writes only notes',human:'Says what to remember'},
-  hi:['tools','memory'],title:'The memory agent',
-  ask:'What would you want this agent to remember about you, and what should it never write down?',
-  expected:'Preferences help it, but a health condition is sensitive data. Decide what may be stored, for how long, and who can read the notes.',
-  point:'An agent is a loop that rereads its context each round; tools, memory and patterns are built around it.',
-  transition:'Part 3: agents at work.'});
-
-// ---------------------------------------------------------------------------------------- appendix: kinds of memory
-{
- const W=1152,H=300,B=BLUE,cx=[192,576,960];
- const desk=x=>`<rect x="${x-120}" y="118" width="240" height="12" rx="3" fill="${B}" opacity=".85"/>`+line(x-104,130,x-104,190,{stroke:B,w:5})+line(x+104,130,x+104,190,{stroke:B,w:5})+
-  [[-80,62,-8],[-28,54,5],[30,66,-3]].map(([dx,y,r])=>`<g transform="rotate(${r} ${x+dx+28} ${y+28})"><rect x="${x+dx}" y="${y}" width="56" height="${118-y-2}" rx="3" fill="#fff" stroke="${B}" stroke-width="2.5"/>${line(x+dx+10,y+14,x+dx+44,y+14,{stroke:B,w:2})}${line(x+dx+10,y+26,x+dx+38,y+26,{stroke:B,w:2})}</g>`).join('');
- const book=x=>`<rect x="${x-70}" y="20" width="140" height="170" rx="8" fill="#fff" stroke="${B}" stroke-width="3"/>`+
-  [0,1,2,3,4,5,6].map(i=>`<circle cx="${x-70}" cy="${36+i*23}" r="6" fill="#fff" stroke="${B}" stroke-width="2.5"/>`).join('')+
-  [0,1,2,3].map(i=>line(x-48,98+i*22,x+54,98+i*22,{stroke:'#245EDB55',w:2})).join('')+label(x-48,72,'has asthma',{size:18,fill:B,weight:650});
- const cab=x=>`<rect x="${x-62}" y="16" width="124" height="176" rx="6" fill="#fff" stroke="${B}" stroke-width="3"/>`+
-  [0,2].map(i=>`<rect x="${x-50}" y="${28+i*54}" width="100" height="44" rx="4" fill="none" stroke="${B}" stroke-width="2.5"/>${line(x-14,50+i*54,x+14,50+i*54,{stroke:B,w:3})}`).join('')+
-  `<rect x="${x-26}" y="48" width="44" height="40" rx="2" fill="#fff" stroke="${B}" stroke-width="2.5"/>${line(x-18,58,x+10,58,{stroke:B,w:2})}${line(x-18,68,x+4,68,{stroke:B,w:2})}`+
-  `<rect x="${x-74}" y="80" width="148" height="50" rx="4" fill="#fff" stroke="${B}" stroke-width="3"/>${line(x-16,106,x+16,106,{stroke:B,w:3})}`+icon('search',x+96,52,40,B,{sw:2.4});
- const KINDS=[[desk,'The context','What it reads this round.','Cleared when the run ends.'],[book,'Notes','Short facts it saves,','then reads in a later run.'],
-  [cab,'Documents','A large store it searches,','taking only the pages it needs.']];
- O('p2-memory-kinds','Three kinds of memory',{builds:1,
-  body:fig(W,H,KINDS.map(([f,t,a,b],i)=>f(cx[i])+label(cx[i],232,t,{size:23,fill:B,anchor:'middle',weight:700})+label(cx[i],261,a,{size:20,anchor:'middle',fill:'#374151'})+label(cx[i],287,b,{size:20,anchor:'middle',fill:'#374151'})).join(''),
-   'Three kinds of memory: the context, notes and documents'),
-  lines:[`Agents use ${word(KINDS.length)} kinds of memory. Which one would hold your company’s policy manual?`],
-  ask:['Which kind of memory would hold your company’s policy manual?'],
-  expected:['Documents: the agent searches them and quotes the parts it needs (retrieval). Notes hold short facts about a user or a task; the context holds only this run.'],
-  point:'The context is cleared after each run; notes and documents are stored outside the model and read back with tools.',
-  source:'Drawings: made for the slide.'});
-}
+recap(2,['Each round, the model rereads the whole conversation.','Its instructions are a paragraph of plain English.','Notes in a file outlast a run.'],
+ 'the same agent, other jobs.',
+ {card:{goal:'Work out a school’s bill',model:esc(T.model),tools:`${chip('eye','read')} ${chip('pen','write, edit')} ${chip('terminal','bash')}`,
+   memory:`The conversation, and <span class="p2-kB">${esc(noteFile)}</span>`,stop:'An answer, or 12 rounds',guard:'Works in one folder',human:'Says what to remember'},
+  hi:['memory'],title:'Our agent, with notes',
+  ask:'Which line of the card changed since Part 1?',
+  expected:'Memory: the conversation lasts for one run, and the notes file lasts across runs. The model, the tools and the loop are the same.',
+  point:'One run is a conversation that only grows. Instructions start it, and a notes file carries a little of it into the next run.',
+  transition:'Part 3: the same agent, other jobs.'});
