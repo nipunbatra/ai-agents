@@ -114,3 +114,17 @@ pre.json{font:18px/1.42 "SFMono-Regular",Menlo,Consolas,monospace;margin:0;white
 .tok-k{color:#1E3A8A}
 .facts small,.req b{font-size:16px}.msg .mh{font-size:15px}
 @media(max-width:760px){.reading pre.json,.reading .msg .mb{overflow-x:auto;max-width:100%;min-width:0}}
+/* the notebook slide: where the talk switches to the notebook */
+.content:has(> .nbrun){justify-content:flex-start;padding-top:44px}
+.nbrun{border:3px solid var(--p);border-radius:20px;background:#fff;width:100%;max-width:1060px;margin:0 auto}
+.nbrun .nb-head{display:flex;align-items:center;gap:18px;background:var(--p);color:#fff;padding:16px 28px;border-radius:17px 17px 0 0}
+.nbrun .nb-num{font-size:42px;font-weight:700;font-variant-numeric:tabular-nums}
+.nbrun .nb-title{font-size:34px;font-weight:650;line-height:1.2}
+.nbrun .nb-rows{display:flex;flex-direction:column;gap:16px;padding:20px 28px 24px}
+.nbrun .nb-row small{display:block;font-size:16px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;color:var(--p);margin-bottom:6px}
+.nbrun .code{font-size:23px;margin:0;border-left-color:var(--p)}
+.nbrun ul{margin:0;padding-left:28px;font-size:27px;line-height:1.4}.nbrun li+li{margin-top:4px}
+/* the loop as a flowchart, the talk's map */
+.loopmap svg{max-height:420px}
+@media(max-width:760px){.reading .nbrun .nb-num{font-size:30px}.reading .nbrun .nb-title{font-size:23px}.reading .nbrun ul{font-size:19px}.reading .nbrun .code{font-size:16px}}
+.part-break .lead+.steps{margin-top:16px}

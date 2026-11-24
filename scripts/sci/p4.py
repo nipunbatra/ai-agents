@@ -35,6 +35,12 @@ D['compound'] = {
     'task_checked': round(task(P, N, True), 4), 'n_long': N_LONG, 'task_long': round(task(P, N_LONG), 4),
     'slider': {'p_min': 0.80, 'p_max': 0.995, 'p_step': 0.005, 'n_min': 1, 'n_max': 50},
 }
+# The three-line printout of notebook 4.1 (notebook/agents.py): the whole task's chance for three step rates and four
+# task lengths. The notebook slide builds its code from these lists, and its notes quote the rows.
+TABLE_P, TABLE_N = [0.99, 0.95, 0.90], [5, 10, 20, 50]
+D['compound']['table'] = {'p': TABLE_P, 'n': TABLE_N,
+                          'rows': [[round(task(p, n), 4) for n in TABLE_N] for p in TABLE_P]}
+assert P in TABLE_P and N in TABLE_N and N_LONG in TABLE_N
 assert round(task(P, N) * 100) == 36                     # the slide's answer to "95% a step, 20 steps"
 assert round(task(P, N, True) * 100) == 95               # checking brings it back to about 95%
 assert task(P, N_LONG) < 0.1

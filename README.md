@@ -12,21 +12,26 @@ companion notebook. The session is listed as “The Engine of Autonomy: Unlockin
 
 ## What the talk covers
 
+The talk moves between the slides and the notebook. A slide titled **"In the notebook"** names a numbered section
+(1.1, 1.2, …); the notebook has the same section, and the slide after it shows our own recorded run of it, so the
+talk can go on even if a live run is slow.
+
 | Part | |
 |---|---|
-| Opening | One request sent to a chatbot and to an agent (a real run); three eras of AI assistants; METR's measure of how long a task agents can finish |
-| 1 · What an agent is | A model, tools and a loop; the agent card; workflow or agent; the autonomy dial (operator to observer) |
-| 2 · Inside the engine | One real run step by step, with tokens and cost; the tool menu; the context; memory; five patterns; MCP |
-| 3 · Agents at work | Fourteen applications in four families (knowledge work, operations, science, India and sustainability), and where each sits on a map of "what a mistake costs" against "how easy the result is to check" |
-| 4 · When the engine stalls | Errors that compound; real failures; prompt injection and the lethal trifecta; guardrails; evals |
-| 5 · In your organisation | Should this be an agent; a ramp to autonomy; the cost of a task; what changes for a team |
+| Opening | A question about three cities' air, sent to a model on its own (notebook 1.1); the plan |
+| 1 · What an agent is | What a model cannot do alone; write a tool; the reply as a request; the loop as a flowchart, built one box at a time; check the agent's answer; workflow or agent; five levels of autonomy |
+| 2 · One run, step by step | The opening run round by round, with tokens and cost; the loop in Python; the context; notes as memory; routing and other patterns; MCP |
+| 3 · Agents at work | Nine applications on the main route (four of them run live) and five more in the appendix, placed on a map of "how easy is the result to check" against "what does a mistake cost" |
+| 4 · How agents fail | Errors that add up; real failures, each placed on the loop's flowchart; prompt injection and the lethal trifecta; approvals and step limits; evals |
+| 5 · Agents in your organisation | Should this task be an agent; raising autonomy in steps; the cost of a task; what changes for a team |
 
 ## The notebook
 
 `notebook/agents.ipynb` builds an agent from scratch in plain Python (no framework) and runs every example in the
-talk: the air-quality trip planner, a data analyst on ten Indian cities' PM2.5, a research assistant that cites
-Wikipedia, an inbox assistant with an approval gate, a Gujarati farm advisory with a writer and a critic, a poisoned
-email, a step limit, and an evaluation over ten runs. Choose the backend in the first cell:
+talk: the air-quality question, a data analyst on ten Indian cities' PM2.5, a research assistant that cites
+Wikipedia, an inbox assistant that asks before sending, a Gujarati farm advisory with a writer and a checker, an email
+with hidden instructions, a step limit, and an eval over ten runs. Its sections are numbered like the slides. Choose
+the backend in the first cell:
 
 - `BACKEND = "gemini"` (default): a free Gemini API key from https://aistudio.google.com/apikey , stored in Colab's
   Secrets as `GEMINI_API_KEY`. Runs on a CPU runtime.
@@ -53,7 +58,8 @@ To re-record the runs (needs `GEMINI_API_KEY`; changes the numbers on the slides
 RECORD_DIR=data/traces python3 scripts/build_notebook.py --run && python3 scripts/sci/traces.py
 ```
 
-`AUTHORING.md` describes the conventions; `plan/outline.md` the plan of every part.
+`AUTHORING.md` describes the conventions; `plan/slow-deck.md` the current shape of the deck (slower, with notebook
+slides and the loop flowchart as a map).
 
 ## Credits
 

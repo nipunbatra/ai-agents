@@ -1,5 +1,5 @@
 // The agent-specific figures of the talk: an icon set, the three-lane trace card every application uses, the loop
-// drawn as an engine, chat bubbles for real traces, tool chips and the agent card.
+// drawn as a circle and as a flowchart, chat bubbles for real traces, tool chips and the agent card.
 // Colours carry meaning everywhere: amber is a person, purple is the model, teal is tools and the world,
 // red is risk, green is a checked result, blue is memory and data.
 import {esc} from './shared/author.js';
@@ -113,7 +113,7 @@ export function lanes(steps,{W=1152,laneH=108,left=172,fs=18,r=25,names={},alt='
  return fig(W,top+3*laneH+2*gap+2,g,alt,'lanes');
 }
 
-// ---------------------------------------------------------------------------------------- the loop as an engine
+// ---------------------------------------------------------------------------------------- the loop as a circle
 /** The agent loop: think (the model) → act (tools) → observe (results) → think again, until it answers.
  o.at: {loop, act, observe, stop, tools} reveal builds; o.size scales; o.tools: icons around Act. */
 export function loopFig({W=620,H=470,at={},tools=['search','database','mail','code','globe'],labels={},hub=true,stopText='answer',toolSize=24}={}){
@@ -134,6 +134,59 @@ export function loopFig({W=620,H=470,at={},tools=['search','database','mail','co
   g+=gat(at.stop,arrow(x1,ty,x2-70,ty,{stroke:COL.green,w:3,head:13})+icon('check',x2-46,ty,30,COL.green,{sw:2.6})+label(x2-46,ty+38,stopText,{size:20,fill:COL.green,anchor:'middle',weight:650}));}
  return fig(W,H,g,'The agent loop: think, act, observe, repeated until the goal is reached','loopfig');
 }
+
+// ---------------------------------------------------------------------------------------- the loop as a flowchart
+/** The agent loop as a flowchart, used as the talk's map. hi names the box we are at: it is tinted and gets a
+ "We are here" tag, and the rest fades. Boxes: goal, model, ask (the decision), tool, result, answer; with
+ guards:true also gate (a person approves risky tools) and limit (the step limit). o.at: {box: build} reveals a box
+ and the arrow into it. o.text: {box: 'line one\nline two'} replaces a label. o.icons: {box: icon}. o.cols: {box: colour}. o.here: the tag's
+ text, or {box: text} for a different tag per highlighted box ('' for none). */
+export const MAP_BOXES=['goal','model','ask','tool','result','answer','gate','limit'];
+export function loopMap({hi=null,at={},text={},icons={},cols={},guards=false,here='We are here',alt='The agent loop as a flowchart'}={}){
+ for(const k of [...[hi].flat().filter(Boolean),...Object.keys(at),...Object.keys(text),...Object.keys(cols)])if(!MAP_BOXES.includes(k))throw new Error("Unknown loopMap box "+k);
+ const W=1152,H=440,TOP=112,BOT=348,fs=23,his=[hi].flat().filter(Boolean);
+ const B={
+  goal:{x:14,y:TOP-48,w:196,h:96,col:COL.amber,ic:'person',t:'You give\na goal'},
+  model:{x:270,y:TOP-52,w:310,h:104,col:COL.guess,ic:'spark',t:'The model reads the\nconversation, replies'},
+  ask:{cx:770,cy:TOP,hw:132,hh:74,col:COL.guess,t:'Did it ask\nfor a tool?'},
+  answer:{x:958,y:TOP-48,w:180,h:96,col:COL.green,ic:'check',t:'It answers'},
+  tool:{x:640,y:BOT-48,w:260,h:96,col:COL.target,ic:'zap',t:'Our code runs\nthe tool'},
+  result:{x:270,y:BOT-48,w:310,h:96,col:COL.data,ic:'file',t:'The result is added\nto the conversation'},
+  gate:{cx:770,cy:(TOP+74+BOT-48)/2+2,w:236,h:42,col:COL.amber,ic:'approve',t:'A person approves'},
+  limit:{cx:425,cy:(TOP+52+BOT-48)/2,w:178,h:42,col:COL.loss,ic:'stop',t:'Step limit'}};
+ for(const [k,c] of Object.entries(cols))B[k].col=c;   // e.g. {answer: COL.loss} for a box where it went wrong
+ const op=k=>his.length&&!his.includes(k)?' opacity=".5"':'';
+ const wrap=(k,s)=>at[k]?gat(at[k],s):s;
+ const tint=c=>c+'14';
+ const lines=(k,cx,cy,{size=fs,dy=0,weight=600}={})=>{const ls=String(text[k]??B[k].t).split('\n'),lh=size*1.2,y0=cy+dy-(ls.length-1)*lh/2+size*.35;
+  return ls.map((l,j)=>label(cx,y0+j*lh,esc(l),{size,fill:COL.ink,anchor:'middle',weight:his.includes(k)?700:weight})).join('');};
+ const box=k=>{const b=B[k],on=his.includes(k),cx=b.x+b.w/2,cy=b.y+b.h/2,ic=icons[k]??b.ic;
+  return `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="16" fill="#fff"/><g${op(k)}><rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="16" fill="${on?tint(b.col):'#fff'}" stroke="${b.col}" stroke-width="${on?5:2.6}"/>`+
+   (ic?icon(ic,b.x+30,cy,28,b.col,{sw:2.2}):'')+lines(k,cx+(ic?16:0),cy)+'</g>';};
+ const diamond=k=>{const b=B[k],on=his.includes(k);
+  return `<g${op(k)}><path d="M${b.cx},${b.cy-b.hh} L${b.cx+b.hw},${b.cy} L${b.cx},${b.cy+b.hh} L${b.cx-b.hw},${b.cy}Z" fill="${on?tint(b.col):'#fff'}" stroke="${b.col}" stroke-width="${on?5:2.6}"/>`+lines(k,b.cx,b.cy,{size:22})+'</g>';};
+ const pill=k=>{const b=B[k],on=his.includes(k),x=b.cx-b.w/2,y=b.cy-b.h/2;
+  return `<rect x="${x}" y="${y}" width="${b.w}" height="${b.h}" rx="21" fill="#fff"/><g${op(k)}><rect x="${x}" y="${y}" width="${b.w}" height="${b.h}" rx="21" fill="${on?tint(b.col):'#fff'}" stroke="${b.col}" stroke-width="${on?4.5:2.4}"/>`+
+   icon(b.ic,x+24,b.cy,22,b.col,{sw:2.2})+label(b.cx+14,b.cy+7,esc(text[k]??b.t),{size:20,fill:b.col,anchor:'middle',weight:700})+'</g>';};
+ const A=(k,x1,y1,x2,y2,extra='')=>wrap(k,`<g${his.length?' opacity=".5"':''}>${arrow(x1,y1,x2,y2,{stroke:DARK,w:3,head:13})}${extra}</g>`);
+ const M=B.model,R=B.result,T=B.tool,D=B.ask,N=B.answer,G=B.goal;
+ let g='';
+ g+=A('model',G.x+G.w+4,TOP,M.x-4,TOP);
+ g+=A('ask',M.x+M.w+4,TOP,D.cx-D.hw-4,TOP);
+ g+=A('answer',D.cx+D.hw+4,TOP,N.x-4,TOP,label((D.cx+D.hw+N.x)/2,TOP-12,'no',{size:22,fill:DARK,anchor:'middle',weight:650}));
+ g+=A('tool',D.cx,D.cy+D.hh+4,D.cx,T.y-4,label(D.cx+16,D.cy+D.hh+20,'yes',{size:22,fill:DARK,weight:650}));
+ g+=A('result',T.x-4,BOT,R.x+R.w+4,BOT);
+ g+=A('result',R.x+R.w/2,R.y-4,M.x+M.w/2,M.y+M.h+4);
+ g+=wrap('goal',box('goal'))+wrap('model',box('model'))+wrap('ask',diamond('ask'))+wrap('answer',box('answer'))+wrap('tool',box('tool'))+wrap('result',box('result'));
+ if(guards)g+=wrap('gate',pill('gate'))+wrap('limit',pill('limit'));
+ for(const k of his){const tag=typeof here==='object'?here[k]:here;if(!tag)continue;
+  const b=B[k],top=['goal','model','ask','answer'].includes(k),cx=b.cx??b.x+b.w/2,w=tag.length*11.5+36;
+  if(k==='gate'||k==='limit'){const x=k==='gate'?b.cx+b.w/2+14:b.cx-b.w/2-14-w;g+=pillTag(x,b.cy,w,tag,b.col);continue;}
+  const y=top?(k==='ask'?D.cy-D.hh-20:b.y-30):b.y+b.h+24;g+=pillTag(cx-w/2,y,w,tag,b.col);}
+ return fig(W,H,g,alt,"loopmap");
+}
+const pillTag=(x,cy,w,t,col)=>`<rect x="${x.toFixed(1)}" y="${(cy-17).toFixed(1)}" width="${w.toFixed(1)}" height="34" rx="17" fill="${col}"/>`+
+ label(x+w/2,cy+7,esc(t),{size:19,fill:'#fff',anchor:'middle',weight:700});
 
 // ---------------------------------------------------------------------------------------- messages of a real trace
 /** One message of a trace as a chat bubble. who: 'you', 'model', 'call', 'tool', 'thought'. */

@@ -64,6 +64,12 @@ Slides
   the application slide (Part 3). It lays out the illustration, the request bubble, the three-lane trace (`lanes`) and a
   strip of facts. Steps after the first appear at click 2 unless they set `at`.
 - `O(id, title, {...})`: an appendix slide. `partBreak`, `recap`, `chap`, `strip`: section 3.
+- `nbRun(id, section, '1.2', 'Write a tool', {run, look[], line, ask, expected, point, transition})`: a notebook slide,
+  the moment the talk switches to the notebook and runs that numbered section live. The number and title must match
+  the section in `notebook/agents.py` (anchor `nb-1-2`); `plan/slow-deck.md` lists them all. The slide after it shows
+  our recorded run, so the talk goes on if the live run is slow.
+- `loopMap({hi, at, text, icons, guards})` (figures.js): the agent loop as a flowchart, the talk's map. `hi:'tool'`
+  highlights a box with a "We are here" tag and fades the rest; `guards:true` adds the approval and step-limit pills.
 - Text: `p(s)` (lead, 28px), `ps(s)` (26px), `small(s)` (caption), `takeaway(s)`, `answer(build, s)`, `request(s)`.
   Colour words by role: `kY()` a person (amber), `kA()` the model or agent (purple), `kT()` tools and the world (teal),
   `kR()` risk (red), `kG()` a checked result (green).
@@ -124,7 +130,8 @@ No number is typed into a part file. Every number a slide shows comes from a dat
 
 Pace and structure
 
-- One move per click. A slide makes one point; a click adds one thing.
+- One idea per slide, and one move per click. Two builds is normal, three the most; if it needs more, split it.
+- Slow: Nipun found the dense version intimidating. When in doubt, make two slides.
 - Ask first. Where it fits, build 1 poses the question and the next clicks answer it.
 - A flowchart (`chart`) or a trace (`lanes`) for any process of more than two steps. Pictures over bullet lists.
 - Caveats, credits and "strictly speaking" go in the notes (`point`, `misconception`, `source`), off the slide.
@@ -132,14 +139,15 @@ Pace and structure
 
 Density (checked by `scripts/density.mjs`)
 
-- A story line is at most 30 words. A state (body + story line + half the SVG labels) is at most 100 words; aim under 70.
+- A story line is at most 25 words. A state (body + story line + half the SVG labels) is at most 75 words; aim under 50.
   A code block is at most 12 lines.
 - The body never repeats the story line. The story line says what to look at or asks the question; the body shows it.
 - Nothing may overflow the slide, and no two labels may touch. Leave air around a figure.
 
 Words
 
-- Plain, concrete sentences in the voice of a speaker talking to professionals ("we", "you"). No jargon without a
+- Plain, concrete sentences in the voice of a teacher talking to a room of professionals ("we", "you"), the way you
+  would say them out loud. No history as narrative (timelines, "in 2023 … in 2025"). No jargon without a
   one-line meaning. Indian examples where natural (₹, Gujarat, UPI, monsoon, cumin).
 - No slogan fragments ("One loop. Every agent."), no forced groups of three, no "X, not Y" endings, no rhetorical
   "It's not just A, it's B", no decorative bold, no emojis, no title case in headings, no hype words ("revolutionary",
@@ -151,10 +159,11 @@ Words
   vectors"). Story lines report what we did or what happened, with the number ("Coffee scores above tea."). Part
   breaks pose one key question; no "By the end of this part you can".
 - No meta lines about the slide or the talk ("The picture on the right is the whole idea", "Notice where…", "Argue
-  with them"), no aphorisms ("The context forgets; notes do not", "Measure before you trust"), no warm-up filler
-  ("Let us…", "Here is…", "very welcome").
+  with them"), no aphorisms ("The context forgets; notes do not", "Measure before you trust"), no empty filler
+  ("very welcome", "It is worth noting"). Short spoken links are fine where they carry the talk ("Over to the
+  notebook.", "Here is what came back."), but not on every slide.
 - No em dashes or en dashes anywhere, on slides or in notes. Write ranges as "1 to 4". Curly quotes are fine.
-- Shared terms: "agent", "the model", "tool", "the loop", "a trace" (one recorded run), "a step" (one model turn),
+- Shared terms: "agent", "the model", "tool", "the loop", "a trace" (one recorded run), "a round" (one model turn),
   "a tool call", "autonomy", "a guardrail", "an eval" (a test set you run the agent on), "the context" (what the model
   reads each turn). Write "a person" or "you", not "the human".
 

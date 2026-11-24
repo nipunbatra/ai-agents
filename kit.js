@@ -1,7 +1,7 @@
 // The authoring kit of the agents talk. Every part file in parts/ imports from here and from nowhere else:
 // the talk's meta, the one slide list, the slide helpers, the route strip, the application slide and the agent card.
 // AUTHORING.md explains how to use it.
-import {at,esc,m,highlight} from './shared/author.js';
+import {at,esc,m,highlight,code} from './shared/author.js';
 import {iconHTML,chip,lanes,agentCard,ROLE} from './figures.js';
 export * from './shared/author.js';
 export * from './widgets.js';
@@ -9,24 +9,41 @@ export * from './figures.js';
 
 export const meta={
  id:'ai-agents',kicker:'IITGN-X',title:'AI agents',series:'IITGN-X Residency Program',
- subtitle:'Language models that use tools in a loop',date:'3 December 2026',minutes:65,
+ subtitle:'Language models that use tools in a loop',date:'3 December 2026',minutes:85,
  sections:[
-  {id:'open',title:'Opening',minutes:6},
-  {id:'what',title:'Part 1 · What an agent is',minutes:10},
-  {id:'engine',title:'Part 2 · One run, step by step',minutes:12},
-  {id:'work',title:'Part 3 · Fourteen applications',minutes:20},
-  {id:'risk',title:'Part 4 · How agents fail',minutes:9},
-  {id:'adopt',title:'Part 5 · Agents in your organisation',minutes:6},
-  {id:'wrap',title:'Wrap-up',minutes:2},
+  {id:'open',title:'Opening',minutes:4},
+  {id:'what',title:'Part 1 · What an agent is',minutes:17},
+  {id:'engine',title:'Part 2 · One run, step by step',minutes:14},
+  {id:'work',title:'Part 3 · Agents at work',minutes:25},
+  {id:'risk',title:'Part 4 · How agents fail',minutes:15},
+  {id:'adopt',title:'Part 5 · Agents in your organisation',minutes:7},
+  {id:'wrap',title:'Wrap-up',minutes:3},
   {id:'optional',title:'Appendix · More depth',minutes:0},
  ]};
 /** The five parts: [section id, short name for the route strip]. */
-export const PARTS=[['what','What an agent is'],['engine','One run, step by step'],['work','Fourteen applications'],['risk','How agents fail'],['adopt','In your organisation']];
+export const PARTS=[['what','What an agent is'],['engine','One run, step by step'],['work','Agents at work'],['risk','How agents fail'],['adopt','In your organisation']];
 export const REPO='https://github.com/nipunbatra/ai-agents';
 export const SITE='https://nipunbatra.github.io/ai-agents/';
 export const COLAB='https://colab.research.google.com/github/nipunbatra/ai-agents/blob/main/notebook/agents.ipynb';
 /** The top-right link of a slide to a section of the notebook: nb('part-3'). */
 export const nb=(anchor,label='▶ Notebook')=>({href:`${COLAB}#scrollTo=${anchor}`,label});
+
+/** A notebook slide: the moment we switch to the notebook and run one numbered section live. The notebook's section
+ has the same number and title (notebook/agents.py, anchor nb-1-2 for '1.2'), and the slide after it shows our
+ recorded run, so the talk goes on even if the live run is slow or fails.
+ nbRun(id, section, '1.2', 'Write a tool', {run: 'the key line or two', look: ['what to watch for'], line, ask,
+ expected, point, transition, demo}). */
+export function nbRun(id,section,num,title,o){
+ if(!/^\d\.\d$/.test(num))throw new Error(`${id}: notebook section must look like 1.2`);
+ if(!Array.isArray(o.look)||!o.look.length||o.look.length>2)throw new Error(`${id}: look needs one or two entries`);
+ S_(id,section,'In the notebook',{builds:1,nb:nb('nb-'+num.replace('.','-'),`▶ Open ${num} in Colab`),
+  body:`<div class="nbrun"><div class="nb-head">${iconHTML('code','#fff',30)}<span class="nb-num">${num}</span><span class="nb-title">${title}</span></div>
+   <div class="nb-rows">${o.run?`<div class="nb-row"><small>We run</small>${code(o.run)}</div>`:''}
+   <div class="nb-row"><small>Look for</small><ul>${o.look.map(x=>`<li>${x}</li>`).join('')}</ul></div></div></div>`,
+  lines:[o.line],ask:[o.ask],expected:[o.expected],point:o.point||'',transition:o.transition||'',
+  demo:o.demo||`Notebook ${num}: run the cells under “${title}”. If the run is slow or fails, move on: the next slide shows our recorded run.`,
+  source:o.source||''});
+}
 
 /** A data file written by a script in scripts/sci/. Slides never type a number; they read it from here. */
 export async function data(name){

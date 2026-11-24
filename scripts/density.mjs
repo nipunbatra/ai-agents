@@ -8,7 +8,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import puppeteer from 'puppeteer';
-const WARN=70,MAX=100,LINE=30,CODE=12;
+const WARN=50,MAX=75,LINE=25,CODE=12;
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..'),base=process.env.DECK_URL||'http://127.0.0.1:8795';
 const executablePath=process.env.PUPPETEER_EXECUTABLE_PATH||['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome','/usr/bin/google-chrome','/usr/bin/chromium'].find(p=>fs.existsSync(p));
 const b=await puppeteer.launch({headless:true,executablePath,args:['--no-sandbox']});
